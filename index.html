@@ -1,0 +1,1753 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DURF roadmap</title>
+<meta name="description" content="Gantt chart of the six DURF themes — Dutch Repository Federation.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+/* ==========================================================================
+   DURF roadmap
+   Everything is scoped to .durf-app so this block can be pasted into an
+   existing page without touching its styles. Design tokens and component
+   rules below are taken from the SURF Design System (@surfnet/sds).
+   https://surfnet.github.io/DesignSystem/
+   ========================================================================== */
+
+.durf-app {
+  /* --- SDS colour tokens ------------------------------------------------ */
+  --sds--color--black: #050E1D;
+  --sds--color--white: #FFFFFF;
+  --sds--color--pitch-black--dimmed--15: #00000026;
+  --sds--color--pitch-black--dimmed--25: #00000040;
+  --sds--color--gray--100: #F4F6F8;
+  --sds--color--gray--200: #EAECF0;
+  --sds--color--gray--250: #CDD0D5;
+  --sds--color--gray--300: #B2B6BE;
+  --sds--color--gray--400: #8C969F;
+  --sds--color--gray--500: #5E6873;
+  --sds--color--yellow--200: #FEF8D3;
+  --sds--color--yellow--500: #FFC100;
+  --sds--color--green--100: #DCF2E5;
+  --sds--color--green--200: #B8E3C9;
+  --sds--color--green--300: #17A95D;
+  --sds--color--green--400: #008939;
+  --sds--color--green--500: #006731;
+  --sds--color--blue--100: #DFF4FF;
+  --sds--color--blue--200: #B3E5FF;
+  --sds--color--blue--300: #78BEFD;
+  --sds--color--blue--400: #0077C8;
+  --sds--color--blue--500: #004C97;
+  --sds--color--red--200: #FFCDCA;
+  --sds--color--red--400: #DA362D;
+  --sds--color--red--500: #83201B;
+  --sds--color--orange--100: #FFE6D2;
+  --sds--color--orange--200: #FFC294;
+  --sds--color--orange--300: #FF9A4E;
+  --sds--color--orange--400: #E67300;
+  --sds--color--orange--500: #C15500;
+
+  /* --- SDS spacing tokens ----------------------------------------------- */
+  --sds--space--0-and-a-half: 0.25rem;
+  --sds--space--1: 0.5rem;
+  --sds--space--1-and-a-half: 0.75rem;
+  --sds--space--2: 1rem;
+  --sds--space--3: 1.5rem;
+  --sds--space--4: 2rem;
+  --sds--space--5: 2.5rem;
+  --sds--space--6: 3rem;
+  --sds--space--8: 4rem;
+
+  /* --- SDS blue colour palette (main = blue, support = green) ----------- */
+  --sds--palette--main-color--100: var(--sds--color--blue--100);
+  --sds--palette--main-color--200: var(--sds--color--blue--200);
+  --sds--palette--main-color--300: var(--sds--color--blue--300);
+  --sds--palette--main-color--400: var(--sds--color--blue--400);
+  --sds--palette--main-color--500: var(--sds--color--blue--500);
+  --sds--palette--support-color--100: var(--sds--color--green--100);
+  --sds--palette--support-color--400: var(--sds--color--green--400);
+  --sds--palette--support-color--500: var(--sds--color--green--500);
+
+  /* --- chart geometry --------------------------------------------------- */
+  --durf--label-width: 21rem;
+  --durf--row-height: 2.5rem;
+  --durf--bar-height: 1.375rem;
+  --durf--unit: 2.0833%;
+
+  box-sizing: border-box;
+  font-family: "Source Sans 3", "Source Sans Pro", system-ui, -apple-system, "Segoe UI", sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--sds--color--black);
+  background-color: var(--sds--color--white);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+.durf-app *, .durf-app *::before, .durf-app *::after { box-sizing: inherit; }
+.durf-app p, .durf-app h1, .durf-app h2, .durf-app h3, .durf-app h4,
+.durf-app h5, .durf-app h6, .durf-app ul, .durf-app ol, .durf-app dl,
+.durf-app dd, .durf-app figure { margin: 0; }
+.durf-app ul, .durf-app ol { padding: 0; list-style: none; }
+.durf-app button { font: inherit; color: inherit; background: none; border: 0; margin: 0; cursor: pointer; }
+.durf-app svg { fill: currentColor; height: auto; overflow: visible; }
+.durf-app svg [stroke] { stroke: currentColor; }
+.durf-app :focus-visible {
+  outline: .1875rem solid var(--sds--color--blue--400);
+  outline-offset: .125rem;
+  border-radius: .125rem;
+}
+
+/* --- SDS typography ---------------------------------------------------- */
+.durf-app .sds--text--h1 { font-weight: 600; font-size: 2.25rem; line-height: calc(42 / 36); }
+.durf-app .sds--text--h3 { font-weight: 600; font-size: 1.5rem; line-height: calc(30 / 24); }
+.durf-app .sds--text--h4 { font-weight: 600; font-size: 1.25rem; line-height: calc(30 / 20); }
+.durf-app .sds--text--h5 { font-weight: 600; font-size: 1.125rem; line-height: calc(26 / 18); }
+.durf-app .sds--text--h6 { font-weight: 600; font-size: 1rem; line-height: calc(24 / 16); }
+.durf-app .sds--text--body--large { font-size: 1.125rem; line-height: calc(26 / 18); }
+.durf-app .sds--text--body { font-size: 1rem; line-height: calc(24 / 16); }
+.durf-app .sds--text--body--small { font-size: .875rem; line-height: calc(18 / 14); }
+.durf-app .sds--visually-hidden {
+  position: absolute !important; height: 0; width: 0; overflow: hidden;
+  clip: rect(1px, 1px, 1px, 1px); white-space: nowrap;
+}
+
+/* --- SDS components ---------------------------------------------------- */
+.durf-app .sds--divider { width: 100%; height: .0625rem; background-color: var(--sds--color--gray--300); }
+
+.durf-app .sds--btn {
+  font-weight: 600; padding: var(--sds--space--1) var(--sds--space--3);
+  min-height: 2.5rem; border-radius: .375rem;
+  border: .0625rem solid transparent;
+  display: inline-flex; align-items: center; gap: .5em; justify-content: center;
+  transition: background-color .12s ease, color .12s ease, border-color .12s ease;
+}
+.durf-app .sds--btn--secondary { border-color: var(--sds--color--gray--400); color: var(--sds--color--gray--500); }
+.durf-app .sds--btn--secondary:hover {
+  border-color: var(--sds--palette--support-color--500);
+  background-color: var(--sds--palette--support-color--100);
+  color: var(--sds--palette--support-color--500);
+}
+.durf-app .sds--btn--tertiary { color: var(--sds--palette--support-color--400); }
+.durf-app .sds--btn--tertiary:hover {
+  background-color: var(--sds--palette--support-color--100);
+  color: var(--sds--palette--support-color--500);
+}
+
+.durf-app .sds--chips {
+  padding: 0 var(--sds--space--1-and-a-half); display: inline-flex; align-items: center;
+  gap: .5em; border-radius: 1rem; background-color: var(--sds--palette--main-color--100);
+  transition: background-color .12s ease, color .12s ease;
+}
+.durf-app .sds--chips--textual { padding: var(--sds--space--0-and-a-half) 0; font-weight: 600; font-size: .8125rem; }
+.durf-app button.sds--chips:hover { background-color: var(--sds--palette--main-color--200); }
+.durf-app .sds--chips.is-active { background-color: var(--sds--palette--main-color--400); color: var(--sds--color--white); }
+.durf-app button.sds--chips.is-active:hover { background-color: var(--sds--palette--main-color--500); }
+
+.durf-app .sds--badge--number {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-width: 1.625rem; height: 1.625rem; padding: 0 .375rem; border-radius: .8125rem;
+  border: .0625rem solid var(--sds--color--white);
+  background-color: var(--sds--color--black); color: var(--sds--color--white);
+  font-weight: 800; font-size: .625rem; line-height: 1;
+}
+.durf-app .sds--badge--number--small { min-width: 1.125rem; height: 1.125rem; border-radius: .5625rem; font-size: .5rem; }
+
+.durf-app .sds--content-card {
+  background-color: var(--sds--color--white); border-radius: .375rem;
+  box-shadow: 0 .25rem .25rem 0 var(--sds--color--pitch-black--dimmed--25);
+}
+.durf-app .sds--content-card--main {
+  padding: var(--sds--space--3); display: flex; gap: var(--sds--space--3);
+  border: .0625rem solid var(--sds--color--gray--200); border-radius: .375rem;
+}
+.durf-app .sds--tab-navigation--basic .sds--tab-navigation--nav {
+  border-bottom: .0625rem solid var(--sds--color--gray--300);
+}
+.durf-app .sds--tab-navigation--nav ul { display: flex; gap: var(--sds--space--1); flex-wrap: wrap; }
+.durf-app .sds--tab-navigation--basic .sds--tab-navigation--nav button {
+  padding: var(--sds--space--1) var(--sds--space--2); min-height: 2.75rem; font-weight: 600;
+  border-bottom: .25rem solid transparent; color: var(--sds--palette--support-color--400);
+}
+.durf-app .sds--tab-navigation--basic .sds--tab-navigation--nav button:hover { color: var(--sds--palette--support-color--500); }
+.durf-app .sds--tab-navigation--basic .sds--tab-navigation--nav button.active {
+  color: var(--sds--color--black); border-bottom-color: var(--sds--palette--support-color--400);
+  box-shadow: 0 .0625rem 0 0 var(--sds--palette--support-color--400);
+}
+.durf-app .sds--table table { width: 100%; border-collapse: collapse; border-spacing: 0; }
+.durf-app .sds--table table td, .durf-app .sds--table table th {
+  padding: var(--sds--space--1) var(--sds--space--2); text-align: left; vertical-align: top;
+}
+.durf-app .sds--table table th { font-weight: 600; border-bottom: .0625rem solid var(--sds--color--black); }
+.durf-app .sds--table table td { border-bottom: .0625rem solid var(--sds--color--gray--300); }
+
+/* ==========================================================================
+   Layout
+   ========================================================================== */
+.durf-app { display: block; padding: var(--sds--space--4) var(--sds--space--3) var(--sds--space--5); }
+.durf-shell { max-width: 82rem; margin: 0 auto; }
+
+.durf-head { display: flex; flex-wrap: wrap; align-items: flex-end; gap: var(--sds--space--3); }
+.durf-head__text { flex: 1 1 26rem; }
+.durf-eyebrow {
+  font-weight: 700; font-size: .8125rem; letter-spacing: .08em; text-transform: uppercase;
+  color: var(--sds--color--blue--400);
+}
+.durf-title { font-family: Nunito, "Source Sans 3", sans-serif; letter-spacing: -.01em; }
+.durf-sub { color: var(--sds--color--gray--500); font-weight: 600; }
+.durf-intro { max-width: 46rem; margin-top: var(--sds--space--2) !important; color: var(--sds--color--gray--500); }
+.durf-head__meta { flex: 0 0 auto; text-align: right; color: var(--sds--color--gray--500); }
+.durf-head__span { font-weight: 700; color: var(--sds--color--black); white-space: nowrap; }
+
+/* ---- toolbar ----------------------------------------------------------- */
+.durf-toolbar { margin-top: var(--sds--space--4); }
+.durf-toolbar__row { display: flex; flex-wrap: wrap; gap: var(--sds--space--2); align-items: flex-end; }
+.durf-toolbar__row > .sds--tab-navigation--basic { flex: 1 1 20rem; min-width: 0; }
+.durf-tools { display: flex; flex-wrap: wrap; gap: var(--sds--space--1); padding-bottom: var(--sds--space--1); }
+
+.durf-filters {
+  display: flex; flex-wrap: wrap; align-items: center; gap: var(--sds--space--1);
+  margin-top: var(--sds--space--2);
+}
+.durf-filters__label {
+  font-weight: 600; font-size: .8125rem; color: var(--sds--color--gray--500);
+  margin-right: var(--sds--space--0-and-a-half);
+}
+.durf-filters__count { color: var(--sds--color--gray--500); font-size: .8125rem; }
+
+/* ---- the chart --------------------------------------------------------- */
+.durf-chart {
+  margin-top: var(--sds--space--3);
+  border: .0625rem solid var(--sds--color--gray--300);
+  border-radius: .375rem;
+  background-color: var(--sds--color--white);
+  overflow: hidden;
+}
+.durf-chart.is-dropping { border-color: var(--sds--color--blue--400); box-shadow: inset 0 0 0 .1875rem var(--sds--color--blue--100); }
+
+.durf-row { display: grid; grid-template-columns: var(--durf--label-width) minmax(0, 1fr); align-items: stretch; }
+
+/* axis */
+.durf-axis {
+  position: sticky; top: 0; z-index: 4;
+  background-color: var(--sds--color--gray--100);
+  border-bottom: .0625rem solid var(--sds--color--gray--300);
+}
+.durf-axis__label { display: flex; align-items: flex-end; padding: var(--sds--space--1) var(--sds--space--2); }
+.durf-axis__legend { font-size: .75rem; font-weight: 600; color: var(--sds--color--gray--500); }
+.durf-axis__track { position: relative; border-left: .0625rem solid var(--sds--color--gray--300); }
+.durf-axis__band { position: relative; display: flex; height: 1.375rem; }
+.durf-axis__band--minor { height: 1.25rem; border-top: .0625rem solid var(--sds--color--gray--250); }
+.durf-axis__cell {
+  position: absolute; top: 0; bottom: 0; display: flex; align-items: center; justify-content: center;
+  font-size: .6875rem; font-weight: 700; letter-spacing: .04em; color: var(--sds--color--gray--500);
+  border-left: .0625rem solid var(--sds--color--gray--250);
+  overflow: hidden; white-space: nowrap;
+}
+.durf-axis__cell:first-child { border-left: 0; }
+.durf-axis__band--major .durf-axis__cell {
+  color: var(--sds--color--black); text-transform: uppercase;
+  border-left-color: var(--sds--color--gray--300);
+}
+.durf-axis__band--now { height: 1.125rem; position: relative; }
+.durf-axis__now {
+  position: absolute; top: .0625rem; white-space: nowrap;
+  font-size: .625rem; font-weight: 800; letter-spacing: .04em;
+  color: var(--sds--color--white); background-color: var(--sds--color--red--400);
+  padding: 0 .3125rem; border-radius: .125rem;
+}
+.durf-axis__today {
+  position: absolute; top: 0; bottom: 0; width: 0; z-index: 3;
+  border-left: .125rem solid var(--sds--color--red--400);
+}
+
+/* theme block */
+.durf-theme { border-top: .0625rem solid var(--sds--color--gray--200); }
+.durf-theme:first-child { border-top: 0; }
+.durf-theme.is-open { background-color: color-mix(in srgb, var(--t) 4%, #fff); }
+
+.durf-row--theme { min-height: 3.25rem; }
+.durf-row--theme:hover { background-color: var(--sds--color--gray--100); }
+.durf-cell-label {
+  display: flex; align-items: center; gap: var(--sds--space--0-and-a-half);
+  padding: var(--sds--space--0-and-a-half) var(--sds--space--1) var(--sds--space--0-and-a-half) var(--sds--space--2);
+  min-width: 0;
+}
+.durf-toggle {
+  flex: 1 1 auto; min-width: 0; display: flex; align-items: center; gap: var(--sds--space--1);
+  padding: var(--sds--space--0-and-a-half); border-radius: .25rem; text-align: left;
+}
+.durf-caret { flex: 0 0 auto; color: var(--sds--color--gray--500); transition: transform .15s ease; display: flex; }
+.durf-toggle[aria-expanded="true"] .durf-caret { transform: rotate(90deg); }
+.durf-piece { flex: 0 0 auto; width: 1.75rem; height: 1.75rem; position: relative; }
+.durf-piece svg { width: 100%; height: 100%; display: block; color: var(--t); }
+.durf-piece b {
+  position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+  font-family: Nunito, sans-serif; font-size: .8125rem; font-weight: 800; color: var(--t-ink);
+  padding-bottom: .0625rem;
+}
+.durf-tname { flex: 1 1 auto; min-width: 0; font-weight: 700; font-size: .9375rem; line-height: 1.25; }
+.durf-tname small { display: block; font-weight: 400; font-size: .75rem; color: var(--sds--color--gray--500); }
+.durf-count { flex: 0 0 auto; background-color: var(--t-deep); }
+.durf-info {
+  flex: 0 0 auto; width: 1.75rem; height: 1.75rem; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  border: .0625rem solid var(--sds--color--gray--300); color: var(--sds--color--gray--500);
+  font-weight: 800; font-size: .75rem; font-family: Nunito, serif;
+}
+.durf-info:hover { border-color: var(--t-deep); color: var(--t-deep); background-color: var(--t-tint); }
+.durf-info[aria-expanded="true"] { background-color: var(--t-deep); border-color: var(--t-deep); color: #fff; }
+
+/* track */
+.durf-cell-track {
+  position: relative; border-left: .0625rem solid var(--sds--color--gray--300);
+  background-image: repeating-linear-gradient(to right,
+    var(--sds--color--gray--200) 0 .0625rem, transparent .0625rem var(--durf--unit));
+}
+.durf-cell-track::after {
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  background-image: repeating-linear-gradient(to right,
+    var(--sds--color--gray--300) 0 .0625rem, transparent .0625rem calc(var(--durf--unit) * var(--durf--major, 3)));
+}
+.durf-today {
+  position: absolute; top: 0; bottom: 0; width: 0; z-index: 2; pointer-events: none;
+  border-left: .0625rem dashed var(--sds--color--red--400);
+}
+
+/* bars */
+.durf-bar {
+  position: absolute; top: 50%; transform: translateY(-50%);
+  height: var(--durf--bar-height); border-radius: .3125rem;
+  display: flex; align-items: center; min-width: .375rem;
+}
+.durf-bar--clip-l { border-top-left-radius: 0; border-bottom-left-radius: 0; }
+.durf-bar--clip-r { border-top-right-radius: 0; border-bottom-right-radius: 0; }
+.durf-bar--rollup { height: 1.625rem; background-color: var(--t); box-shadow: inset 0 0 0 .0625rem rgba(0,0,0,.08); }
+.durf-bar--act {
+  background-color: var(--t); cursor: pointer; z-index: 1;
+  transition: filter .12s ease, box-shadow .12s ease;
+}
+.durf-bar--act:hover { filter: brightness(.93); box-shadow: 0 .0625rem .25rem var(--sds--color--pitch-black--dimmed--25); }
+.durf-bar--point {
+  min-width: 0; width: 0 !important; height: 0; background: none !important;
+  box-shadow: none !important;
+}
+.durf-bar__text {
+  padding: 0 .4375rem; font-size: .75rem; font-weight: 700; color: var(--t-ink);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.durf-bar__more {
+  position: absolute; top: 50%; transform: translateY(-50%);
+  font-size: .8125rem; font-weight: 800; line-height: 1; color: var(--t-ink); opacity: .75;
+}
+.durf-bar__more--r { right: .1875rem; }
+.durf-bar__more--l { left: .1875rem; }
+.durf-bar--rail .durf-bar__more { color: var(--t-deep); opacity: 1; }
+.durf-bar--rail {
+  height: .375rem; border-radius: .1875rem;
+  background-color: color-mix(in srgb, var(--t) 55%, #fff);
+}
+.durf-bar--rail.durf-bar--point { min-width: .875rem; }
+.durf-milestone {
+  position: absolute; top: 50%; width: .6875rem; height: .6875rem;
+  margin-left: -.34375rem; margin-top: -.34375rem;
+  background-color: var(--t); transform: rotate(45deg);
+  box-shadow: 0 0 0 .09375rem var(--sds--color--white);
+}
+.durf-bar--point .durf-milestone {
+  width: .8125rem; height: .8125rem; margin-left: -.40625rem; margin-top: -.40625rem;
+  background-color: var(--t);
+  box-shadow: 0 0 0 .09375rem var(--sds--color--white), 0 0 0 .15625rem var(--t-deep);
+}
+.durf-bar--act:not(.durf-bar--rail):not(.durf-bar--point) .durf-milestone {
+  background-color: var(--t-ink);
+  box-shadow: 0 0 0 .09375rem color-mix(in srgb, var(--t) 70%, var(--t-ink));
+}
+.durf-bar--act.is-selected { box-shadow: 0 0 0 .125rem var(--sds--color--white), 0 0 0 .25rem var(--sds--color--black); }
+
+/* activity rows */
+.durf-theme-body { border-top: .0625rem solid var(--t-tint-strong); }
+.durf-row--act { min-height: var(--durf--row-height); }
+.durf-row--act + .durf-row--act .durf-cell-label { border-top: .0625rem solid var(--sds--color--gray--100); }
+.durf-act-btn {
+  flex: 1 1 auto; min-width: 0; display: flex; align-items: center; gap: var(--sds--space--1);
+  padding: var(--sds--space--0-and-a-half) var(--sds--space--0-and-a-half) var(--sds--space--0-and-a-half) 2rem;
+  border-radius: .25rem; text-align: left; font-size: .8125rem; line-height: 1.3;
+}
+.durf-act-btn:hover { background-color: var(--t-tint); }
+.durf-act-btn[aria-expanded="true"] { background-color: var(--t-tint-strong); }
+.durf-act-btn .durf-act-name {
+  flex: 1 1 auto; min-width: 0;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+}
+.durf-act-btn .durf-plus { flex: 0 0 auto; color: var(--t-deep); font-weight: 800; }
+.durf-row--act:hover { background-color: color-mix(in srgb, var(--t) 5%, #fff); }
+
+/* detail panels */
+.durf-detail { padding: 0 var(--sds--space--3) var(--sds--space--3) var(--sds--space--3); }
+.durf-detail[hidden] { display: none; }
+.durf-detail__card {
+  border-left: .25rem solid var(--t); border-radius: .375rem;
+  background-color: var(--sds--color--gray--100);
+  padding: var(--sds--space--2) var(--sds--space--3);
+}
+.durf-detail__grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+  gap: var(--sds--space--1-and-a-half) var(--sds--space--4);
+}
+.durf-detail dt {
+  font-size: .6875rem; font-weight: 800; letter-spacing: .07em; text-transform: uppercase;
+  color: var(--sds--color--gray--500); margin-bottom: .125rem;
+}
+.durf-detail dd { margin: 0; font-size: .9375rem; }
+.durf-pair { min-width: 0; }
+.durf-detail ul.durf-list { list-style: none; }
+.durf-detail ul.durf-list li { position: relative; padding-left: 1rem; }
+.durf-detail ul.durf-list li::before {
+  content: ""; position: absolute; left: 0; top: .5625rem;
+  width: .375rem; height: .375rem; background-color: var(--t-deep); transform: rotate(45deg);
+}
+.durf-detail a { color: var(--sds--palette--support-color--400); font-weight: 700; }
+.durf-detail a:hover { color: var(--sds--palette--support-color--500); }
+.durf-detail a[href^="http"]::after { content: " ↗"; font-weight: 400; }
+.durf-tagrow { display: flex; flex-wrap: wrap; gap: .375rem; margin-top: .25rem; }
+.durf-tag {
+  padding: .0625rem var(--sds--space--1); border-radius: 1rem;
+  background-color: var(--t-tint-strong); color: var(--t-deep);
+  font-size: .6875rem; font-weight: 700; letter-spacing: .02em;
+}
+.durf-note {
+  margin-top: var(--sds--space--1-and-a-half); padding: var(--sds--space--1) var(--sds--space--1-and-a-half);
+  border-radius: .25rem; background-color: var(--sds--color--yellow--200);
+  font-size: .8125rem; border-left: .1875rem solid var(--sds--color--yellow--500);
+}
+.durf-money { font-variant-numeric: tabular-nums; white-space: nowrap; font-weight: 700; }
+
+/* footer */
+.durf-foot {
+  margin-top: var(--sds--space--3); display: flex; flex-wrap: wrap;
+  gap: var(--sds--space--1) var(--sds--space--4); align-items: center;
+  font-size: .8125rem; color: var(--sds--color--gray--500);
+}
+.durf-legend { display: flex; flex-wrap: wrap; gap: var(--sds--space--2); align-items: center; }
+.durf-legend span { display: inline-flex; align-items: center; gap: .375rem; }
+.durf-legend i { display: inline-block; width: 1.5rem; height: .625rem; border-radius: .1875rem; background: var(--sds--color--gray--400); }
+.durf-legend i.dens { background: linear-gradient(to right, #8C969F55, #8C969F); }
+.durf-legend i.ms { width: .5rem; height: .5rem; border-radius: 0; transform: rotate(45deg); background: var(--sds--color--black); }
+.durf-status { margin-left: auto; }
+
+/* empty / error states */
+.durf-empty { padding: var(--sds--space--5) var(--sds--space--3); text-align: center; color: var(--sds--color--gray--500); }
+
+/* ---- responsive -------------------------------------------------------- */
+@media (max-width: 60rem) {
+  .durf-app { --durf--label-width: 15rem; }
+  .durf-bar__text { display: none; }
+}
+@media (max-width: 44rem) {
+  .durf-app { padding: var(--sds--space--3) var(--sds--space--2) var(--sds--space--4); }
+  .durf-row { grid-template-columns: minmax(0, 1fr); }
+  .durf-cell-track { border-left: 0; min-height: 2.25rem; }
+  .durf-cell-label { padding-bottom: 0; }
+  .durf-axis .durf-axis__label { display: none; }
+  .durf-head__meta { text-align: left; }
+  .durf-act-btn { padding-left: var(--sds--space--1); }
+  .durf-detail { padding-left: var(--sds--space--2); padding-right: var(--sds--space--2); }
+}
+
+/* ---- print ------------------------------------------------------------- */
+@media print {
+  .durf-toolbar, .durf-info, .durf-status { display: none !important; }
+  .durf-app { padding: 0; }
+  .durf-chart { border-color: #999; }
+  .durf-axis { position: static; }
+  .durf-theme-body[hidden], .durf-detail[hidden] { display: block !important; }
+  .durf-bar--act, .durf-bar--rollup, .durf-piece svg, .durf-tag {
+    -webkit-print-color-adjust: exact; print-color-adjust: exact;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .durf-app *, .durf-app *::before { transition: none !important; }
+}
+</style>
+</head>
+<body>
+<div class="durf-app" id="durf-app">
+ <div class="durf-shell">
+
+  <header class="durf-head">
+    <div class="durf-head__text">
+      <p class="durf-eyebrow" id="durf-eyebrow">Roadmap</p>
+      <h1 class="sds--text--h1 durf-title" id="durf-title">DURF</h1>
+      <p class="durf-sub sds--text--body--large" id="durf-subtitle"></p>
+      <p class="durf-intro sds--text--body" id="durf-intro"></p>
+    </div>
+    <div class="durf-head__meta sds--text--body--small">
+      <p class="durf-head__span" id="durf-span"></p>
+      <p id="durf-scale"></p>
+    </div>
+  </header>
+
+  <div class="durf-toolbar">
+    <div class="durf-toolbar__row">
+      <div class="sds--tab-navigation--basic">
+        <div class="sds--tab-navigation--nav">
+          <ul id="durf-zoom" role="tablist" aria-label="Timeline range"></ul>
+        </div>
+      </div>
+      <div class="durf-tools">
+        <button type="button" class="sds--btn sds--btn--secondary" id="durf-expand">Expand all</button>
+        <button type="button" class="sds--btn sds--btn--secondary" id="durf-collapse">Collapse all</button>
+        <button type="button" class="sds--btn sds--btn--tertiary" id="durf-load">Load data…</button>
+        <input type="file" id="durf-file" accept=".xlsx,.csv,.tsv" class="sds--visually-hidden">
+      </div>
+    </div>
+    <div class="durf-filters">
+      <span class="durf-filters__label">Filter by deliverable</span>
+      <span id="durf-tagfilters" style="display:contents"></span>
+      <button type="button" class="sds--btn sds--btn--tertiary" id="durf-clear" hidden
+              style="min-height:1.75rem;padding:0 .5rem;font-size:.8125rem">Clear</button>
+      <span class="durf-filters__count" id="durf-count"></span>
+    </div>
+  </div>
+
+  <div class="durf-chart" id="durf-chart">
+    <div class="durf-row durf-axis" id="durf-axis">
+      <div class="durf-axis__label"><span class="durf-axis__legend">Theme</span></div>
+      <div class="durf-axis__track" id="durf-axis-track"></div>
+    </div>
+    <div id="durf-rows"></div>
+  </div>
+
+  <div class="durf-foot">
+    <div class="durf-legend">
+      <span><i class="dens"></i> theme activity, darker&nbsp;=&nbsp;busier</span>
+      <span><i class="ms"></i> milestone</span>
+      <span>› ‹ continues outside this view</span>
+    </div>
+    <p class="durf-status" id="durf-source"></p>
+  </div>
+
+ </div>
+</div>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <symbol id="durf-puzzle" viewBox="0 0 100 100">
+    <path d="M14 6h20a12 12 0 0 1 32 0h20a8 8 0 0 1 8 8v20a12 12 0 0 0 0 32v20a8 8 0 0 1-8 8H66a12 12 0 0 0-32 0H14a8 8 0 0 1-8-8V66a12 12 0 0 1 0-32V14a8 8 0 0 1 8-8z"/>
+  </symbol>
+</svg>
+
+<script>
+/* == DURF-DATA:BEGIN == */
+window.__DURF_SHEETS__ = {"Themes":[["theme_no","name","short_name","colour","goal","lead","partners"],[1,"Governance of the Federation and Netherlands Research Portal","Governance","#EE7628","A sustainable governance framework established for the Dutch federated research information ecosystem including parties maintaining Repository/CRIS systems, eDepot and OpenAIRE Graph.","TU Delft","SURF (community management, legal advice, project assistance)"],[2,"Metadata Quality Improvement","Metadata Quality","#F6DA44","Repository/CRIS systems have adopted the updated metadata- and exchange-standards for high-quality research metadata that comply with international guidelines and meet national requirements.","Leiden","WUR (tech lead), SURF (community management, legal advice, project assistance, architect), KB (WISH)"],[3,"Full Text Capture","Full Text Capture","#177ABF","Comprehensive full-text availability in Dutch repository/CRIS systems for enhancing primarily preservation, and secondary text-mining, AI-usage and Taverne-mechanisms.","UvA","WUR (tech lead), SURF (community management, legal advice, project assistance)"],[4,"KB National Library e-Depot Archiving","e-Depot Archiving","#2CA055","Comprehensive preservation achieved of Dutch scientific output in the KB e-Depot.","KB National Library","WUR (tech lead), SURF (legal)"],[5,"Metadata Distribution & Discovery Optimization","Distribution & Discovery","#7B2882","Increase the visibility of Dutch research content in major international indexes.","Leiden","WUR (tech lead)"],[6,"NL Research Portal Update","NL Research Portal","#E7303A","Deliver a fully-functional, user-centered Netherlands Research Portal that serves as the primary discovery point for Dutch research outputs.","TU Delft"]],"Activities":[["theme_no","activity","outcomes","tags","start_month","end_month","milestone_months","links","status","notes"],[1,"Develop and secure signatures for a position paper on the shared information chain","A position paper on the importance of the Shared Information Chain is signed by stakeholders.","report",1,12,"","GORC Commons Model template :: https://view.officeapps.live.com/op/view.aspx?src=https%3A%2F%2Fwww.rd-alliance.org%2Fwp-content%2Fuploads%2F2024%2F07%2FGORC-International-Model-WG-Commons-Model-V1.1.xlsx&wdOrigin=BROWSELINK","Not started"],[1,"Establish NaMeCo (Dutch National Membership Consortium for OpenAIRE representation)","Signed federation / consortium agreement.","signed agreement",1,12,"","NaMeCo template :: https://www.openaire.eu/public-documents/nameco-template","Not started"],[1,"Draft and finalize formal agreements on roles and responsibilities between SURF, NaMeCo institutions, KB National Library, publishers, and OpenAIRE","Draft & Signed Federation Rule Book.","signed agreement",1,18,"","GORC Commons Model template :: https://view.officeapps.live.com/op/view.aspx?src=https%3A%2F%2Fwww.rd-alliance.org%2Fwp-content%2Fuploads%2F2024%2F07%2FGORC-International-Model-WG-Commons-Model-V1.1.xlsx&wdOrigin=BROWSELINK","Not started"],[1,"Define legal structure for CC0 metadata influx","Legal Guideline “metadata re-use” in CRISes, used in negotiations for future publisher deals, Scopus & Pure.","legal",6,6,"6","","Not started"],[1,"Create a comprehensive governance framework for all project themes","Project governance framework.","report",1,12,"","","Not started"],[1,"Organize annual National Symposium and General Assembly for federation members","4 National symposia.","event",12,48,"12, 24, 36, 48","","Not started","Budget: € 23.000 per symposium × 4."],[1,"Review and update governance framework to ensure post-project sustainability","Updated Federation Rule Book.","report",36,48,"","","Not started"],[2,"Form and formalize NL Research Information Content Board through EduStandaard","1 WISH 2.0 formalized at Edustandaard.nl.","signed agreement",1,3,"","EduStandaard werkgroepen :: https://www.edustandaard.nl/standaard_werkgroepen/","Not started"],[2,"Develop updated metadata application profile; translating current NL-DIDL-MODS requirements to OpenAIRE CERIF and DC guidelines","1 oai_cerif_openaire_NL and 1 oai_dc_openaire_NL application profile published at Edustandaard.nl.","standard",3,12,"","NL-DIDL-MODS :: https://www.edustandaard.nl/standaard_afspraken/?edu_orderby=title&werkgebieden%5B%5D=ho&registratiestatussen%5B%5D=geregistreerd&registratiestatussen%5B%5D=aangemeld&gebruiksadviezen%5B%5D=verplicht&gebruiksadviezen%5B%5D=aangeraden&gebruiksadviezen%5B%5D=onder-voorwaarden&gebruiksadviezen%5B%5D=onbekend | OpenAIRE CERIF and DC guidelines :: https://guidelines.openaire.eu/ | RSL: Really Simple Licensing :: https://rslstandard.org/","Not started"],[2,"Support repositories, CRIS systems, and KB eDepot in adopting the updated profile","16 CRIS systems & 31 institutional repositories adopted the new application profile.","configuration",12,18,"","","Not started"],[2,"Monitor compliance with the new standard and share implementation best practices","1 OAI Compliancy Validator. | 1 Compliancy health CRIS/Repo Dashboard: chart with validation results per repo over time. | 4 WISH 2.0 best practice workshops.","software, service, training",12,48,"","CRIS/Repo Dashboard :: https://surf-ori.github.io/dashboards/cris-repository-overview.html","Not started"],[2,"Develop proof of concept for enriching local metadata with the OpenAIRE data broker","15 CRIS/repo managers attend training on the OpenAIRE broker feed to ingest enriched metadata in CRIS/repo. | Evaluation report on feedback quality.","training, software, report",12,24,"","OpenAIRE Broker :: https://catalogue.openaire.eu/service/openaire.broker/overview | Example broker feed :: https://provide.openaire.eu/repository/eurocrisdris::01222/events","Not started"],[2,"Monitor usage of core entity PIDs (ROR, ORCiD, DOI) and promote local implementation","1 PID health CRIS/Repo Dashboard: chart with ROR, ORCiD and DOI presence in records per repo over time.","software, service",12,48,"","CRIS/Repo Dashboard :: https://surf-ori.github.io/dashboards/cris-repository-overview.html","Not started"],[2,"Launch download statistics sharing pilot on OpenAIRE","2 CRIS/repos enabled for OpenAIRE Usage Counts.","configuration",12,18,"","OpenAIRE Usage Counts :: https://catalogue.openaire.eu/service/openaire.usagecounts/overview","Not started"],[3,"Establish baseline metrics and reporting system for full-text uptake","1 Digital sovereignty health CRIS/Repo Dashboard: chart with ratio of metadata records containing a link to a file (PDF) on the institutional domain, per repo over time.","software, service",1,6,"","CRIS/Repo Dashboard :: https://surf-ori.github.io/dashboards/cris-repository-overview.html","Not started"],[3,"Create inventory of existing tools and methods for full-text capture","1 advisory report with an inventory of existing tools and methods for full-text capture, by desk research & interviews with WISH, the PURE user group and OA Switchboard.","report",1,12,"","","Not started"],[3,"Develop and pilot a local full-text capture service with shareable code and practices","1 selected full-text capture method made available for other repos. | 1 documentation set for others to implement.","software, report",12,24,"","","Not started"],[3,"Implement ecosystem-wide improvements to increase full-text availability","2 workshops for CRIS/repo managers to implement the selected method.","training",24,48,"","","Not started"],[4,"Implement pull mechanism for metadata and full-text publications, partly via OpenAIRE","1 added usage term in provide.openaire; full-text download for archiving by the KB e-Depot. | 1 weekly metadata + full-text harvest package of 13 CRISes and 31 institutional repositories.","legal, feature, data",3,12,"","","Not started"],[4,"Archive and back up all Dutch CRIS and repository content at KB National Library e-Depot","3.2 million records and full text safely stored in the KB e-Depot.","service",12,48,"","","Not started"],[4,"Establish monitoring system for preservation status of publications and metadata","1 Backup health CRIS/Repo Dashboard: chart with ratio of PDFs in the e-Depot vs in the repository, per repo over time.","software, service",12,48,"","CRIS/Repo Dashboard :: https://surf-ori.github.io/dashboards/cris-repository-overview.html","Not started","Slide timeline bar suggested months 3–18; the written months (12–48) are used here. Confirm with the theme lead."],[4,"Update and maintain URN:NBN resolver functionality","URN:NBN resolver.","service",12,18,"","","Not started","Slide timeline bar suggested months 1–6; the written months (12–18) are used here. Confirm with the theme lead."],[5,"Develop mappings and best practices for major indexes to improve Dutch research visibility","1 guideline for adding repository content to OpenAlex, WorldCat and Google Scholar.","report",1,12,"","Google Scholar inclusion guidelines :: https://scholar.google.com/intl/en/scholar/inclusion.html","Not started"],[5,"Implement DOI-minting capabilities for grey literature in DURF repositories","13 CRISes + 31 repositories have minted a DOI for records that did not have a DOI but do have a PDF attached locally.","configuration, software",6,18,"","","Not started"],[5,"Create monitoring system for tracking DURF content visibility across major indexes","1 Discoverability health CRIS/Repo Dashboard: chart indicating implementation of the Google Scholar index guidelines, per repo over time.","software, service",12,48,"","CRIS/Repo Dashboard :: https://surf-ori.github.io/dashboards/cris-repository-overview.html | Google Scholar inclusion guidelines :: https://scholar.google.com/intl/en/scholar/inclusion.html","Not started","Slide timeline column also noted months 1–18; the written months (12–48) are used here. Confirm with the theme lead."],[6,"Establish Netherlands Research Portal Steering Committee with rotating NaMeCo membership","NL Portal steering committee.","signed agreement",1,25,"1, 25","","Not started","Milestone-driven: convened in month 1 and refreshed in month 25."],[6,"Conduct regular stakeholder needs assessments","Customer value report on Portal needs / business cases.","report",6,42,"6, 18, 30, 42","","Not started","Repeats every 12 months."],[6,"Create development roadmaps aligned with OpenAIRE Connect and project themes","Development roadmap.","report",9,45,"9, 21, 33, 45","","Not started","Repeats every 12 months."],[6,"Release quarterly portal updates with major versions annually","4 releases of the portal.","software, service",12,48,"12, 24, 36, 48","","Not started","Quarterly updates; the milestones mark the annual major versions."],[6,"Enable SSO to OpenAIRE services PROVIDE, CONNECT and MONITOR with SURFconext","80 institutions can log in with their SURFconext account.","configuration",9,9,"9","","Not started"]],"Budget":[["theme_no","item","description","amount_eur","shared"],[1,"National symposium / conference / workshop","National Symposium incl. General Assembly each year — € 23.000 × 4",92000,"no"],[1,"Travel and accommodation","(International) travel and accommodation incl. conference visit",3000,"yes"],[2,"Hardware","Running monitor and reporting services — SURF Research Cloud VMs (€ 5.000 × 4 years)",20000,"yes"],[2,"Work by third parties","Development of the monitors for reporting",40000,"yes"],[2,"Travel and accommodation","(International) travel and accommodation incl. conference visit",3000,"yes"],[2,"Training and course","Universities attending courses on metadata enrichment and full-text capture (e.g. JISC or OpenAIRE) — 15 persons × € 1.800",27000,"yes"],[2,"Work by third parties","Legal support, e.g. report on licencing and copyright of metadata and full text — € 300/h × 70 hours",21000,"yes"],[3,"Hardware","Running monitor and reporting services — SURF Research Cloud VMs (€ 5.000 × 4 years)",20000,"yes"],[3,"Work by third parties","Development of the monitors for reporting",40000,"yes"],[3,"Training and course","Universities attending courses on metadata enrichment and full-text capture (e.g. JISC or OpenAIRE) — 15 persons × € 1.800",27000,"yes"],[3,"Work by third parties","Legal support, e.g. report on licencing and copyright of metadata and full text — € 300/h × 70 hours",21000,"yes"],[4,"Hardware","Running monitor and reporting services — SURF Research Cloud VMs (€ 5.000 × 4 years)",20000,"yes"],[4,"Work by third parties","Development of the monitors for reporting",40000,"yes"],[4,"Work by third parties","Legal support, e.g. report on licencing and copyright of metadata and full text — € 300/h × 70 hours",21000,"yes"],[5,"Hardware","Running monitor and reporting services — SURF Research Cloud VMs (€ 5.000 × 4 years)",20000,"yes"],[5,"Work by third parties","Development of the monitors for reporting",40000,"yes"],[6,"Work by third parties","Further development of the NL Research Portal",50000,"no"]],"Open questions":[["theme_no","question","links"],[5,"What about discovery regulation for AI bots, adding AI usage licence markers?","RSL: Really Simple Licensing :: https://rslstandard.org/"],[5,"What about discovery by proactive content push with Event Notifications in Value-Adding Networks?","Event Notifications :: https://www.eventnotifications.net/"],[5,"What about discovery by signposting?","Metadata Resources Pattern — Signposting the Scholarly Web :: https://signposting.org/patterns/metadata_resources/"]],"Settings":[["key","value","what it does"],["project_title","DURF","Shown as the main heading."],["project_subtitle","Dutch Repository Federation — project roadmap","Shown under the main heading."],["start_year_month","2026-01","Calendar month that project month 1 maps to. Format YYYY-MM."],["total_months",48,"Project length in months. Drives the timeline width."],["intro","DURF reinforces the Netherlands Research Portal and the institutional repository/CRIS landscape so Dutch research output is more robust, sovereign and findable. Six themes run in parallel over four years.","Short paragraph under the title. Leave blank to hide."],["source_note","Source: DURF presentation, 19 March 2026 — theme slides 5–10.","Footer provenance line."]]};
+/* == DURF-DATA:END == */
+</script>
+
+<script>
+(function () {
+"use strict";
+
+/* ==========================================================================
+   1. Reading files the project assistant edits
+   -------------------------------------------------------------------------
+   Both the baked-in data and a file dropped onto the page end up as the same
+   shape -- { "Sheet name": [[header...], [row...], ...] } -- so there is a
+   single normaliser and the two paths cannot drift apart.
+   ========================================================================== */
+
+/* ---- ZIP (an .xlsx is a zip archive) ----------------------------------- */
+async function unzip(buffer) {
+  const view = new DataView(buffer);
+  const bytes = new Uint8Array(buffer);
+  let eocd = -1;
+  for (let i = buffer.byteLength - 22; i >= 0 && i > buffer.byteLength - 65558; i--) {
+    if (view.getUint32(i, true) === 0x06054b50) { eocd = i; break; }
+  }
+  if (eocd < 0) throw new Error("Not a valid .xlsx file (no zip directory found).");
+
+  const count = view.getUint16(eocd + 10, true);
+  let ptr = view.getUint32(eocd + 16, true);
+  const files = new Map();
+  const decoder = new TextDecoder();
+
+  for (let n = 0; n < count; n++) {
+    if (view.getUint32(ptr, true) !== 0x02014b50) break;
+    const method = view.getUint16(ptr + 10, true);
+    const compSize = view.getUint32(ptr + 20, true);
+    const nameLen = view.getUint16(ptr + 28, true);
+    const extraLen = view.getUint16(ptr + 30, true);
+    const commentLen = view.getUint16(ptr + 32, true);
+    const localOff = view.getUint32(ptr + 42, true);
+    const name = decoder.decode(bytes.subarray(ptr + 46, ptr + 46 + nameLen));
+    ptr += 46 + nameLen + extraLen + commentLen;
+
+    if (view.getUint32(localOff, true) !== 0x04034b50) continue;
+    const dataStart = localOff + 30
+      + view.getUint16(localOff + 26, true)
+      + view.getUint16(localOff + 28, true);
+    files.set(name, { method: method, raw: bytes.subarray(dataStart, dataStart + compSize) });
+  }
+  return files;
+}
+
+async function inflate(entry) {
+  if (entry.method === 0) return entry.raw;
+  if (entry.method !== 8) throw new Error("Unsupported compression in the .xlsx file.");
+  if (typeof DecompressionStream === "undefined") {
+    throw new Error("This browser cannot unpack .xlsx files. Save the sheet as CSV and load that instead.");
+  }
+  const stream = new Blob([entry.raw]).stream()
+    .pipeThrough(new DecompressionStream("deflate-raw"));
+  return new Uint8Array(await new Response(stream).arrayBuffer());
+}
+
+/* ---- XLSX ------------------------------------------------------------- */
+const RELS_NS = "http://schemas.openxmlformats.org/officeDocument/2006/relationships";
+
+function colIndex(ref) {
+  let n = 0;
+  for (let i = 0; i < ref.length; i++) {
+    const c = ref.charCodeAt(i);
+    if (c < 65 || c > 90) break;
+    n = n * 26 + (c - 64);
+  }
+  return n - 1;
+}
+
+function sheetRows(doc, shared) {
+  const rows = [];
+  const rowEls = doc.getElementsByTagName("row");
+  for (let i = 0; i < rowEls.length; i++) {
+    const idx = parseInt(rowEls[i].getAttribute("r"), 10) - 1;
+    const cells = rowEls[i].getElementsByTagName("c");
+    const row = [];
+    for (let j = 0; j < cells.length; j++) {
+      const cell = cells[j];
+      const at = colIndex(cell.getAttribute("r") || "");
+      const type = cell.getAttribute("t");
+      let value = "";
+      if (type === "inlineStr") {
+        const is = cell.getElementsByTagName("t");
+        for (let k = 0; k < is.length; k++) value += is[k].textContent;
+      } else {
+        const v = cell.getElementsByTagName("v")[0];
+        const text = v ? v.textContent : "";
+        if (type === "s") value = shared[parseInt(text, 10)] || "";
+        else if (type === "b") value = text === "1" ? "yes" : "no";
+        else if (text !== "" && !isNaN(Number(text))) value = Number(text);
+        else value = text;
+      }
+      while (row.length < at) row.push("");
+      row[at] = typeof value === "string" ? value.trim() : value;
+    }
+    while (rows.length < idx) rows.push([]);
+    rows[idx] = row;
+  }
+  return rows;
+}
+
+async function readXlsx(buffer) {
+  const files = await unzip(buffer);
+  const decoder = new TextDecoder();
+  const parser = new DOMParser();
+  const text = async function (name) {
+    const entry = files.get(name);
+    return entry ? decoder.decode(await inflate(entry)) : null;
+  };
+  const xml = async function (name) {
+    const t = await text(name);
+    if (!t) return null;
+    const doc = parser.parseFromString(t, "application/xml");
+    if (doc.getElementsByTagName("parsererror").length) return null;
+    return doc;
+  };
+
+  let shared = [];
+  const ssDoc = await xml("xl/sharedStrings.xml");
+  if (ssDoc) {
+    const si = ssDoc.getElementsByTagName("si");
+    shared = new Array(si.length);
+    for (let i = 0; i < si.length; i++) {
+      const ts = si[i].getElementsByTagName("t");
+      let s = "";
+      for (let k = 0; k < ts.length; k++) {
+        if (ts[k].parentNode.nodeName !== "rPh") s += ts[k].textContent;
+      }
+      shared[i] = s;
+    }
+  }
+
+  const wbDoc = await xml("xl/workbook.xml");
+  const relDoc = await xml("xl/_rels/workbook.xml.rels");
+  if (!wbDoc || !relDoc) throw new Error("This file does not look like an Excel workbook.");
+
+  const rels = {};
+  const relEls = relDoc.getElementsByTagName("Relationship");
+  for (let i = 0; i < relEls.length; i++) {
+    rels[relEls[i].getAttribute("Id")] = relEls[i].getAttribute("Target");
+  }
+
+  const out = {};
+  const sheets = wbDoc.getElementsByTagName("sheet");
+  for (let i = 0; i < sheets.length; i++) {
+    const name = sheets[i].getAttribute("name");
+    const rid = sheets[i].getAttributeNS(RELS_NS, "id") || sheets[i].getAttribute("r:id");
+    let target = rels[rid];
+    if (!target) continue;
+    target = target.charAt(0) === "/" ? target.slice(1) : "xl/" + target.replace(/^\.\//, "");
+    const doc = await xml(target);
+    if (doc) out[name] = sheetRows(doc, shared);
+  }
+  if (!Object.keys(out).length) throw new Error("No worksheets found in that file.");
+  return out;
+}
+
+/* ---- CSV -------------------------------------------------------------- */
+function readCsv(text) {
+  if (text.charCodeAt(0) === 0xFEFF) text = text.slice(1);
+  const head = text.split(/\r?\n/, 1)[0];
+  const counts = { ",": 0, ";": 0, "\t": 0 };
+  let quoted = false;
+  for (let i = 0; i < head.length; i++) {
+    const ch = head[i];
+    if (ch === '"') quoted = !quoted;
+    else if (!quoted && ch in counts) counts[ch]++;
+  }
+  const delim = Object.keys(counts).reduce(function (a, b) {
+    return counts[b] > counts[a] ? b : a;
+  }, ",");
+
+  const rows = [];
+  let row = [], field = "", inQuotes = false;
+  for (let i = 0; i < text.length; i++) {
+    const ch = text[i];
+    if (inQuotes) {
+      if (ch === '"') {
+        if (text[i + 1] === '"') { field += '"'; i++; }
+        else inQuotes = false;
+      } else field += ch;
+      continue;
+    }
+    if (ch === '"') { inQuotes = true; }
+    else if (ch === delim) { row.push(field); field = ""; }
+    else if (ch === "\n") { row.push(field); rows.push(row); row = []; field = ""; }
+    else if (ch !== "\r") { field += ch; }
+  }
+  if (field !== "" || row.length) { row.push(field); rows.push(row); }
+
+  return rows.map(function (r) {
+    return r.map(function (v) {
+      v = v.trim();
+      return v !== "" && !isNaN(Number(v)) && /^-?[\d.]+$/.test(v) ? Number(v) : v;
+    });
+  });
+}
+
+/* A lone CSV has no sheet name, so recognise it by its header row. */
+const SIGNATURES = [
+  { sheet: "Activities",     needs: ["activity"] },
+  { sheet: "Themes",         needs: ["name"], any: ["colour", "color", "goal"] },
+  { sheet: "Budget",         needs: ["amount_eur"] },
+  { sheet: "Open questions", needs: ["question"] },
+  { sheet: "Settings",       needs: ["key", "value"] }
+];
+
+function identifySheet(rows) {
+  const header = (rows[0] || []).map(function (h) { return String(h).toLowerCase().trim(); });
+  for (const sig of SIGNATURES) {
+    const hasAll = sig.needs.every(function (k) { return header.indexOf(k) >= 0; });
+    const hasAny = !sig.any || sig.any.some(function (k) { return header.indexOf(k) >= 0; });
+    if (hasAll && hasAny) return sig.sheet;
+  }
+  return null;
+}
+
+/* ==========================================================================
+   2. Turning sheet rows into the chart model
+   ========================================================================== */
+
+function indexRows(rows) {
+  if (!rows || !rows.length) return [];
+  const header = rows[0].map(function (h) { return String(h).toLowerCase().trim(); });
+  const out = [];
+  for (let i = 1; i < rows.length; i++) {
+    const row = rows[i];
+    if (!row || !row.some(function (v) { return String(v).trim() !== ""; })) continue;
+    const obj = {};
+    for (let c = 0; c < header.length; c++) {
+      if (header[c]) obj[header[c]] = row[c] === undefined ? "" : row[c];
+    }
+    out.push(obj);
+  }
+  return out;
+}
+
+const str = function (v) { return v === undefined || v === null ? "" : String(v).trim(); };
+const num = function (v, fallback) {
+  const n = parseInt(String(v).replace(/[^\d-]/g, ""), 10);
+  return isNaN(n) ? fallback : n;
+};
+const splitList = function (v, sep) {
+  return str(v).split(sep).map(function (s) { return s.trim(); }).filter(Boolean);
+};
+
+function parseLinks(v) {
+  return splitList(v, "|").map(function (part) {
+    const at = part.indexOf("::");
+    if (at < 0) return { label: part, url: part };
+    return { label: part.slice(0, at).trim(), url: part.slice(at + 2).trim() };
+  }).filter(function (l) { return l.url; });
+}
+
+function normalise(sheets) {
+  const get = function (name) { return indexRows(sheets[name]); };
+
+  const settings = {};
+  get("Settings").forEach(function (r) {
+    if (str(r.key)) settings[str(r.key)] = r.value;
+  });
+
+  const themes = get("Themes").map(function (r) {
+    return {
+      no: num(r.theme_no, 0),
+      name: str(r.name),
+      short: str(r.short_name) || str(r.name),
+      colour: str(r.colour || r.color) || "#5E6873",
+      goal: str(r.goal),
+      lead: str(r.lead),
+      partners: str(r.partners)
+    };
+  }).filter(function (t) { return t.no; });
+
+  const activities = get("Activities").map(function (r, i) {
+    const start = num(r.start_month, 1);
+    const end = Math.max(start, num(r.end_month, start));
+    return {
+      id: "a" + i,
+      theme: num(r.theme_no, 0),
+      name: str(r.activity),
+      outcomes: splitList(r.outcomes, "|"),
+      tags: splitList(r.tags, ",").map(function (t) { return t.toLowerCase(); }),
+      start: start,
+      end: end,
+      milestones: splitList(r.milestone_months, ",").map(function (m) { return num(m, 0); })
+        .filter(function (m) { return m > 0; }),
+      links: parseLinks(r.links),
+      status: str(r.status),
+      notes: str(r.notes)
+    };
+  }).filter(function (a) { return a.theme && a.name; });
+
+  const budget = get("Budget").map(function (r) {
+    return {
+      theme: num(r.theme_no, 0),
+      item: str(r.item),
+      description: str(r.description),
+      amount: num(r.amount_eur, 0),
+      shared: /^y/i.test(str(r.shared))
+    };
+  }).filter(function (b) { return b.item || b.description; });
+
+  const questions = get("Open questions").map(function (r) {
+    return { theme: num(r.theme_no, 0), question: str(r.question), links: parseLinks(r.links) };
+  }).filter(function (q) { return q.question; });
+
+  let total = num(settings.total_months, 0);
+  activities.forEach(function (a) { if (a.end > total) total = a.end; });
+  total = Math.max(total, 12);
+
+  return {
+    settings: settings,
+    total: total,
+    themes: themes,
+    activities: activities,
+    budget: budget,
+    questions: questions
+  };
+}
+
+/* ==========================================================================
+   3. Colour maths -- derives a readable set of shades from one hex per theme
+   ========================================================================== */
+
+function toRgb(hex) {
+  let h = String(hex).replace("#", "").trim();
+  if (h.length === 3) h = h[0] + h[0] + h[1] + h[1] + h[2] + h[2];
+  const n = parseInt(h, 16);
+  if (isNaN(n) || h.length !== 6) return [94, 104, 115];
+  return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
+}
+const toHex = function (rgb) {
+  return "#" + rgb.map(function (v) {
+    return Math.max(0, Math.min(255, Math.round(v))).toString(16).padStart(2, "0");
+  }).join("");
+};
+function luminance(rgb) {
+  const c = rgb.map(function (v) {
+    v /= 255;
+    return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4);
+  });
+  return 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2];
+}
+const contrast = function (a, b) {
+  const l1 = luminance(a), l2 = luminance(b);
+  return (Math.max(l1, l2) + 0.05) / (Math.min(l1, l2) + 0.05);
+};
+const mix = function (a, b, amount) {
+  return a.map(function (v, i) { return v + (b[i] - v) * amount; });
+};
+
+const INK = [5, 14, 29], PAPER = [255, 255, 255];
+
+function toHsl(rgb) {
+  const r = rgb[0] / 255, g = rgb[1] / 255, b = rgb[2] / 255;
+  const max = Math.max(r, g, b), min = Math.min(r, g, b), d = max - min;
+  const l = (max + min) / 2;
+  if (!d) return [0, 0, l];
+  const s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+  let h;
+  if (max === r) h = ((g - b) / d + (g < b ? 6 : 0)) / 6;
+  else if (max === g) h = ((b - r) / d + 2) / 6;
+  else h = ((r - g) / d + 4) / 6;
+  return [h, s, l];
+}
+function fromHsl(hsl) {
+  const h = hsl[0], s = hsl[1], l = hsl[2];
+  if (!s) return [l * 255, l * 255, l * 255];
+  const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+  const p = 2 * l - q;
+  const hue = function (t) {
+    if (t < 0) t += 1;
+    if (t > 1) t -= 1;
+    if (t < 1 / 6) return p + (q - p) * 6 * t;
+    if (t < 1 / 2) return q;
+    if (t < 2 / 3) return p + (q - p) * (2 / 3 - t) * 6;
+    return p;
+  };
+  return [hue(h + 1 / 3) * 255, hue(h) * 255, hue(h - 1 / 3) * 255];
+}
+
+function shades(hex) {
+  const base = toRgb(hex);
+  const ink = contrast(base, INK) >= contrast(base, PAPER) ? INK : PAPER;
+  /* A readable version of the theme colour for text and small marks on white.
+     Darkening in HSL keeps the hue -- yellow becomes amber, not grey. */
+  const hsl = toHsl(base);
+  let deep = base;
+  for (let step = 0; step < 30 && contrast(deep, PAPER) < 4.5; step++) {
+    deep = fromHsl([hsl[0], Math.min(1, hsl[1] + step * 0.01), Math.max(0.12, hsl[2] - step * 0.025)]);
+  }
+  return {
+    colour: toHex(base),
+    ink: toHex(ink),
+    deep: toHex(deep),
+    tint: toHex(mix(PAPER, base, 0.12)),
+    tintStrong: toHex(mix(PAPER, base, 0.24))
+  };
+}
+
+/* ==========================================================================
+   4. Rendering
+   ========================================================================== */
+
+const $ = function (id) { return document.getElementById(id); };
+const el = function (tag, cls, text) {
+  const node = document.createElement(tag);
+  if (cls) node.className = cls;
+  if (text !== undefined) node.textContent = text;
+  return node;
+};
+
+const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
+                "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+const state = {
+  model: null,
+  view: { start: 1, end: 48 },
+  zoom: "all",
+  tags: new Set(),
+  open: new Set(),
+  info: new Set(),
+  detail: new Set(),
+  sheets: {},
+  source: ""
+};
+
+/* month 1 -> {year, monthIndex} from the start_year_month setting */
+function calendar(model) {
+  const raw = str(model.settings.start_year_month) || "2026-01";
+  const m = /^(\d{4})-(\d{1,2})$/.exec(raw);
+  return m
+    ? { year: parseInt(m[1], 10), month: parseInt(m[2], 10) - 1 }
+    : { year: 2026, month: 0 };
+}
+function monthLabel(model, projectMonth) {
+  const base = calendar(model);
+  const offset = base.month + projectMonth - 1;
+  return MONTHS[((offset % 12) + 12) % 12] + " " + (base.year + Math.floor(offset / 12));
+}
+function currentProjectMonth(model) {
+  const base = calendar(model);
+  const now = new Date();
+  return (now.getFullYear() - base.year) * 12 + (now.getMonth() - base.month) + 1;
+}
+
+/* geometry inside the current view window */
+function pct(month) {
+  const span = state.view.end - state.view.start + 1;
+  return ((month - state.view.start) / span) * 100;
+}
+function place(start, end) {
+  const a = Math.max(start, state.view.start);
+  const b = Math.min(end, state.view.end);
+  if (b < a) return null;
+  return {
+    left: pct(a),
+    width: pct(b + 1) - pct(a),
+    clipL: start < state.view.start,
+    clipR: end > state.view.end
+  };
+}
+const monthCentre = function (m) { return pct(m) + (pct(m + 1) - pct(m)) / 2; };
+
+function setBox(node, box) {
+  node.style.left = box.left + "%";
+  node.style.width = box.width + "%";
+  if (box.clipL) node.classList.add("durf-bar--clip-l");
+  if (box.clipR) node.classList.add("durf-bar--clip-r");
+}
+
+function visibleActivities(themeNo) {
+  return state.model.activities.filter(function (a) {
+    if (a.theme !== themeNo) return false;
+    if (!state.tags.size) return true;
+    return a.tags.some(function (t) { return state.tags.has(t); });
+  });
+}
+
+/* ---- axis -------------------------------------------------------------- */
+function renderAxis() {
+  const model = state.model;
+  const track = $("durf-axis-track");
+  track.textContent = "";
+
+  const span = state.view.end - state.view.start + 1;
+  const minorSize = span > 24 ? 3 : 1;                 /* quarters, or months when zoomed in */
+  const app = $("durf-app");
+  app.style.setProperty("--durf--unit", (100 / span) + "%");
+  app.style.setProperty("--durf--major", String(minorSize));
+
+  /* Percentages say nothing about whether a label fits. Measure the track. */
+  const trackPx = track.clientWidth || 900;
+  const px = function (box) { return box.width / 100 * trackPx; };
+
+  const major = el("div", "durf-axis__band durf-axis__band--major");
+  const minor = el("div", "durf-axis__band durf-axis__band--minor");
+
+  for (let m = state.view.start; m <= state.view.end; ) {
+    const yearNo = Math.floor((m - 1) / 12) + 1;
+    const yearEnd = Math.min(yearNo * 12, state.view.end);
+    const box = place(m, yearEnd);
+    const cell = el("div", "durf-axis__cell");
+    const calYear = monthLabel(model, m).slice(-4);
+    const room = px(box);
+    cell.textContent = room > 104 ? "Year " + yearNo + " · " + calYear
+      : (room > 52 ? "Year " + yearNo : (room > 26 ? "Y" + yearNo : ""));
+    cell.title = "Year " + yearNo + " (months " + ((yearNo - 1) * 12 + 1) + "–" + yearNo * 12 + ")";
+    cell.style.left = box.left + "%";
+    cell.style.width = box.width + "%";
+    major.appendChild(cell);
+    m = yearEnd + 1;
+  }
+
+  for (let m = state.view.start; m <= state.view.end; ) {
+    const blockStart = Math.floor((m - 1) / minorSize) * minorSize + 1;
+    const blockEnd = Math.min(blockStart + minorSize - 1, state.view.end);
+    const box = place(m, blockEnd);
+    const cell = el("div", "durf-axis__cell");
+    const room = px(box);
+    if (minorSize === 3) {
+      cell.textContent = room > 22 ? "Q" + (Math.floor(((blockStart - 1) % 12) / 3) + 1) : "";
+      cell.title = "Months " + blockStart + "–" + blockEnd;
+    } else {
+      const label = monthLabel(model, blockStart);
+      cell.textContent = room > 34 ? label.slice(0, 3) : (room > 14 ? label.slice(0, 1) : "");
+      cell.title = label + " · month " + blockStart;
+    }
+    cell.style.left = box.left + "%";
+    cell.style.width = box.width + "%";
+    minor.appendChild(cell);
+    m = blockEnd + 1;
+  }
+
+  track.appendChild(major);
+  track.appendChild(minor);
+
+  const today = currentProjectMonth(model);
+  if (today >= state.view.start && today <= state.view.end) {
+    const strip = el("div", "durf-axis__band durf-axis__band--now");
+    const pill = el("span", "durf-axis__now", "Now · " + monthLabel(model, today));
+    const at = monthCentre(today);
+    pill.style.left = at + "%";
+    /* keep the pill inside the track at both ends */
+    pill.style.transform = "translateX(" + (at > 88 ? "-100%" : (at < 6 ? "0" : "-50%")) + ")";
+    strip.appendChild(pill);
+    track.appendChild(strip);
+
+    const line = el("div", "durf-axis__today");
+    line.style.left = at + "%";
+    track.appendChild(line);
+  }
+}
+
+function addToday(track) {
+  const today = currentProjectMonth(state.model);
+  if (today < state.view.start || today > state.view.end) return;
+  const marker = el("div", "durf-today");
+  marker.style.left = monthCentre(today) + "%";
+  track.appendChild(marker);
+}
+
+/* ---- bars -------------------------------------------------------------- */
+function monthRange(a) {
+  if (a.milestones.length && a.milestones.length > 1) {
+    return "Months " + a.milestones.join(", ");
+  }
+  return a.start === a.end ? "Month " + a.start : "Months " + a.start + "–" + a.end;
+}
+
+function rollupBackground(activities, from, to, colour) {
+  const counts = [];
+  let max = 0;
+  for (let m = from; m <= to; m++) {
+    let c = 0;
+    activities.forEach(function (a) { if (a.start <= m && a.end >= m) c++; });
+    counts.push(c);
+    if (c > max) max = c;
+  }
+  if (max <= 1) return colour;
+  const rgb = toRgb(colour).join(",");
+  const step = 100 / counts.length;
+  const stops = counts.map(function (c, i) {
+    const alpha = (0.32 + 0.68 * (c / max)).toFixed(3);
+    return "rgba(" + rgb + "," + alpha + ") " + (i * step).toFixed(3) + "% " +
+           ((i + 1) * step).toFixed(3) + "%";
+  });
+  return "linear-gradient(to right," + stops.join(",") + ")";
+}
+
+function overflowMark(box, host) {
+  if (box.width < 1.2) return;
+  [["clipL", "durf-bar__more--l", "‹"], ["clipR", "durf-bar__more--r", "›"]]
+    .forEach(function (spec) {
+      if (!box[spec[0]]) return;
+      const mark = el("span", "durf-bar__more " + spec[1], spec[2]);
+      mark.setAttribute("aria-hidden", "true");
+      host.appendChild(mark);
+    });
+}
+
+/* ---- detail panels ----------------------------------------------------- */
+function linkList(links) {
+  const ul = el("ul", "durf-list");
+  links.forEach(function (l) {
+    const li = el("li");
+    const a = el("a", null, l.label);
+    a.href = l.url;
+    a.target = "_blank";
+    a.rel = "noopener noreferrer";
+    li.appendChild(a);
+    ul.appendChild(li);
+  });
+  return ul;
+}
+
+function definition(dl, term, value) {
+  if (value === null || value === undefined || value === "") return;
+  const pair = el("div", "durf-pair");
+  pair.appendChild(el("dt", null, term));
+  const dd = el("dd");
+  if (typeof value === "string") dd.textContent = value;
+  else dd.appendChild(value);
+  pair.appendChild(dd);
+  dl.appendChild(pair);
+}
+
+function activityDetail(a) {
+  const wrap = el("div", "durf-detail");
+  wrap.id = "detail-" + a.id;
+  wrap.hidden = true;
+
+  const card = el("div", "durf-detail__card");
+  const grid = el("dl", "durf-detail__grid");
+
+  if (a.outcomes.length) {
+    const ul = el("ul", "durf-list");
+    a.outcomes.forEach(function (o) { ul.appendChild(el("li", null, o)); });
+    definition(grid, a.outcomes.length > 1 ? "Outcomes" : "Outcome", ul);
+  }
+
+  const when = el("div");
+  when.appendChild(el("span", null, monthRange(a)));
+  when.appendChild(el("br"));
+  const cal = el("span", "sds--text--body--small");
+  cal.style.color = "var(--sds--color--gray--500)";
+  cal.textContent = a.start === a.end
+    ? monthLabel(state.model, a.start)
+    : monthLabel(state.model, a.start) + " – " + monthLabel(state.model, a.end);
+  when.appendChild(cal);
+  definition(grid, "Timing", when);
+
+  if (a.tags.length) {
+    const row = el("div", "durf-tagrow");
+    a.tags.forEach(function (t) { row.appendChild(el("span", "durf-tag", t)); });
+    definition(grid, "Deliverable", row);
+  }
+  if (a.status) definition(grid, "Status", a.status);
+  if (a.links.length) definition(grid, "Reference", linkList(a.links));
+
+  card.appendChild(grid);
+  if (a.notes) card.appendChild(el("p", "durf-note", a.notes));
+  wrap.appendChild(card);
+  return wrap;
+}
+
+function themeDetail(theme) {
+  const model = state.model;
+  const wrap = el("div", "durf-detail");
+  wrap.id = "info-t" + theme.no;
+  wrap.hidden = true;
+
+  const card = el("div", "durf-detail__card");
+  const grid = el("dl", "durf-detail__grid");
+  definition(grid, "Goal", theme.goal);
+  definition(grid, "Theme lead", theme.lead);
+  definition(grid, "Also involved", theme.partners);
+  card.appendChild(grid);
+
+  const lines = model.budget.filter(function (b) { return b.theme === theme.no; });
+  if (lines.length) {
+    const total = lines.reduce(function (sum, b) { return sum + b.amount; }, 0);
+    const money = function (v) { return "€ " + v.toLocaleString("nl-NL"); };
+
+    const box = el("div", "sds--table");
+    box.style.marginTop = "var(--sds--space--2)";
+    const heading = el("p", "sds--text--h6");
+    heading.textContent = "Budget allocation";
+    heading.style.marginBottom = ".25rem";
+    box.appendChild(heading);
+
+    const table = el("table");
+    const thead = el("thead");
+    const hr = el("tr");
+    ["Item", "Description", "Amount"].forEach(function (h) { hr.appendChild(el("th", null, h)); });
+    thead.appendChild(hr);
+    table.appendChild(thead);
+    const tbody = el("tbody");
+    lines.forEach(function (b) {
+      const tr = el("tr");
+      tr.appendChild(el("td", null, b.item));
+      tr.appendChild(el("td", null, b.description));
+      const td = el("td", "durf-money", money(b.amount) + (b.shared ? " *" : ""));
+      td.style.textAlign = "right";
+      tr.appendChild(td);
+      tbody.appendChild(tr);
+    });
+    const tr = el("tr");
+    tr.appendChild(el("td", null, ""));
+    const label = el("td", null, "Total" + (lines.some(function (b) { return b.shared; })
+      ? " — * shared with other themes" : ""));
+    label.style.fontWeight = "600";
+    tr.appendChild(label);
+    const totalCell = el("td", "durf-money", money(total));
+    totalCell.style.textAlign = "right";
+    tr.appendChild(totalCell);
+    tbody.appendChild(tr);
+    table.appendChild(tbody);
+    box.appendChild(table);
+    card.appendChild(box);
+  }
+
+  const qs = model.questions.filter(function (q) { return q.theme === theme.no; });
+  if (qs.length) {
+    const heading = el("p", "sds--text--h6", "Open questions");
+    heading.style.marginTop = "var(--sds--space--2)";
+    card.appendChild(heading);
+    const ul = el("ul", "durf-list");
+    qs.forEach(function (q) {
+      const li = el("li", null, q.question);
+      q.links.forEach(function (l) {
+        li.appendChild(document.createTextNode(" "));
+        const a = el("a", null, l.label);
+        a.href = l.url;
+        a.target = "_blank";
+        a.rel = "noopener noreferrer";
+        li.appendChild(a);
+      });
+      ul.appendChild(li);
+    });
+    card.appendChild(ul);
+  }
+
+  wrap.appendChild(card);
+  return wrap;
+}
+
+/* ---- rows -------------------------------------------------------------- */
+function puzzle(number) {
+  const box = el("span", "durf-piece");
+  const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+  const use = document.createElementNS("http://www.w3.org/2000/svg", "use");
+  use.setAttribute("href", "#durf-puzzle");
+  svg.appendChild(use);
+  svg.setAttribute("aria-hidden", "true");
+  svg.setAttribute("focusable", "false");
+  box.appendChild(svg);
+  box.appendChild(el("b", null, String(number)));
+  return box;
+}
+
+function activityRow(theme, a) {
+  const row = el("div", "durf-row durf-row--act");
+
+  const label = el("div", "durf-cell-label");
+  const btn = el("button", "durf-act-btn");
+  btn.type = "button";
+  btn.title = a.name;
+  btn.setAttribute("aria-expanded", state.detail.has(a.id) ? "true" : "false");
+  btn.setAttribute("aria-controls", "detail-" + a.id);
+  btn.appendChild(el("span", "durf-plus", state.detail.has(a.id) ? "−" : "+"));
+  btn.appendChild(el("span", "durf-act-name", a.name));
+  label.appendChild(btn);
+
+  const track = el("div", "durf-cell-track");
+  addToday(track);
+
+  const box = place(a.start, a.end);
+  /* Several dated milestones means recurring moments, not continuous work --
+     draw a thin rail with diamonds rather than a solid block. */
+  const isRail = a.milestones.length >= 2;
+  const isPoint = a.start === a.end;
+  let bar = null;
+  if (box) {
+    bar = el("div", "durf-bar durf-bar--act");
+    if (isPoint) bar.classList.add("durf-bar--point");
+    if (isRail) bar.classList.add("durf-bar--rail");
+    setBox(bar, box);
+    if (state.detail.has(a.id)) bar.classList.add("is-selected");
+    bar.title = a.name + " — " + monthRange(a);
+
+    /* The label column already carries the name; in-bar text is a bonus that
+       only helps on wide bars, and never fits around milestone diamonds. */
+    if (!isRail && !isPoint && box.width > 9) {
+      bar.appendChild(el("span", "durf-bar__text", a.name));
+    }
+    if (isPoint && !a.milestones.length) a.milestones = [a.start];
+
+    a.milestones.forEach(function (m) {
+      if (m < state.view.start || m > state.view.end) return;
+      const diamond = el("span", "durf-milestone");
+      diamond.style.left = ((monthCentre(m) - box.left) / box.width * 100) + "%";
+      diamond.title = "Milestone — " + monthLabel(state.model, m) + " (month " + m + ")";
+      bar.appendChild(diamond);
+    });
+
+    overflowMark(box, bar);
+    bar.addEventListener("click", function () { btn.click(); });
+    track.appendChild(bar);
+  } else {
+    const outside = el("span", "durf-bar__more", "outside this view");
+    outside.style.left = "0";
+    outside.style.position = "relative";
+    outside.style.transform = "none";
+    const holder = el("div");
+    holder.style.cssText = "display:flex;align-items:center;height:100%;padding-left:.5rem;font-size:.75rem;color:var(--sds--color--gray--400)";
+    holder.textContent = monthRange(a);
+    track.appendChild(holder);
+  }
+
+  row.appendChild(label);
+  row.appendChild(track);
+
+  const detail = activityDetail(a);
+  detail.hidden = !state.detail.has(a.id);
+
+  btn.addEventListener("click", function () {
+    const open = !detail.hidden;
+    detail.hidden = open;
+    btn.setAttribute("aria-expanded", String(!open));
+    btn.firstChild.textContent = open ? "+" : "−";
+    if (bar) bar.classList.toggle("is-selected", !open);
+    if (open) state.detail.delete(a.id); else state.detail.add(a.id);
+  });
+
+  return [row, detail];
+}
+
+function themeSection(theme) {
+  const activities = visibleActivities(theme.no);
+  const tone = shades(theme.colour);
+
+  const section = el("section", "durf-theme");
+  section.style.setProperty("--t", tone.colour);
+  section.style.setProperty("--t-ink", tone.ink);
+  section.style.setProperty("--t-deep", tone.deep);
+  section.style.setProperty("--t-tint", tone.tint);
+  section.style.setProperty("--t-tint-strong", tone.tintStrong);
+
+  const isOpen = state.open.has(theme.no);
+  if (isOpen) section.classList.add("is-open");
+
+  /* ---- theme header row ---- */
+  const row = el("div", "durf-row durf-row--theme");
+  const label = el("div", "durf-cell-label");
+
+  const toggle = el("button", "durf-toggle");
+  toggle.type = "button";
+  toggle.setAttribute("aria-expanded", String(isOpen));
+  toggle.setAttribute("aria-controls", "body-t" + theme.no);
+
+  const caret = el("span", "durf-caret");
+  caret.innerHTML = '<svg width="10" height="10" viewBox="0 0 10 10" aria-hidden="true"><path d="M3 1l4 4-4 4" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  toggle.appendChild(caret);
+  toggle.appendChild(puzzle(theme.no));
+
+  const nameBox = el("span", "durf-tname");
+  nameBox.appendChild(document.createTextNode(theme.short));
+  if (theme.name && theme.name !== theme.short) nameBox.appendChild(el("small", null, theme.name));
+  toggle.appendChild(nameBox);
+
+  const count = el("span", "sds--badge--number durf-count", String(activities.length));
+  count.title = activities.length + " activities";
+  toggle.appendChild(count);
+  label.appendChild(toggle);
+
+  const info = el("button", "durf-info");
+  info.type = "button";
+  info.textContent = "i";
+  info.setAttribute("aria-label", "Goal, partners and budget for " + theme.short);
+  info.setAttribute("aria-expanded", state.info.has(theme.no) ? "true" : "false");
+  info.setAttribute("aria-controls", "info-t" + theme.no);
+  label.appendChild(info);
+
+  const track = el("div", "durf-cell-track");
+  addToday(track);
+
+  if (activities.length) {
+    const from = Math.min.apply(null, activities.map(function (a) { return a.start; }));
+    const to = Math.max.apply(null, activities.map(function (a) { return a.end; }));
+    const box = place(from, to);
+    if (box) {
+      const bar = el("div", "durf-bar durf-bar--rollup");
+      setBox(bar, box);
+      bar.style.background = rollupBackground(activities, from, to, tone.colour);
+      bar.title = theme.short + " — " + activities.length + " activities, months " + from + "–" + to;
+      overflowMark(box, bar);
+      track.appendChild(bar);
+    }
+  }
+
+  row.appendChild(label);
+  row.appendChild(track);
+  section.appendChild(row);
+
+  /* ---- theme info panel ---- */
+  const infoPanel = themeDetail(theme);
+  infoPanel.hidden = !state.info.has(theme.no);
+  section.appendChild(infoPanel);
+  info.addEventListener("click", function () {
+    const open = !infoPanel.hidden;
+    infoPanel.hidden = open;
+    info.setAttribute("aria-expanded", String(!open));
+    if (open) state.info.delete(theme.no); else state.info.add(theme.no);
+  });
+
+  /* ---- activities ---- */
+  const body = el("div", "durf-theme-body");
+  body.id = "body-t" + theme.no;
+  body.hidden = !isOpen;
+  if (!activities.length) {
+    body.appendChild(el("p", "durf-empty sds--text--body--small",
+      "No activities match the current filter."));
+  }
+  activities.forEach(function (a) {
+    const pair = activityRow(theme, a);
+    body.appendChild(pair[0]);
+    body.appendChild(pair[1]);
+  });
+  section.appendChild(body);
+
+  toggle.addEventListener("click", function () {
+    const open = !body.hidden;
+    body.hidden = open;
+    toggle.setAttribute("aria-expanded", String(!open));
+    section.classList.toggle("is-open", !open);
+    if (open) state.open.delete(theme.no); else state.open.add(theme.no);
+  });
+
+  return section;
+}
+
+function renderRows() {
+  const host = $("durf-rows");
+  host.textContent = "";
+  const themes = state.model.themes;
+  if (!themes.length) {
+    host.appendChild(el("p", "durf-empty",
+      "No themes found. Check that the Themes sheet has a theme_no and a name column."));
+    return;
+  }
+  themes.forEach(function (t) { host.appendChild(themeSection(t)); });
+}
+
+/* ---- header, toolbar, footer ------------------------------------------- */
+function renderChrome() {
+  const model = state.model;
+  const s = model.settings;
+
+  $("durf-title").textContent = str(s.project_title) || "Roadmap";
+  document.title = ($("durf-title").textContent + " roadmap").trim();
+
+  const sub = $("durf-subtitle");
+  sub.textContent = str(s.project_subtitle);
+  sub.hidden = !sub.textContent;
+
+  const intro = $("durf-intro");
+  intro.textContent = str(s.intro);
+  intro.hidden = !intro.textContent;
+
+  const years = Math.ceil(model.total / 12);
+  $("durf-eyebrow").textContent = monthLabel(model, 1).slice(-4) + " – " +
+    monthLabel(model, model.total).slice(-4) + " · " + years + "-year programme";
+  $("durf-span").textContent = model.themes.length + " themes · " +
+    model.activities.length + " activities";
+  $("durf-scale").textContent = model.total + " months, " +
+    monthLabel(model, 1) + " – " + monthLabel(model, model.total);
+
+  const source = $("durf-source");
+  source.textContent = state.source || str(s.source_note);
+  source.hidden = !source.textContent;
+}
+
+function renderZoom() {
+  const list = $("durf-zoom");
+  list.textContent = "";
+  const years = Math.ceil(state.model.total / 12);
+  const options = [{ key: "all", label: "Whole project", start: 1, end: state.model.total }];
+  for (let y = 1; y <= years; y++) {
+    options.push({
+      key: "y" + y,
+      label: "Year " + y,
+      start: (y - 1) * 12 + 1,
+      end: Math.min(y * 12, state.model.total)
+    });
+  }
+  options.forEach(function (o) {
+    const li = el("li");
+    const btn = el("button", state.zoom === o.key ? "active" : null, o.label);
+    btn.type = "button";
+    btn.setAttribute("role", "tab");
+    btn.setAttribute("aria-selected", String(state.zoom === o.key));
+    btn.addEventListener("click", function () {
+      state.zoom = o.key;
+      state.view = { start: o.start, end: o.end };
+      renderZoom();
+      renderAxis();
+      renderRows();
+    });
+    li.appendChild(btn);
+    list.appendChild(li);
+  });
+}
+
+function renderFilters() {
+  const host = $("durf-tagfilters");
+  host.textContent = "";
+  const counts = new Map();
+  state.model.activities.forEach(function (a) {
+    a.tags.forEach(function (t) { counts.set(t, (counts.get(t) || 0) + 1); });
+  });
+  const tags = Array.from(counts.keys()).sort();
+
+  tags.forEach(function (tag) {
+    const btn = el("button", "sds--chips" + (state.tags.has(tag) ? " is-active" : ""));
+    btn.type = "button";
+    btn.setAttribute("aria-pressed", String(state.tags.has(tag)));
+    const text = el("span", "sds--chips--textual", tag);
+    btn.appendChild(text);
+    const badge = el("span", "sds--badge--number sds--badge--number--small", String(counts.get(tag)));
+    badge.style.background = state.tags.has(tag) ? "rgba(255,255,255,.28)" : "var(--sds--color--gray--500)";
+    badge.style.borderColor = "transparent";
+    btn.appendChild(badge);
+    btn.addEventListener("click", function () {
+      if (state.tags.has(tag)) state.tags.delete(tag); else state.tags.add(tag);
+      renderFilters();
+      renderRows();
+    });
+    host.appendChild(btn);
+  });
+
+  const clear = $("durf-clear");
+  clear.hidden = state.tags.size === 0;
+
+  const shown = state.model.activities.filter(function (a) {
+    return !state.tags.size || a.tags.some(function (t) { return state.tags.has(t); });
+  }).length;
+  $("durf-count").textContent = state.tags.size
+    ? "showing " + shown + " of " + state.model.activities.length + " activities"
+    : "";
+}
+
+let resizeTimer = null;
+function onResize() {
+  window.clearTimeout(resizeTimer);
+  resizeTimer = window.setTimeout(function () { if (state.model) renderAxis(); }, 120);
+}
+
+function renderAll() {
+  renderChrome();
+  renderZoom();
+  renderAxis();
+  renderFilters();
+  renderRows();
+}
+
+/* ---- loading a file ---------------------------------------------------- */
+function flash(message, isError) {
+  const source = $("durf-source");
+  source.hidden = false;
+  source.textContent = message;
+  source.style.color = isError ? "var(--sds--color--red--400)" : "var(--sds--color--gray--500)";
+  source.style.fontWeight = isError ? "600" : "400";
+}
+
+async function loadFile(file) {
+  try {
+    let sheets;
+    if (/\.(csv|tsv|txt)$/i.test(file.name)) {
+      const rows = readCsv(await file.text());
+      const name = identifySheet(rows);
+      if (!name) {
+        throw new Error("Could not tell which sheet this is. The header row needs one of: " +
+          "activity, name + colour, amount_eur, question, or key + value.");
+      }
+      sheets = Object.assign({}, state.sheets);
+      sheets[name] = rows;
+    } else {
+      sheets = await readXlsx(await file.arrayBuffer());
+    }
+    const model = normalise(sheets);
+    if (!model.themes.length && !model.activities.length) {
+      throw new Error("That file has no Themes or Activities rows.");
+    }
+    state.sheets = sheets;
+    state.model = model;
+    state.view = { start: 1, end: model.total };
+    state.zoom = "all";
+    state.tags.clear();
+    state.open.clear();
+    state.info.clear();
+    state.detail.clear();
+    state.source = "";
+    renderAll();
+    flash("Loaded " + file.name + " — " + model.themes.length + " themes, " +
+          model.activities.length + " activities. Nothing was uploaded; the file was read in your browser.", false);
+  } catch (err) {
+    flash((err && err.message) || "Could not read that file.", true);
+  }
+}
+
+function wireControls() {
+  window.addEventListener("resize", onResize);
+
+  $("durf-expand").addEventListener("click", function () {
+    state.model.themes.forEach(function (t) { state.open.add(t.no); });
+    renderRows();
+  });
+  $("durf-collapse").addEventListener("click", function () {
+    state.open.clear();
+    state.info.clear();
+    state.detail.clear();
+    renderRows();
+  });
+  $("durf-clear").addEventListener("click", function () {
+    state.tags.clear();
+    renderFilters();
+    renderRows();
+  });
+
+  const input = $("durf-file");
+  $("durf-load").addEventListener("click", function () { input.click(); });
+  input.addEventListener("change", function () {
+    if (input.files && input.files[0]) loadFile(input.files[0]);
+    input.value = "";
+  });
+
+  const chart = $("durf-chart");
+  let depth = 0;
+  ["dragenter", "dragover"].forEach(function (type) {
+    chart.addEventListener(type, function (e) {
+      e.preventDefault();
+      if (type === "dragenter") depth++;
+      chart.classList.add("is-dropping");
+    });
+  });
+  chart.addEventListener("dragleave", function () {
+    if (--depth <= 0) { depth = 0; chart.classList.remove("is-dropping"); }
+  });
+  chart.addEventListener("drop", function (e) {
+    e.preventDefault();
+    depth = 0;
+    chart.classList.remove("is-dropping");
+    const file = e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0];
+    if (file) loadFile(file);
+  });
+}
+
+/* ---- boot -------------------------------------------------------------- */
+async function boot() {
+  wireControls();
+
+  let sheets = window.__DURF_SHEETS__ || {};
+
+  /* Optional: point the page at a CSV or XLSX next to it with
+     <div class="durf-app" data-src="durf-roadmap.xlsx">  */
+  const src = $("durf-app").getAttribute("data-src");
+  if (src) {
+    try {
+      const res = await fetch(src);
+      if (!res.ok) throw new Error("HTTP " + res.status);
+      if (/\.xlsx$/i.test(src)) sheets = await readXlsx(await res.arrayBuffer());
+      else {
+        const rows = readCsv(await res.text());
+        const name = identifySheet(rows);
+        if (name) { sheets = Object.assign({}, sheets); sheets[name] = rows; }
+      }
+    } catch (err) {
+      /* fall through to the baked-in data */
+    }
+  }
+
+  if (!Object.keys(sheets).length) {
+    $("durf-rows").appendChild(el("p", "durf-empty",
+      "No data yet. Use “Load data…” to open durf-roadmap.xlsx, or run tools/build.py to bake it in."));
+    return;
+  }
+
+  state.sheets = sheets;
+  state.model = normalise(sheets);
+  state.view = { start: 1, end: state.model.total };
+  renderAll();
+}
+
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", boot);
+} else {
+  boot();
+}
+})();
+</script>
+</body>
+</html>
