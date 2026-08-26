@@ -5,15 +5,20 @@ becomes the source of truth -- edit the workbook, not this file. Re-running
 `seed_workbook.py` overwrites the workbook, so only do that to start over.
 """
 
-# SURF PowerPoint theme accents (ppt/theme/theme1.xml, clrScheme "SURF").
-# The deck reuses accent1/accent2 for themes 5 and 6; a Gantt needs six
-# distinguishable colours, so 5 and 6 take the remaining SURF accents.
+# Theme colours. Themes 1-4 keep the deck's SURF accents (orange, yellow,
+# blue, green). The deck reuses accent1/accent2 for themes 5 and 6, which is
+# ambiguous on a Gantt, so those two are separated by *lightness* rather than
+# hue -- dark purple and dark red. Lightness difference is what survives
+# colour-blind vision, where orange, yellow and red otherwise converge.
+# Worst-case pairwise distance across normal, protan, deutan and tritan
+# vision: dE 15.9 (was 9.0 with a mid-tone red for theme 6).
 SETTINGS = [
     ("project_title", "DURF", "Shown as the main heading."),
     ("project_subtitle", "Dutch Repository Federation — project roadmap",
      "Shown under the main heading."),
-    ("start_year_month", "2026-01",
-     "Calendar month that project month 1 maps to. Format YYYY-MM."),
+    ("start_year_month", "2026-06",
+     "Calendar month that project month 1 maps to. Format YYYY-MM. "
+     "Project years and the month axis are counted from here."),
     ("total_months", 48, "Project length in months. Drives the timeline width."),
     ("intro",
      "DURF reinforces the Netherlands Research Portal and the institutional "
@@ -65,7 +70,7 @@ THEMES = [
         no=4,
         name="KB National Library e-Depot Archiving",
         short="e-Depot Archiving",
-        color="#2CA055",
+        color="#17A95D",
         goal="Comprehensive preservation achieved of Dutch scientific output in the "
              "KB e-Depot.",
         lead="KB National Library",
@@ -75,7 +80,7 @@ THEMES = [
         no=5,
         name="Metadata Distribution & Discovery Optimization",
         short="Distribution & Discovery",
-        color="#7B2882",
+        color="#5C1B61",
         goal="Increase the visibility of Dutch research content in major "
              "international indexes.",
         lead="Leiden",
@@ -85,7 +90,7 @@ THEMES = [
         no=6,
         name="NL Research Portal Update",
         short="NL Research Portal",
-        color="#E7303A",
+        color="#83201B",
         goal="Deliver a fully-functional, user-centered Netherlands Research Portal "
              "that serves as the primary discovery point for Dutch research outputs.",
         lead="TU Delft",
@@ -216,14 +221,10 @@ ACTIVITIES = [
         "metadata",
      "1 Backup health CRIS/Repo Dashboard: chart with ratio of PDFs in the e-Depot vs "
      "in the repository, per repo over time.",
-     "software, service", 12, 48, "", DASH,
-     "Slide timeline bar suggested months 3–18; the written months (12–48) "
-     "are used here. Confirm with the theme lead."),
+     "software, service", 12, 38, "", DASH, ""),
     (4, "Update and maintain URN:NBN resolver functionality",
      "URN:NBN resolver.",
-     "service", 12, 18, "", "",
-     "Slide timeline bar suggested months 1–6; the written months (12–18) "
-     "are used here. Confirm with the theme lead."),
+     "service", 12, 18, "", "", ""),
 
     # ---- Theme 5 ---------------------------------------------------------
     (5, "Develop mappings and best practices for major indexes to improve Dutch "
@@ -241,11 +242,9 @@ ACTIVITIES = [
         "indexes",
      "1 Discoverability health CRIS/Repo Dashboard: chart indicating implementation of "
      "the Google Scholar index guidelines, per repo over time.",
-     "software, service", 12, 48, "",
+     "software, service", 12, 18, "",
      DASH + " | Google Scholar inclusion guidelines :: "
-     "https://scholar.google.com/intl/en/scholar/inclusion.html",
-     "Slide timeline column also noted months 1–18; the written months "
-     "(12–48) are used here. Confirm with the theme lead."),
+     "https://scholar.google.com/intl/en/scholar/inclusion.html", ""),
 
     # ---- Theme 6 ---------------------------------------------------------
     (6, "Establish Netherlands Research Portal Steering Committee with rotating NaMeCo "

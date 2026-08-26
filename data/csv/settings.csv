@@ -1,7 +1,7 @@
 ﻿key,value,what it does
 project_title,DURF,Shown as the main heading.
 project_subtitle,Dutch Repository Federation — project roadmap,Shown under the main heading.
-start_year_month,2026-01,Calendar month that project month 1 maps to. Format YYYY-MM.
+start_year_month,2026-06,Calendar month that project month 1 maps to. Format YYYY-MM. Project years and the month axis are counted from here.
 total_months,48,Project length in months. Drives the timeline width.
 intro,"DURF reinforces the Netherlands Research Portal and the institutional repository/CRIS landscape so Dutch research output is more robust, sovereign and findable. Six themes run in parallel over four years.",Short paragraph under the title. Leave blank to hide.
 source_note,"Source: DURF presentation, 19 March 2026 — theme slides 5–10.",Footer provenance line.
