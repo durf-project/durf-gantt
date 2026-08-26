@@ -18,7 +18,7 @@ from openpyxl import load_workbook
 
 ROOT = Path(__file__).resolve().parent.parent
 XLSX = ROOT / "data" / "durf-roadmap.xlsx"
-HTML = ROOT / "index.html"
+HTML = ROOT / "gantt.html"
 CSV_DIR = ROOT / "data" / "csv"
 
 SKIP_SHEETS = {"READ ME"}
