@@ -474,7 +474,8 @@
 </style>
 </head>
 <body>
-<div class="durf-app" id="durf-app">
+<!-- data-allow-remote lists the hosts ?data= may fetch from. -->
+<div class="durf-app" id="durf-app" data-allow-remote="surf.works.surf.nl">
  <div class="durf-shell">
 
   <header class="durf-head">
@@ -1729,28 +1730,70 @@ function dataSource() {
   if (window.location.protocol === "file:") return "";
 
   /* A ?data= value is attacker-supplied if someone hands out a crafted link,
-     so by default only fetch from the page's own origin. A host page that
-     really does serve its workbook from a CDN opts in explicitly. */
-  const allowRemote = $("durf-app").getAttribute("data-allow-remote") === "true";
+     so by default only fetch from the page's own origin. The host page opts in
+     by naming the hosts it trusts -- data-allow-remote="drive.example.org" --
+     which keeps a crafted link from pointing the page at anywhere it likes.
+     "true" or "*" allows any host. */
+  const allow = ($("durf-app").getAttribute("data-allow-remote") || "")
+    .split(",").map(function (h) { return h.trim().toLowerCase(); }).filter(Boolean);
+  const anyHost = allow.indexOf("true") >= 0 || allow.indexOf("*") >= 0;
+
+  let resolved;
   try {
-    const resolved = new URL(src, window.location.href);
-    const sameOrigin = resolved.origin === window.location.origin;
-    if (!sameOrigin && !allowRemote) {
-      state.source = "Ignored ?data=" + src +
-        " — it points at another site. Add data-allow-remote=\"true\" to allow that.";
-      return "";
-    }
+    resolved = new URL(src, window.location.href);
   } catch (err) {
+    return "";
+  }
+  if (resolved.origin !== window.location.origin && !anyHost &&
+      allow.indexOf(resolved.hostname.toLowerCase()) < 0) {
+    state.source = "Ignored ?data=" + src + " — " + resolved.hostname +
+      " is not an allowed host. Add data-allow-remote=\"" + resolved.hostname +
+      "\" to the page to permit it.";
     return "";
   }
   return src;
 }
 
+/* Nextcloud/ownCloud hand out share links of the form /s/<token>, which serve
+   a web page, not the file. The bytes live one path segment further on. */
+function shareLinkToFile(url) {
+  if (/\/s\/[A-Za-z0-9]+$/.test(url.pathname)) {
+    const copy = new URL(url.href);
+    copy.pathname = copy.pathname + "/download";
+    return copy;
+  }
+  return url;
+}
+
 async function fetchSheets(src, fallback) {
-  const res = await fetch(src);
+  const target = shareLinkToFile(new URL(src, window.location.href)).href;
+  let res;
+  try {
+    res = await fetch(target);
+  } catch (err) {
+    /* A cross-site fetch that the server does not permit fails here with an
+       opaque TypeError, so name the likely cause rather than echoing it. */
+    throw new Error("the server did not allow this page to read the file " +
+      "(no CORS header, or the host is unreachable)");
+  }
   if (!res.ok) throw new Error("HTTP " + res.status);
-  if (/\.xlsx(\?|#|$)/i.test(src)) return await readXlsx(await res.arrayBuffer());
-  const rows = readCsv(await res.text());
+
+  /* A share link that still points at a viewer page, an expired link, or a
+     download limit reached all come back as HTML with a 200. Sniff the bytes
+     -- the URL's extension says nothing useful. */
+  const buffer = await res.arrayBuffer();
+  const head = new Uint8Array(buffer.slice(0, 4));
+  if (head[0] === 0x50 && head[1] === 0x4B && head[2] === 0x03 && head[3] === 0x04) {
+    return await readXlsx(buffer);
+  }
+
+  const text = new TextDecoder().decode(buffer);
+  if (/^\s*(<!doctype|<html|<\?xml)/i.test(text)) {
+    throw new Error("that link returned a web page, not a spreadsheet — " +
+      "check that it is a direct download link and that it has not expired " +
+      "or run out of permitted downloads");
+  }
+  const rows = readCsv(text);
   const name = identifySheet(rows);
   if (!name) throw new Error("unrecognised header row");
   const merged = Object.assign({}, fallback);
