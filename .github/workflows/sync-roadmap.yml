@@ -12,10 +12,21 @@
 
 name: Sync roadmap from Nextcloud
 
+# The schedule is deliberately switched off. GitHub's runners cannot open a
+# connection to surf.works.surf.nl -- run 34484502000 timed out on connect
+# four times over eight minutes, with no HTTP response at all, so this is a
+# network restriction on the SURF side rather than anything about the share.
+# On a schedule this would simply fail twelve times a day.
+#
+# Until that path opens up, sync from a machine that can reach the share:
+#     python3 tools/sync.py
+#
+# To switch the schedule back on, uncomment the two lines below and run this
+# workflow by hand once to confirm the download step passes.
 on:
-  schedule:
-    - cron: "17 6-18 * * 1-5"   # hourly through the working day, UTC
-  workflow_dispatch:            # or run it by hand from the Actions tab
+  # schedule:
+  #   - cron: "17 6-18 * * 1-5"   # hourly through the working day, UTC
+  workflow_dispatch:             # run it by hand from the Actions tab
 
 concurrency:
   group: sync-roadmap
