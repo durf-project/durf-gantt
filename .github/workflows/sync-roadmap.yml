@@ -12,10 +12,21 @@
 
 name: Sync roadmap from Nextcloud
 
+# The schedule is deliberately switched off. GitHub's runners cannot open a
+# connection to surf.works.surf.nl -- run 34484502000 timed out on connect
+# four times over eight minutes, with no HTTP response at all, so this is a
+# network restriction on the SURF side rather than anything about the share.
+# On a schedule this would simply fail twelve times a day.
+#
+# Until that path opens up, sync from a machine that can reach the share:
+#     python3 tools/sync.py
+#
+# To switch the schedule back on, uncomment the two lines below and run this
+# workflow by hand once to confirm the download step passes.
 on:
-  schedule:
-    - cron: "17 6-18 * * 1-5"   # hourly through the working day, UTC
-  workflow_dispatch:            # or run it by hand from the Actions tab
+  # schedule:
+  #   - cron: "17 6-18 * * 1-5"   # hourly through the working day, UTC
+  workflow_dispatch:             # run it by hand from the Actions tab
 
 concurrency:
   group: sync-roadmap
@@ -43,7 +54,18 @@ jobs:
           url="${SHARE_URL%/}"
           case "$url" in */download) ;; *) url="$url/download" ;; esac
           echo "fetching $url"
-          curl -sSfL --max-time 120 --retry 3 --retry-delay 5 -o roadmap.new.xlsx "$url"
+          # --connect-timeout matters more than --max-time here: a host that
+          # drops packets rather than refusing leaves curl waiting, and without
+          # it a run burns eight minutes to learn it cannot reach the server.
+          curl -sSfL --connect-timeout 20 --max-time 90 \
+               --retry 2 --retry-delay 5 --retry-connrefused \
+               -o roadmap.new.xlsx "$url" || {
+            echo "::error::Could not download the share link."
+            echo "The runner reached neither the file nor a useful error. If this"
+            echo "times out on connect, the host is likely refusing connections"
+            echo "from GitHub's runners rather than rejecting the share itself."
+            exit 1
+          }
 
       - name: Check it is really a workbook
         run: |
