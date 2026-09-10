@@ -31,6 +31,9 @@ version:
 | `Open questions` | The "what about …?" notes from the deck |
 | `Settings` | Title, subtitle, intro, project start month, project length |
 
+Extra columns are ignored, so you can keep working notes in the sheet — the
+`needs:` columns, for instance — without them appearing on the chart.
+
 `start_month` and `end_month` are **project months counted from 1**, not dates.
 Month 1 maps to a calendar month via `start_year_month` in `Settings`
 (currently `2026-06`, so month 1 is June 2026). `milestone_months` is a comma-separated list; each entry
@@ -65,9 +68,35 @@ This needs a real web server. Opened as `file://` the browser refuses to fetch
 anything, so the page skips straight to the baked-in copy.
 
 `?data=` only accepts files on the page's own origin, so a crafted link cannot
-turn the page into a viewer for someone else's content. To load the workbook
-from another host, opt in with `data-allow-remote="true"` on the `.durf-app`
-element (the other host also needs to send CORS headers).
+turn the page into a viewer for someone else's content. To allow other hosts,
+name them on the `.durf-app` element — `data-allow-remote="surf.works.surf.nl"`,
+comma-separated for several, or `"true"` for any host. `surf.works.surf.nl` is
+allowed out of the box.
+
+A Nextcloud or ownCloud share link (`…/s/<token>`) serves a web page rather
+than the file, so the page appends `/download` for you. The format is decided
+by sniffing the first bytes, not the file extension, so a link without an
+`.xlsx` suffix still works.
+
+The catch is CORS: the other host must send `Access-Control-Allow-Origin`, and
+a Nextcloud public share does not. That is what the sync workflow below is for.
+
+## Keeping the chart in step with a Nextcloud team folder
+
+`.github/workflows/sync-roadmap.yml` fetches the workbook from the share link
+hourly during the working day, checks it really is a workbook, rebuilds, and
+commits if anything changed. The published chart then serves the current
+planning from its own origin, with no CORS involved and one download per run
+rather than one per visitor.
+
+Run it by hand from the **Actions** tab to test. To point it at a different
+share, set a repository variable `ROADMAP_SHARE_URL` (Settings → Secrets and
+variables → Actions → Variables) rather than editing the workflow.
+
+The share must be reachable without a password, unexpired, and free of a
+download limit — Nextcloud answers all three cases with an HTML page and a
+200 status, so the workflow checks the file's magic bytes and fails loudly
+rather than committing a password prompt over your data.
 
 CSV also works on its own. Save any single sheet as CSV and load it — the page
 recognises a sheet by its header row, and comma, semicolon and tab delimiters

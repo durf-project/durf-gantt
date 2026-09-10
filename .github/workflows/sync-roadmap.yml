@@ -1,0 +1,86 @@
+# Pulls the roadmap workbook out of the Nextcloud team folder and commits it,
+# so the published chart shows what the theme leads have edited.
+#
+# This exists because a browser on durf-project.github.io cannot read a file
+# from surf.works.surf.nl directly: the Nextcloud share does not send the CORS
+# header that would permit it. Fetching once here, server-side, sidesteps that
+# entirely -- and means one download per run rather than one per visitor.
+#
+# The share must be reachable without a password. Set the share URL in
+# Settings -> Secrets and variables -> Actions -> Variables as ROADMAP_SHARE_URL
+# to change it without editing this file.
+
+name: Sync roadmap from Nextcloud
+
+on:
+  schedule:
+    - cron: "17 6-18 * * 1-5"   # hourly through the working day, UTC
+  workflow_dispatch:            # or run it by hand from the Actions tab
+
+concurrency:
+  group: sync-roadmap
+  cancel-in-progress: true
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - run: pip install --quiet openpyxl
+
+      - name: Download the workbook
+        env:
+          SHARE_URL: ${{ vars.ROADMAP_SHARE_URL || 'https://surf.works.surf.nl/s/NMABkFM9pMrdkBJ' }}
+        run: |
+          set -euo pipefail
+          url="${SHARE_URL%/}"
+          case "$url" in */download) ;; *) url="$url/download" ;; esac
+          echo "fetching $url"
+          curl -sSfL --max-time 120 --retry 3 --retry-delay 5 -o roadmap.new.xlsx "$url"
+
+      - name: Check it is really a workbook
+        run: |
+          set -euo pipefail
+          # A password prompt, an expired link or a hit download limit all come
+          # back as HTML with a 200, so never trust the status code alone.
+          if [ "$(head -c 2 roadmap.new.xlsx)" != "PK" ]; then
+            echo "::error::The share link did not return an .xlsx file."
+            echo "First bytes were:"; head -c 200 roadmap.new.xlsx | tr -d '\0'; echo
+            echo "Check the share is public (no password), not expired, and has no download limit."
+            exit 1
+          fi
+          python3 - <<'PY'
+          from openpyxl import load_workbook
+          wb = load_workbook("roadmap.new.xlsx", read_only=True)
+          need = {"Themes", "Activities"}
+          missing = need - set(wb.sheetnames)
+          if missing:
+              raise SystemExit(f"::error::Workbook is missing sheet(s): {', '.join(sorted(missing))}")
+          print("sheets:", ", ".join(wb.sheetnames))
+          PY
+
+      - name: Rebuild the chart
+        run: |
+          set -euo pipefail
+          mv roadmap.new.xlsx data/durf-roadmap.xlsx
+          python3 tools/build.py
+
+      - name: Commit if anything changed
+        run: |
+          set -euo pipefail
+          if git diff --quiet -- data gantt.html; then
+            echo "No change since the last sync."
+            exit 0
+          fi
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data gantt.html
+          git commit -m "Sync roadmap from Nextcloud"
+          git push
