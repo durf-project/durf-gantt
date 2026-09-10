@@ -43,7 +43,18 @@ jobs:
           url="${SHARE_URL%/}"
           case "$url" in */download) ;; *) url="$url/download" ;; esac
           echo "fetching $url"
-          curl -sSfL --max-time 120 --retry 3 --retry-delay 5 -o roadmap.new.xlsx "$url"
+          # --connect-timeout matters more than --max-time here: a host that
+          # drops packets rather than refusing leaves curl waiting, and without
+          # it a run burns eight minutes to learn it cannot reach the server.
+          curl -sSfL --connect-timeout 20 --max-time 90 \
+               --retry 2 --retry-delay 5 --retry-connrefused \
+               -o roadmap.new.xlsx "$url" || {
+            echo "::error::Could not download the share link."
+            echo "The runner reached neither the file nor a useful error. If this"
+            echo "times out on connect, the host is likely refusing connections"
+            echo "from GitHub's runners rather than rejecting the share itself."
+            exit 1
+          }
 
       - name: Check it is really a workbook
         run: |
