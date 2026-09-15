@@ -28,6 +28,10 @@ SETTINGS = [
     ("source_note",
      "Source: DURF presentation, 19 March 2026 — theme slides 5–10.",
      "Footer provenance line."),
+    ("edit_url", "https://surf.works.surf.nl/s/rjDi6bPYpyTrQBi",
+     "Where the 'Log in to edit' button sends theme leads. Leave blank to "
+     "hide the button."),
+    ("edit_label", "Log in to edit", "Wording on that button."),
 ]
 
 THEMES = [
