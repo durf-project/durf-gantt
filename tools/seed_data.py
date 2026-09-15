@@ -108,7 +108,10 @@ GORC = ("GORC Commons Model template :: https://view.officeapps.live.com/op/view
 DASH = ("CRIS/Repo Dashboard :: "
         "https://surf-ori.github.io/dashboards/cris-repository-overview.html")
 
-# theme, activity, outcomes, tags, start, end, milestones, links, notes
+# theme, activity, outcomes, tags, start, end, milestones, links, public_note
+# The seeded remarks are all explanations a reader benefits from, so they go in
+# public_note. The `notes` column is left empty for theme leads' own working
+# remarks and is never rendered on the chart.
 ACTIVITIES = [
     # ---- Theme 1 ---------------------------------------------------------
     (1, "Develop and secure signatures for a position paper on the shared "
