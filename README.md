@@ -30,7 +30,7 @@ version:
 | `Activities` | Every bar on the chart |
 | `Budget` | The budget table inside a theme's info panel |
 | `Open questions` | The "what about …?" notes from the deck |
-| `Settings` | Title, subtitle, intro, project start month, project length |
+| `Settings` | Title, subtitle, intro, project start month, project length, edit link |
 
 Extra columns are ignored, so you can keep working notes in the sheet — the
 `needs:` columns, for instance — without them appearing on the chart.
@@ -121,6 +121,19 @@ and refuse rather than writing a password prompt over your data.
 CSV also works on its own. Save any single sheet as CSV and load it — the page
 recognises a sheet by its header row, and comma, semicolon and tab delimiters
 are all detected, so a Dutch Excel export is fine.
+
+## The edit button and the last-edited date
+
+The chart shows **Planning last edited &lt;date&gt;** in the footer. That date is
+the workbook's own `dcterms:modified` — when a theme lead last saved it, not
+when the page was built — so a reader can tell at a glance whether they are
+looking at current planning. A CSV carries no such property, so a CSV loaded
+in the browser dates itself from the file's own timestamp instead.
+
+**Log in to edit** sends theme leads to the workbook in SURF Research Drive.
+Change where it points, or its wording, with `edit_url` and `edit_label` in the
+`Settings` sheet — no code change needed if the share link is rotated. Clear
+`edit_url` to hide the button.
 
 ## Embedding
 
