@@ -425,9 +425,10 @@
   font-size: .6875rem; font-weight: 700; letter-spacing: .02em;
 }
 .durf-note {
-  margin-top: var(--sds--space--1-and-a-half); padding: var(--sds--space--1) var(--sds--space--1-and-a-half);
-  border-radius: .25rem; background-color: var(--sds--color--yellow--200);
-  font-size: .8125rem; border-left: .1875rem solid var(--sds--color--yellow--500);
+  margin-top: var(--sds--space--1-and-a-half);
+  padding: var(--sds--space--1) var(--sds--space--1-and-a-half);
+  border-radius: .25rem; background-color: var(--sds--color--blue--100);
+  font-size: .8125rem; border-left: .1875rem solid var(--sds--color--blue--400);
 }
 .durf-money { font-variant-numeric: tabular-nums; white-space: nowrap; font-weight: 700; }
 
@@ -872,6 +873,11 @@ function normalise(sheets) {
         .filter(function (m) { return m > 0; }),
       links: parseLinks(r.links),
       status: str(r.status),
+      /* Shown on the public chart. */
+      publicNote: str(r.public_note || r["public note"] || r["note (public)"]),
+      /* Deliberately not rendered: the workbook is edited by theme leads and
+         `notes` is where their working remarks land. Kept in the model only so
+         a future internal view could use it. */
       notes: str(r.notes)
     };
   }).filter(function (a) { return a.theme && a.name; });
@@ -1255,7 +1261,7 @@ function activityDetail(a) {
   if (a.links.length) definition(grid, "Reference", linkList(a.links));
 
   card.appendChild(grid);
-  if (a.notes) card.appendChild(el("p", "durf-note", a.notes));
+  if (a.publicNote) card.appendChild(el("p", "durf-note", a.publicNote));
   wrap.appendChild(card);
   return wrap;
 }

@@ -35,6 +35,22 @@ version:
 Extra columns are ignored, so you can keep working notes in the sheet — the
 `needs:` columns, for instance — without them appearing on the chart.
 
+### Two kinds of note
+
+| Column | Where it goes |
+| --- | --- |
+| `public_note` | Rendered on the chart, under an activity when a reader opens it |
+| `notes` | Never rendered anywhere |
+
+The workbook is edited by theme leads, so `notes` is theirs — working remarks,
+open questions, to-dos for each other. Anything a reader benefits from
+("Repeats every 12 months") belongs in `public_note`.
+
+The split exists because it was learned the hard way: a note reading *"Pascal
+schrijf dit verder uit"* went live on a public page. If a column is editable by
+several people under time pressure, assume it will collect things not meant for
+publication, and give those somewhere to live.
+
 `start_month` and `end_month` are **project months counted from 1**, not dates.
 Month 1 maps to a calendar month via `start_year_month` in `Settings`
 (currently `2026-06`, so month 1 is June 2026). `milestone_months` is a comma-separated list; each entry
