@@ -84,29 +84,34 @@ a Nextcloud public share does not. That is what the sync workflow below is for.
 
 ## Keeping the chart in step with a Nextcloud team folder
 
-Run this from a machine that can open the share link — a laptop on the SURF or
-university network:
+This is automated. `.github/workflows/sync-roadmap.yml` downloads the workbook
+hourly through the working day, checks it really is one, rebuilds and commits
+if anything changed. Theme leads edit in Nextcloud; the published chart catches
+up within the hour. Nothing else to do.
+
+Run it by hand from the **Actions** tab to publish sooner. To point it at a
+different file, set a repository variable `ROADMAP_SHARE_URL` (Settings →
+Secrets and variables → Actions → Variables) rather than editing the workflow.
+
+**Use the WebDAV public URL, not the `/s/<token>` share page:**
+
+```
+https://surf.works.surf.nl/public.php/dav/files/<token>
+```
+
+Nextcloud offers both, and the difference matters twice over. The `/s/` link
+serves a viewer page rather than the file — handled by appending `/download`,
+which is why the two shapes are told apart rather than one rule applied to
+both. More importantly, the `/s/` download path did not work from a runner at
+all: it timed out on connect four times over eight minutes (run 34484502000),
+where the WebDAV URL fetched in about a second (run 34958586084).
+
+To sync by hand instead, from any machine that can reach the file:
 
 ```
 python3 tools/sync.py
 git add data gantt.html && git commit -m "Update roadmap" && git push
 ```
-
-It downloads the workbook, checks it really is one, rebuilds, and tells you if
-nothing changed. Pass a different link as an argument to override the default.
-
-**Why this is not automated.** `.github/workflows/sync-roadmap.yml` does the
-same thing on a runner, but its schedule is switched off: GitHub's runners
-cannot open a connection to `surf.works.surf.nl` at all. Run 34484502000 timed
-out on connect four times over eight minutes with no HTTP response, so this is
-a network restriction on the SURF side, not a problem with the share. On a
-schedule it would fail twelve times a day.
-
-If that path is ever opened — SURF allowlisting GitHub's ranges, or a
-self-hosted runner inside the network — uncomment the two `schedule` lines,
-run the workflow by hand once to confirm the download step passes, and it
-takes over. `ROADMAP_SHARE_URL` (Settings → Secrets and variables → Actions →
-Variables) points it at a different share without editing the workflow.
 
 The share must be reachable without a password, unexpired, and free of a
 download limit. Nextcloud answers all three cases with an HTML page and a 200

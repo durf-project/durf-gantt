@@ -12,21 +12,15 @@
 
 name: Sync roadmap from Nextcloud
 
-# The schedule is deliberately switched off. GitHub's runners cannot open a
-# connection to surf.works.surf.nl -- run 34484502000 timed out on connect
-# four times over eight minutes, with no HTTP response at all, so this is a
-# network restriction on the SURF side rather than anything about the share.
-# On a schedule this would simply fail twelve times a day.
-#
-# Until that path opens up, sync from a machine that can reach the share:
-#     python3 tools/sync.py
-#
-# To switch the schedule back on, uncomment the two lines below and run this
-# workflow by hand once to confirm the download step passes.
+# Use the WebDAV public URL, not the /s/<token> share page. Beyond serving the
+# file directly, it is the one that works from a runner: the /s/ download path
+# timed out on connect four times over eight minutes (run 34484502000), while
+# the WebDAV URL fetched in about a second (run 34958586084). Whatever the
+# cause on the SURF side, prefer the endpoint that answers.
 on:
-  # schedule:
-  #   - cron: "17 6-18 * * 1-5"   # hourly through the working day, UTC
-  workflow_dispatch:             # run it by hand from the Actions tab
+  schedule:
+    - cron: "17 6-18 * * 1-5"    # hourly through the working day, UTC
+  workflow_dispatch:             # or run it by hand from the Actions tab
 
 concurrency:
   group: sync-roadmap
