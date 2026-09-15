@@ -48,11 +48,15 @@ jobs:
 
       - name: Download the workbook
         env:
-          SHARE_URL: ${{ vars.ROADMAP_SHARE_URL || 'https://surf.works.surf.nl/s/NMABkFM9pMrdkBJ' }}
+          SHARE_URL: ${{ vars.ROADMAP_SHARE_URL || 'https://surf.works.surf.nl/public.php/dav/files/WP9W6mL7QHsxRKz' }}
         run: |
           set -euo pipefail
           url="${SHARE_URL%/}"
-          case "$url" in */download) ;; *) url="$url/download" ;; esac
+          # Only a /s/<token> share link needs /download appended -- it serves a
+          # viewer page. A WebDAV public URL already points at the bytes.
+          if printf '%s' "$url" | grep -qE '/s/[A-Za-z0-9]+$'; then
+            url="$url/download"
+          fi
           echo "fetching $url"
           # --connect-timeout matters more than --max-time here: a host that
           # drops packets rather than refusing leaves curl waiting, and without

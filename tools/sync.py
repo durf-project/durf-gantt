@@ -12,6 +12,7 @@ Then commit what changed:
 
     git add data gantt.html && git commit -m "Update roadmap" && git push
 """
+import re
 import ssl
 import sys
 import urllib.error
@@ -20,17 +21,24 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 TARGET = ROOT / "data" / "durf-roadmap.xlsx"
-DEFAULT_URL = "https://surf.works.surf.nl/s/NMABkFM9pMrdkBJ"
+# The WebDAV public endpoint serves the file itself, so nothing is appended.
+DEFAULT_URL = "https://surf.works.surf.nl/public.php/dav/files/WP9W6mL7QHsxRKz"
 TIMEOUT = 60
+
+# A Nextcloud/ownCloud /s/<token> link serves a viewer page; the file is one
+# segment further on. Other shapes -- /public.php/dav/files/<token>, or a plain
+# path to an .xlsx -- already point at the bytes, so leave them alone.
+SHARE_PAGE = re.compile(r"/s/[A-Za-z0-9]+$")
+
+
+def to_file_url(url):
+    url = url.rstrip("/")
+    return url + "/download" if SHARE_PAGE.search(url) else url
 
 
 def download(url):
-    """Fetch the bytes behind a share link, following Nextcloud's convention."""
-    url = url.rstrip("/")
-    if not url.endswith("/download"):
-        # A Nextcloud/ownCloud /s/<token> link serves a viewer page; the file
-        # itself is one segment further on.
-        url += "/download"
+    """Fetch the bytes behind a share link or a direct download URL."""
+    url = to_file_url(url)
     print(f"fetching {url}")
     request = urllib.request.Request(url, headers={"User-Agent": "durf-gantt sync"})
     try:
