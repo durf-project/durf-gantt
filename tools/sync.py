@@ -4,31 +4,77 @@
     python3 tools/sync.py                      # uses the link below
     python3 tools/sync.py <share-or-file-url>  # or any other link
 
-Run this from a machine that can reach the share -- a laptop on the SURF or
-university network. GitHub's runners cannot: surf.works.surf.nl does not
-accept connections from them, so the scheduled workflow is switched off.
-
-Then commit what changed:
+The GitHub workflow runs exactly this, so what you see here is what a failed
+run would have said. Afterwards commit what changed:
 
     git add data gantt.html && git commit -m "Update roadmap" && git push
+
+Nothing is written until the download has been checked: a password page, a
+server error or a workbook with a renamed column leaves the committed data
+untouched.
 """
+import io
+import os
 import re
 import ssl
 import sys
+import time
 import urllib.error
 import urllib.request
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(ROOT / "tools"))
+import build  # noqa: E402  (shares the validation the workflow relies on)
+
 TARGET = ROOT / "data" / "durf-roadmap.xlsx"
 # The WebDAV public endpoint serves the file itself, so nothing is appended.
 DEFAULT_URL = "https://surf.works.surf.nl/public.php/dav/files/WP9W6mL7QHsxRKz"
-TIMEOUT = 60
+
+TIMEOUT = 30                     # seconds, for connecting and for each read
+RETRY_WAITS = (10, 30)           # wait before the 2nd and 3rd attempt
+TRANSIENT = {408, 425, 429, 500, 502, 503, 504}
 
 # A Nextcloud/ownCloud /s/<token> link serves a viewer page; the file is one
 # segment further on. Other shapes -- /public.php/dav/files/<token>, or a plain
 # path to an .xlsx -- already point at the bytes, so leave them alone.
 SHARE_PAGE = re.compile(r"/s/[A-Za-z0-9]+$")
+
+# What each status most likely means for a public Nextcloud share. These are
+# pointers for a person, not diagnoses: the server's own words are printed too.
+HINTS = {
+    401: "The share asks for a password. Remove it, or no automated sync can read the file.",
+    403: "The server refuses the download. Check the share is not set to 'Hide download', "
+         "and that nothing blocks the address this runs from.",
+    404: "Nothing is served at this address. The share may have been deleted or its link "
+         "regenerated -- copy the new WebDAV URL into the ROADMAP_SHARE_URL variable.",
+    423: "The file is locked, usually because it is open for editing somewhere.",
+    429: "Too many requests from this address.",
+    503: "The server says it is unavailable. That is Nextcloud in maintenance, overloaded, "
+         "or declining requests from this address. It is not a problem with the workbook, "
+         "and not a problem with its columns. Open the URL from another network: if it "
+         "downloads there, the server is refusing this address; if it fails there too, "
+         "the fault is on the Nextcloud side.",
+}
+
+# Response headers worth showing; anything else (cookies in particular) is not.
+SHOW_HEADERS = ("server", "retry-after", "content-type", "content-length", "via",
+                "www-authenticate", "location", "x-request-id", "x-powered-by")
+
+
+class FetchError(Exception):
+    def __init__(self, status, reason, headers=None, body=""):
+        super().__init__(f"HTTP {status} {reason}" if status else reason)
+        self.status = status
+        self.headers = headers or {}
+        self.body = body
+
+
+def say(kind, message):
+    """Print; on GitHub Actions also raise it as an annotation on the run."""
+    if os.environ.get("GITHUB_ACTIONS"):
+        print(f"::{kind}::{message.splitlines()[0]}")
+    print(("ERROR: " if kind == "error" else "") + message)
 
 
 def to_file_url(url):
@@ -36,41 +82,77 @@ def to_file_url(url):
     return url + "/download" if SHARE_PAGE.search(url) else url
 
 
-def download(url):
-    """Fetch the bytes behind a share link or a direct download URL."""
-    url = to_file_url(url)
-    print(f"fetching {url}")
-    request = urllib.request.Request(url, headers={"User-Agent": "durf-gantt sync"})
+def fetch_once(url):
+    request = urllib.request.Request(url, headers={"User-Agent": "durf-gantt-sync"})
     try:
         with urllib.request.urlopen(request, timeout=TIMEOUT,
                                     context=ssl.create_default_context()) as res:
             return res.read()
     except urllib.error.HTTPError as err:
-        raise SystemExit(f"error: the server answered {err.code} {err.reason}")
-    except (urllib.error.URLError, TimeoutError) as err:
-        raise SystemExit(
-            f"error: could not reach the server ({err}).\n"
-            "       Are you on a network that can open the share link?")
+        body = err.read(600).decode("utf-8", "replace")
+        raise FetchError(err.code, err.reason, dict(err.headers), body) from None
+    except (urllib.error.URLError, TimeoutError, ConnectionError) as err:
+        reason = getattr(err, "reason", err)
+        raise FetchError(0, f"could not connect ({reason})") from None
+
+
+def download(url):
+    """Fetch with retries on transient failures, and explain a final failure."""
+    url = to_file_url(url)
+    print(f"fetching {url}")
+    last = None
+    for attempt in range(1, len(RETRY_WAITS) + 2):
+        try:
+            return fetch_once(url)
+        except FetchError as err:
+            last = err
+            print(f"  attempt {attempt}: {err}")
+            retryable = err.status == 0 or err.status in TRANSIENT
+            if not retryable or attempt > len(RETRY_WAITS):
+                break
+            wait = RETRY_WAITS[attempt - 1]
+            print(f"  waiting {wait}s before trying again")
+            time.sleep(wait)
+    explain(last)
+    raise SystemExit(1)
+
+
+def explain(err):
+    lines = [f"Could not download the workbook: {err}."]
+    if err.status in HINTS:
+        lines.append(HINTS[err.status])
+    elif err.status == 0:
+        lines.append("The connection itself failed, before the server could answer. "
+                     "Check the address, and whether this network can reach the host.")
+    shown = {k.lower(): v for k, v in err.headers.items() if k.lower() in SHOW_HEADERS}
+    if shown:
+        lines.append("Server headers: " + "; ".join(f"{k}: {v}" for k, v in shown.items()))
+    snippet = re.sub(r"\s+", " ", re.sub(r"<[^>]+>", " ", err.body)).strip()
+    if snippet:
+        lines.append(f"Server said: {snippet[:300]}")
+    say("error", "\n".join(lines))
 
 
 def check(payload):
     """A password prompt, an expiry or a spent download limit all arrive as
     HTML with a 200, so never trust the status code on its own."""
     if payload[:4] != b"PK\x03\x04":
-        head = payload[:200].decode("utf-8", "replace").strip()
-        raise SystemExit(
-            "error: that link did not return a spreadsheet.\n"
-            f"       It starts with: {head[:120]}\n"
-            "       Check the share is public, unexpired, has no password and\n"
-            "       no download limit.")
+        head = re.sub(r"\s+", " ", payload[:200].decode("utf-8", "replace")).strip()
+        say("error", "That link did not return a spreadsheet.\n"
+                     f"It starts with: {head[:140]}\n"
+                     "Check the share is public, unexpired, has no password and no "
+                     "download limit.")
+        raise SystemExit(1)
 
-    from openpyxl import load_workbook  # imported late so the error above is cheap
-    import io
-    workbook = load_workbook(io.BytesIO(payload), read_only=True)
-    missing = {"Themes", "Activities"} - set(workbook.sheetnames)
-    if missing:
-        raise SystemExit(f"error: the workbook has no {', '.join(sorted(missing))} sheet")
-    print("  sheets: " + ", ".join(workbook.sheetnames))
+    sheets = build.read_sheets(io.BytesIO(payload))
+    problems = build.validate(sheets)
+    if problems:
+        for problem in problems:
+            say("error", problem)
+        say("error", "The workbook was downloaded but not used: fix the columns above "
+                     "in Nextcloud. The published chart keeps its last good version.")
+        raise SystemExit(1)
+    print("  sheets: " + ", ".join(k for k in sheets if k != build.META_KEY))
 
 
 def main():
@@ -85,9 +167,6 @@ def main():
 
     TARGET.write_bytes(payload)
     print(f"  wrote {TARGET.relative_to(ROOT)} ({len(payload) / 1024:.1f} kB)")
-
-    sys.path.insert(0, str(ROOT / "tools"))
-    import build
     build.main()
     print("\nDone. Commit the result:\n"
           "    git add data gantt.html && git commit -m \"Update roadmap\" && git push")

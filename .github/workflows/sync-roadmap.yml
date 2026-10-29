@@ -40,57 +40,16 @@ jobs:
 
       - run: pip install --quiet openpyxl
 
-      - name: Download the workbook
+      # One step, and the same code you can run yourself (python3 tools/sync.py):
+      # download with retries, refuse anything that is not a usable workbook,
+      # then rebuild. On failure the log says what the server answered -- status,
+      # headers and the start of its reply -- and what to check, which the old
+      # curl-based steps could not. Nothing is written until the download has
+      # been checked, so a failed run leaves the last good version published.
+      - name: Download, check and rebuild
         env:
           SHARE_URL: ${{ vars.ROADMAP_SHARE_URL || 'https://surf.works.surf.nl/public.php/dav/files/WP9W6mL7QHsxRKz' }}
-        run: |
-          set -euo pipefail
-          url="${SHARE_URL%/}"
-          # Only a /s/<token> share link needs /download appended -- it serves a
-          # viewer page. A WebDAV public URL already points at the bytes.
-          if printf '%s' "$url" | grep -qE '/s/[A-Za-z0-9]+$'; then
-            url="$url/download"
-          fi
-          echo "fetching $url"
-          # --connect-timeout matters more than --max-time here: a host that
-          # drops packets rather than refusing leaves curl waiting, and without
-          # it a run burns eight minutes to learn it cannot reach the server.
-          curl -sSfL --connect-timeout 20 --max-time 90 \
-               --retry 2 --retry-delay 5 --retry-connrefused \
-               -o roadmap.new.xlsx "$url" || {
-            echo "::error::Could not download the share link."
-            echo "The runner reached neither the file nor a useful error. If this"
-            echo "times out on connect, the host is likely refusing connections"
-            echo "from GitHub's runners rather than rejecting the share itself."
-            exit 1
-          }
-
-      - name: Check it is really a workbook
-        run: |
-          set -euo pipefail
-          # A password prompt, an expired link or a hit download limit all come
-          # back as HTML with a 200, so never trust the status code alone.
-          if [ "$(head -c 2 roadmap.new.xlsx)" != "PK" ]; then
-            echo "::error::The share link did not return an .xlsx file."
-            echo "First bytes were:"; head -c 200 roadmap.new.xlsx | tr -d '\0'; echo
-            echo "Check the share is public (no password), not expired, and has no download limit."
-            exit 1
-          fi
-          python3 - <<'PY'
-          from openpyxl import load_workbook
-          wb = load_workbook("roadmap.new.xlsx", read_only=True)
-          need = {"Themes", "Activities"}
-          missing = need - set(wb.sheetnames)
-          if missing:
-              raise SystemExit(f"::error::Workbook is missing sheet(s): {', '.join(sorted(missing))}")
-          print("sheets:", ", ".join(wb.sheetnames))
-          PY
-
-      - name: Rebuild the chart
-        run: |
-          set -euo pipefail
-          mv roadmap.new.xlsx data/durf-roadmap.xlsx
-          python3 tools/build.py
+        run: python3 tools/sync.py "$SHARE_URL"
 
       - name: Commit if anything changed
         run: |

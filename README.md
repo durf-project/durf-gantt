@@ -129,6 +129,58 @@ python3 tools/sync.py
 git add data gantt.html && git commit -m "Update roadmap" && git push
 ```
 
+The workflow runs exactly that script, so what it prints locally is what a
+failed run would have said.
+
+### Which columns the chart needs
+
+Add columns freely — anything the chart does not use is ignored, and the sync
+log lists what it skipped. What it cannot do without:
+
+| Sheet | Needs |
+| --- | --- |
+| `Themes` | `theme_no`, `name` |
+| `Activities` | `theme_no`, `activity`, `start_month`, `end_month` |
+| `Settings` | `key`, `value` (the project start date lives here) |
+
+Headers must be written exactly like that: lower case, with an underscore.
+`Start Month` does not match `start_month`. A workbook that breaks this is
+**refused, not published**: the run fails, names the column — with a suggestion
+if it looks like a typo — and the chart keeps its last good version. Before
+this check, a renamed column surfaced only as an empty or wrong chart, because
+the page silently drops rows it cannot place and treats an unreadable month
+as month 1.
+
+Problems that do not stop a build but make the chart quietly wrong are
+reported as warnings: an activity whose `theme_no` is not in `Themes`, a month
+that is not a whole number, or an `end_month` before its `start_month`.
+
+### When a run fails
+
+Open the failed run and read the **Download, check and rebuild** step. It says
+what the server answered — status, a few headers, the start of its reply — and
+what that usually means:
+
+| Message | Usually |
+| --- | --- |
+| `HTTP 503` | Nextcloud is unavailable, or declining this address. Not the workbook, and not its columns. Open the URL from another network to tell which. |
+| `HTTP 404` | The share was deleted or its link regenerated. Put the new WebDAV URL in `ROADMAP_SHARE_URL`. |
+| `HTTP 401` | A password was set on the share. |
+| *returned a spreadsheet… starts with `<!DOCTYPE`* | The link answered, but with a web page: password, expiry or a spent download limit. |
+| `sheet 'Activities': 'start_month' is …` | A column was renamed or removed. See above. |
+
+Transient errors (timeouts, `429`, `5xx`) are retried twice, 10 and 30 seconds
+apart, before the run gives up.
+
+### The scheduled sync runs on the default branch
+
+GitHub only runs scheduled workflows from the repository's **default branch**.
+Whatever that branch is, it is also where the sync commits, so it must carry
+the same page and tooling as the branch you publish from. The two once drifted
+apart — the sync kept running an older copy of the page for weeks while newer
+work sat on `main`. Keep one branch as both, or merge into the default branch
+whenever you merge elsewhere.
+
 The share must be reachable without a password, unexpired, and free of a
 download limit. Nextcloud answers all three cases with an HTML page and a 200
 status, so both `tools/sync.py` and the workflow check the file's magic bytes
