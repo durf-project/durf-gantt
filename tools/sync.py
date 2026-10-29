@@ -50,12 +50,22 @@ HINTS = {
          "regenerated -- copy the new WebDAV URL into the ROADMAP_SHARE_URL variable.",
     423: "The file is locked, usually because it is open for editing somewhere.",
     429: "Too many requests from this address.",
-    503: "The server says it is unavailable. That is Nextcloud in maintenance, overloaded, "
-         "or declining requests from this address. It is not a problem with the workbook, "
-         "and not a problem with its columns. Open the URL from another network: if it "
-         "downloads there, the server is refusing this address; if it fails there too, "
-         "the fault is on the Nextcloud side.",
+    503: "The server says it is unavailable: Nextcloud in maintenance, overloaded, or "
+         "declining requests from this address. That is not about the workbook's columns. "
+         "Open the URL from another network: if it downloads there, the server is refusing "
+         "this address; if it fails there too, the fault is on the Nextcloud side.",
 }
+
+# Nextcloud answers 503 -- not 404 -- when a public share's link still exists but
+# the file behind it does not. The giveaway is a NotFound wrapped inside the
+# ServiceUnavailable. Seen for real on this project, so it gets its own advice.
+SHARE_TARGET_GONE = (
+    "The link still exists, but the file it pointed at does not: Nextcloud reports "
+    "'ServiceUnavailable' wrapping 'NotFound'. The workbook was most likely renamed, "
+    "moved, deleted or replaced (uploaded again, or 'saved as' a new file) since the "
+    "link was made, which orphans it. Check that durf-roadmap.xlsx is still in the "
+    "team folder, create a new public share link for it, and put its WebDAV address "
+    "(.../public.php/dav/files/<token>) in the ROADMAP_SHARE_URL repository variable.")
 
 # Response headers worth showing; anything else (cookies in particular) is not.
 SHOW_HEADERS = ("server", "retry-after", "content-type", "content-length", "via",
@@ -107,7 +117,8 @@ def download(url):
         except FetchError as err:
             last = err
             print(f"  attempt {attempt}: {err}")
-            retryable = err.status == 0 or err.status in TRANSIENT
+            gone = err.status == 503 and "notfound" in err.body.lower()
+            retryable = (err.status == 0 or err.status in TRANSIENT) and not gone
             if not retryable or attempt > len(RETRY_WAITS):
                 break
             wait = RETRY_WAITS[attempt - 1]
@@ -119,7 +130,9 @@ def download(url):
 
 def explain(err):
     lines = [f"Could not download the workbook: {err}."]
-    if err.status in HINTS:
+    if err.status == 503 and "notfound" in err.body.lower():
+        lines.append(SHARE_TARGET_GONE)
+    elif err.status in HINTS:
         lines.append(HINTS[err.status])
     elif err.status == 0:
         lines.append("The connection itself failed, before the server could answer. "

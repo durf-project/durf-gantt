@@ -163,7 +163,8 @@ what that usually means:
 
 | Message | Usually |
 | --- | --- |
-| `HTTP 503` | Nextcloud is unavailable, or declining this address. Not the workbook, and not its columns. Open the URL from another network to tell which. |
+| `HTTP 503`, reply mentions `NotFound` | The link exists but the file behind it is gone — renamed, moved, deleted, or replaced by uploading it again or "save as". This is what stalled the sync in autumn 2026. Create a new public share link for the current file and put its WebDAV address in `ROADMAP_SHARE_URL`. Not retried, since waiting cannot fix it. |
+| `HTTP 503`, anything else | Nextcloud is unavailable or declining this address. Not the columns. Open the URL from another network to tell which. Retried. |
 | `HTTP 404` | The share was deleted or its link regenerated. Put the new WebDAV URL in `ROADMAP_SHARE_URL`. |
 | `HTTP 401` | A password was set on the share. |
 | *returned a spreadsheet… starts with `<!DOCTYPE`* | The link answered, but with a web page: password, expiry or a spent download limit. |
