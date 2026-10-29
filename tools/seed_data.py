@@ -28,6 +28,10 @@ SETTINGS = [
     ("source_note",
      "Source: DURF presentation, 19 March 2026 — theme slides 5–10.",
      "Footer provenance line."),
+    ("edit_url", "https://surf.works.surf.nl/s/rjDi6bPYpyTrQBi",
+     "Where the 'Log in to edit' button sends theme leads. Leave blank to "
+     "hide the button."),
+    ("edit_label", "Log in to edit", "Wording on that button."),
 ]
 
 THEMES = [
@@ -104,7 +108,10 @@ GORC = ("GORC Commons Model template :: https://view.officeapps.live.com/op/view
 DASH = ("CRIS/Repo Dashboard :: "
         "https://surf-ori.github.io/dashboards/cris-repository-overview.html")
 
-# theme, activity, outcomes, tags, start, end, milestones, links, notes
+# theme, activity, outcomes, tags, start, end, milestones, links, public_note
+# The seeded remarks are all explanations a reader benefits from, so they go in
+# public_note. The `notes` column is left empty for theme leads' own working
+# remarks and is never rendered on the chart.
 ACTIVITIES = [
     # ---- Theme 1 ---------------------------------------------------------
     (1, "Develop and secure signatures for a position paper on the shared "

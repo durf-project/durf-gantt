@@ -6,6 +6,7 @@ re-running this overwrites any edits.
 
     python3 tools/seed_workbook.py
 """
+import sys
 from pathlib import Path
 
 from openpyxl import Workbook
@@ -98,6 +99,11 @@ def sheet_readme(wb):
                "Each one becomes a diamond on the bar. Leave blank if there are "
                "none."),
         ("li", "outcomes: separate several outcomes with a vertical bar |"),
+        ("li", "public_note appears on the published chart, under the "
+               "activity when a reader opens it. Use it for anything a "
+               "reader benefits from, e.g. “Repeats every 12 months”."),
+        ("li", "notes is yours. It is never rendered, so it is the place for "
+               "working remarks, questions and to-dos for each other."),
         ("li", "tags: comma-separated. They become the filter chips above the "
                "chart. Reuse existing spellings so filters stay tidy."),
         ("li", "links: write them as   Label :: https://url   and separate "
@@ -164,19 +170,25 @@ def sheet_themes(wb):
 def sheet_activities(wb):
     ws = wb.create_sheet("Activities")
     ws.append(["theme_no", "activity", "outcomes", "tags", "start_month",
-               "end_month", "milestone_months", "links", "status", "notes"])
+               "end_month", "milestone_months", "links", "status",
+               "public_note", "notes"])
     for row in seed.ACTIVITIES:
-        theme, act, out, tags, start, end, miles, links, notes = row
+        theme, act, out, tags, start, end, miles, links, public_note = row
         ws.append([theme, act, out, tags, start, end, miles, links,
-                   "Not started", notes])
-    style_header(ws, 10, freeze="B2")
-    set_widths(ws, [9, 52, 52, 22, 12, 11, 17, 46, 13, 38])
-    body(ws, 2, 10, wrap_cols=(2, 3, 4, 8, 10))
+                   "Not started", public_note, ""])
+    style_header(ws, 11, freeze="B2")
+    set_widths(ws, [9, 52, 52, 22, 12, 11, 17, 46, 13, 38, 38])
+    body(ws, 2, 11, wrap_cols=(2, 3, 4, 8, 10, 11))
     for r in range(2, ws.max_row + 1):
         ws.row_dimensions[r].height = 46
         for col in (1, 5, 6, 7):
             ws.cell(row=r, column=col).alignment = Alignment(
                 horizontal="center", vertical="top")
+
+    # Make the private column look private.
+    private = ws.cell(row=1, column=11)
+    private.fill = PatternFill("solid", fgColor="FF5E6873")
+    private.value = "notes (internal — never shown on the chart)"
 
     last = ws.max_row + 300
     theme_dv = DataValidation(type="whole", operator="between", formula1=1,
@@ -232,6 +244,15 @@ def sheet_questions(wb):
 
 
 def main():
+    # The workbook is synced from the Nextcloud team folder and carries the
+    # theme leads' edits. Overwriting it silently would throw those away, and
+    # the next sync would only restore them by luck of timing.
+    if OUT.exists() and "--force" not in sys.argv:
+        sys.exit(
+            f"{OUT.relative_to(ROOT)} already exists and holds live planning.\n"
+            "This script recreates it from the deck and would discard that.\n"
+            "Pass --force if you really mean to start over.")
+
     wb = Workbook()
     wb.remove(wb.active)
     sheet_readme(wb)

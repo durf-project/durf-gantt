@@ -22,6 +22,9 @@ HTML = ROOT / "gantt.html"
 CSV_DIR = ROOT / "data" / "csv"
 
 SKIP_SHEETS = {"READ ME"}
+# Not a worksheet: carries the workbook's own metadata alongside the sheets, so
+# baked data and a file loaded in the browser describe themselves the same way.
+META_KEY = "__meta__"
 BEGIN = "/* == DURF-DATA:BEGIN == */"
 END = "/* == DURF-DATA:END == */"
 
@@ -40,7 +43,10 @@ def cell(value):
 
 def read_sheets(path):
     wb = load_workbook(path, data_only=True)
-    sheets = {}
+    modified = wb.properties.modified
+    sheets = {META_KEY: {
+        "modified": modified.replace(microsecond=0).isoformat() + "Z" if modified else "",
+    }}
     for ws in wb.worksheets:
         if ws.title in SKIP_SHEETS:
             continue
@@ -60,6 +66,8 @@ def read_sheets(path):
 def write_csvs(sheets):
     CSV_DIR.mkdir(parents=True, exist_ok=True)
     for name, rows in sheets.items():
+        if name == META_KEY:
+            continue
         width = max(len(r) for r in rows)
         out = CSV_DIR / (name.lower().replace(" ", "-") + ".csv")
         with out.open("w", newline="", encoding="utf-8-sig") as fh:
@@ -88,7 +96,9 @@ def main():
         sys.exit(f"missing {XLSX} -- run tools/seed_workbook.py first")
     sheets = read_sheets(XLSX)
     print(f"read {XLSX.relative_to(ROOT)}: "
-          + ", ".join(f"{k} ({len(v) - 1})" for k, v in sheets.items()))
+          + ", ".join(f"{k} ({len(v) - 1})" for k, v in sheets.items()
+                      if k != META_KEY))
+    print(f"  workbook last modified: {sheets[META_KEY]['modified'] or 'unknown'}")
     write_csvs(sheets)
     if HTML.exists():
         bake(sheets)

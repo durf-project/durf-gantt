@@ -30,10 +30,26 @@ version:
 | `Activities` | Every bar on the chart |
 | `Budget` | The budget table inside a theme's info panel |
 | `Open questions` | The "what about …?" notes from the deck |
-| `Settings` | Title, subtitle, intro, project start month, project length |
+| `Settings` | Title, subtitle, intro, project start month, project length, edit link |
 
 Extra columns are ignored, so you can keep working notes in the sheet — the
 `needs:` columns, for instance — without them appearing on the chart.
+
+### Two kinds of note
+
+| Column | Where it goes |
+| --- | --- |
+| `public_note` | Rendered on the chart, under an activity when a reader opens it |
+| `notes` | Never rendered anywhere |
+
+The workbook is edited by theme leads, so `notes` is theirs — working remarks,
+open questions, to-dos for each other. Anything a reader benefits from
+("Repeats every 12 months") belongs in `public_note`.
+
+The split exists because it was learned the hard way: a note reading *"Pascal
+schrijf dit verder uit"* went live on a public page. If a column is editable by
+several people under time pressure, assume it will collect things not meant for
+publication, and give those somewhere to live.
 
 `start_month` and `end_month` are **project months counted from 1**, not dates.
 Month 1 maps to a calendar month via `start_year_month` in `Settings`
@@ -121,6 +137,19 @@ and refuse rather than writing a password prompt over your data.
 CSV also works on its own. Save any single sheet as CSV and load it — the page
 recognises a sheet by its header row, and comma, semicolon and tab delimiters
 are all detected, so a Dutch Excel export is fine.
+
+## The edit button and the last-edited date
+
+The chart shows **Planning last edited &lt;date&gt;** in the footer. That date is
+the workbook's own `dcterms:modified` — when a theme lead last saved it, not
+when the page was built — so a reader can tell at a glance whether they are
+looking at current planning. A CSV carries no such property, so a CSV loaded
+in the browser dates itself from the file's own timestamp instead.
+
+**Log in to edit** sends theme leads to the workbook in SURF Research Drive.
+Change where it points, or its wording, with `edit_url` and `edit_label` in the
+`Settings` sheet — no code change needed if the share link is rotated. Clear
+`edit_url` to hide the button.
 
 ## Embedding
 
