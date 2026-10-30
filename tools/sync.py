@@ -87,9 +87,20 @@ def say(kind, message):
     print(("ERROR: " if kind == "error" else "") + message)
 
 
-def to_file_url(url):
+def candidates(url):
+    """The addresses worth trying for one link, best first.
+
+    A /s/<token> link is what Nextcloud's Share dialog hands out, but it serves a
+    viewer page. The file itself is at the WebDAV address for the same token, or
+    at /s/<token>/download. On this project the WebDAV address answered from
+    GitHub's runners while /download hung on connect, so it goes first. Any other
+    shape already points at the bytes.
+    """
     url = url.rstrip("/")
-    return url + "/download" if SHARE_PAGE.search(url) else url
+    if not SHARE_PAGE.search(url):
+        return [url]
+    return [SHARE_PAGE.sub(lambda m: "/public.php/dav/files/" + m.group(0)[3:], url),
+            url + "/download"]
 
 
 def fetch_once(url):
@@ -107,9 +118,28 @@ def fetch_once(url):
 
 
 def download(url):
-    """Fetch with retries on transient failures, and explain a final failure."""
-    url = to_file_url(url)
-    print(f"fetching {url}")
+    """Try each address for the link in turn; explain it if none of them works."""
+    options = candidates(url)
+    failures = []
+    for n, option in enumerate(options, start=1):
+        print(f"fetching {option}" + (f"  (address {n} of {len(options)})" if len(options) > 1 else ""))
+        try:
+            return fetch_with_retries(option)
+        except FetchError as err:
+            failures.append((option, err))
+            if n < len(options):
+                print(f"  that address failed ({err}); trying the next one")
+    # Report the most informative failure rather than just the last: an answer
+    # from the server beats a connection that never got one.
+    option, err = max(failures, key=lambda f: f[1].status != 0)
+    if len(failures) > 1:
+        print("Every address failed: " + "; ".join(f"{o} -> {e}" for o, e in failures))
+    explain(err)
+    raise SystemExit(1)
+
+
+def fetch_with_retries(url):
+    """Fetch one address, retrying transient failures a couple of times."""
     last = None
     for attempt in range(1, len(RETRY_WAITS) + 2):
         try:
@@ -124,8 +154,7 @@ def download(url):
             wait = RETRY_WAITS[attempt - 1]
             print(f"  waiting {wait}s before trying again")
             time.sleep(wait)
-    explain(last)
-    raise SystemExit(1)
+    raise last
 
 
 def explain(err):

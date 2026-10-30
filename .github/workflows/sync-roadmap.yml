@@ -21,6 +21,11 @@ on:
   schedule:
     - cron: "17 6-18 * * 1-5"    # hourly through the working day, UTC
   workflow_dispatch:             # or run it by hand from the Actions tab
+    inputs:
+      share_url:
+        description: "Try this link instead of the usual one (a /s/<token> share link or a WebDAV address). Nothing is saved; set ROADMAP_SHARE_URL to make it permanent."
+        required: false
+        default: ""
 
 concurrency:
   group: sync-roadmap
@@ -48,7 +53,7 @@ jobs:
       # been checked, so a failed run leaves the last good version published.
       - name: Download, check and rebuild
         env:
-          SHARE_URL: ${{ vars.ROADMAP_SHARE_URL || 'https://surf.works.surf.nl/public.php/dav/files/WP9W6mL7QHsxRKz' }}
+          SHARE_URL: ${{ inputs.share_url || vars.ROADMAP_SHARE_URL || 'https://surf.works.surf.nl/public.php/dav/files/WP9W6mL7QHsxRKz' }}
         run: python3 tools/sync.py "$SHARE_URL"
 
       - name: Commit if anything changed
