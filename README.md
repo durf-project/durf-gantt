@@ -109,18 +109,22 @@ Run it by hand from the **Actions** tab to publish sooner. To point it at a
 different file, set a repository variable `ROADMAP_SHARE_URL` (Settings →
 Secrets and variables → Actions → Variables) rather than editing the workflow.
 
-**Use the WebDAV public URL, not the `/s/<token>` share page:**
+**Paste the share link as Nextcloud shows it** — `https://surf.works.surf.nl/s/<token>`.
+That address serves a viewer page rather than the file, so the sync tries two
+addresses for the same token: the WebDAV one (`/public.php/dav/files/<token>`)
+first, then `/s/<token>/download`. The WebDAV address is first because it was
+the one that answered from a GitHub runner; `/download` once hung on connect
+for eight minutes. A WebDAV address pasted directly is used as it is.
 
-```
-https://surf.works.surf.nl/public.php/dav/files/<token>
-```
+To try a different link without changing anything, run the workflow by hand
+from the **Actions** tab and fill in *share_url*. To make a new link permanent,
+set `ROADMAP_SHARE_URL` — or ask for the default in the workflow to be changed.
 
-Nextcloud offers both, and the difference matters twice over. The `/s/` link
-serves a viewer page rather than the file — handled by appending `/download`,
-which is why the two shapes are told apart rather than one rule applied to
-both. More importantly, the `/s/` download path did not work from a runner at
-all: it timed out on connect four times over eight minutes (run 34484502000),
-where the WebDAV URL fetched in about a second (run 34958586084).
+**A link goes stale when its file is replaced.** Renaming, moving or deleting
+`durf-roadmap.xlsx`, uploading it again, or "saving as" a new file orphans the
+old link, and the sync stops without anyone noticing. This is what happened
+from 21 September to 30 October 2026: seventy runs failed. Edit the workbook
+in place and the link keeps working.
 
 To sync by hand instead, from any machine that can reach the file:
 

@@ -12,11 +12,10 @@
 
 name: Sync roadmap from Nextcloud
 
-# Use the WebDAV public URL, not the /s/<token> share page. Beyond serving the
-# file directly, it is the one that works from a runner: the /s/ download path
-# timed out on connect four times over eight minutes (run 34484502000), while
-# the WebDAV URL fetched in about a second (run 34958586084). Whatever the
-# cause on the SURF side, prefer the endpoint that answers.
+# The share link can be pasted as Nextcloud shows it (/s/<token>): tools/sync.py
+# tries the WebDAV address for that token first and /download second.
+# The first link of this project went stale when its file was replaced --
+# see 'When a run fails' in the README.
 on:
   schedule:
     - cron: "17 6-18 * * 1-5"    # hourly through the working day, UTC
@@ -53,7 +52,7 @@ jobs:
       # been checked, so a failed run leaves the last good version published.
       - name: Download, check and rebuild
         env:
-          SHARE_URL: ${{ inputs.share_url || vars.ROADMAP_SHARE_URL || 'https://surf.works.surf.nl/public.php/dav/files/WP9W6mL7QHsxRKz' }}
+          SHARE_URL: ${{ inputs.share_url || vars.ROADMAP_SHARE_URL || 'https://surf.works.surf.nl/s/rZdbSgE2Z8gdzLk' }}
         run: python3 tools/sync.py "$SHARE_URL"
 
       - name: Commit if anything changed

@@ -28,8 +28,8 @@ sys.path.insert(0, str(ROOT / "tools"))
 import build  # noqa: E402  (shares the validation the workflow relies on)
 
 TARGET = ROOT / "data" / "durf-roadmap.xlsx"
-# The WebDAV public endpoint serves the file itself, so nothing is appended.
-DEFAULT_URL = "https://surf.works.surf.nl/public.php/dav/files/WP9W6mL7QHsxRKz"
+# Paste the link as Nextcloud's Share dialog shows it; candidates() finds the file.
+DEFAULT_URL = "https://surf.works.surf.nl/s/rZdbSgE2Z8gdzLk"
 
 TIMEOUT = 30                     # seconds, for connecting and for each read
 RETRY_WAITS = (10, 30)           # wait before the 2nd and 3rd attempt
