@@ -19,8 +19,9 @@
   a { color: #008939; font-weight: 700; }
 </style>
 <script>
-  /* replace() rather than assign() so Back does not bounce the visitor here. */
-  window.location.replace("gantt.html");
+  /* replace() rather than assign() so Back does not bounce the visitor here.
+     Query and anchor go along, so /durf-gantt/?embed opens the chart in embed mode. */
+  window.location.replace("gantt.html" + window.location.search + window.location.hash);
 </script>
 </head>
 <body>
