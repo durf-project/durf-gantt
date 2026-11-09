@@ -1,55 +1,25 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-accent="blue">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>DURF roadmap</title>
 <meta name="description" content="Gantt chart of the six DURF themes — Dutch Repository Federation.">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
+<!-- DURF design system: Oat UI, then durf.css, then durf-nav.js (topbar, menu,
+     theme button, ?embed). No defer: the theme must be set before first paint. -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@knadh/oat@1.0.0/oat.min.css">
+<link rel="stylesheet" href="https://durf-project.github.io/durf-design-system/durf.css">
+<script src="https://durf-project.github.io/durf-design-system/durf-nav.js"></script>
 <style>
 /* ==========================================================================
    DURF roadmap
    Everything is scoped to .durf-app so this block can be pasted into an
-   existing page without touching its styles. Design tokens and component
-   rules below are taken from the SURF Design System (@surfnet/sds).
-   https://surfnet.github.io/DesignSystem/
+   existing page without touching its styles. Colours, fonts, the topbar and
+   the light/dark switch come from the DURF design system (durf.css); what is
+   left here is spacing, chart geometry and the chart components.
    ========================================================================== */
 
 .durf-app {
-  /* --- SDS colour tokens ------------------------------------------------ */
-  --sds--color--black: #050E1D;
-  --sds--color--white: #FFFFFF;
-  --sds--color--pitch-black--dimmed--15: #00000026;
-  --sds--color--pitch-black--dimmed--25: #00000040;
-  --sds--color--gray--100: #F4F6F8;
-  --sds--color--gray--200: #EAECF0;
-  --sds--color--gray--250: #CDD0D5;
-  --sds--color--gray--300: #B2B6BE;
-  --sds--color--gray--400: #8C969F;
-  --sds--color--gray--500: #5E6873;
-  --sds--color--yellow--200: #FEF8D3;
-  --sds--color--yellow--500: #FFC100;
-  --sds--color--green--100: #DCF2E5;
-  --sds--color--green--200: #B8E3C9;
-  --sds--color--green--300: #17A95D;
-  --sds--color--green--400: #008939;
-  --sds--color--green--500: #006731;
-  --sds--color--blue--100: #DFF4FF;
-  --sds--color--blue--200: #B3E5FF;
-  --sds--color--blue--300: #78BEFD;
-  --sds--color--blue--400: #0077C8;
-  --sds--color--blue--500: #004C97;
-  --sds--color--red--200: #FFCDCA;
-  --sds--color--red--400: #DA362D;
-  --sds--color--red--500: #83201B;
-  --sds--color--orange--100: #FFE6D2;
-  --sds--color--orange--200: #FFC294;
-  --sds--color--orange--300: #FF9A4E;
-  --sds--color--orange--400: #E67300;
-  --sds--color--orange--500: #C15500;
-
   /* --- SDS spacing tokens ----------------------------------------------- */
   --sds--space--0-and-a-half: 0.25rem;
   --sds--space--1: 0.5rem;
@@ -61,16 +31,6 @@
   --sds--space--6: 3rem;
   --sds--space--8: 4rem;
 
-  /* --- SDS blue colour palette (main = blue, support = green) ----------- */
-  --sds--palette--main-color--100: var(--sds--color--blue--100);
-  --sds--palette--main-color--200: var(--sds--color--blue--200);
-  --sds--palette--main-color--300: var(--sds--color--blue--300);
-  --sds--palette--main-color--400: var(--sds--color--blue--400);
-  --sds--palette--main-color--500: var(--sds--color--blue--500);
-  --sds--palette--support-color--100: var(--sds--color--green--100);
-  --sds--palette--support-color--400: var(--sds--color--green--400);
-  --sds--palette--support-color--500: var(--sds--color--green--500);
-
   /* --- chart geometry --------------------------------------------------- */
   --durf--label-width: 21rem;
   --durf--row-height: 2.5rem;
@@ -78,13 +38,8 @@
   --durf--unit: 2.0833%;
 
   box-sizing: border-box;
-  font-family: "Source Sans 3", "Source Sans Pro", system-ui, -apple-system, "Segoe UI", sans-serif;
   font-size: 16px;
   line-height: 1.5;
-  color: var(--sds--color--black);
-  background-color: var(--sds--color--white);
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
 }
 .durf-app *, .durf-app *::before, .durf-app *::after { box-sizing: inherit; }
 .durf-app p, .durf-app h1, .durf-app h2, .durf-app h3, .durf-app h4,
@@ -92,10 +47,13 @@
 .durf-app dd, .durf-app figure { margin: 0; }
 .durf-app ul, .durf-app ol { padding: 0; list-style: none; }
 .durf-app button { font: inherit; color: inherit; background: none; border: 0; margin: 0; cursor: pointer; }
+/* Oat also styles every <button> (padding, nowrap, gap, radius, ...). Neutralised
+   here with no specificity, so the component rules below still win. */
+:where(.durf-app) button { padding: 0; gap: 0; white-space: normal; text-decoration: none; border-radius: 0; transition: none; }
 .durf-app svg { fill: currentColor; height: auto; overflow: visible; }
 .durf-app svg [stroke] { stroke: currentColor; }
 .durf-app :focus-visible {
-  outline: .1875rem solid var(--sds--color--blue--400);
+  outline: .1875rem solid var(--ring);
   outline-offset: .125rem;
   border-radius: .125rem;
 }
@@ -115,7 +73,7 @@
 }
 
 /* --- SDS components ---------------------------------------------------- */
-.durf-app .sds--divider { width: 100%; height: .0625rem; background-color: var(--sds--color--gray--300); }
+.durf-app .sds--divider { width: 100%; height: .0625rem; background-color: var(--input); }
 
 .durf-app .sds--btn {
   font-weight: 600; padding: var(--sds--space--1) var(--sds--space--3);
@@ -124,82 +82,81 @@
   display: inline-flex; align-items: center; gap: .5em; justify-content: center;
   transition: background-color .12s ease, color .12s ease, border-color .12s ease;
 }
-.durf-app .sds--btn--secondary { border-color: var(--sds--color--gray--400); color: var(--sds--color--gray--500); }
+.durf-app .sds--btn--secondary { border-color: var(--faint-foreground); color: var(--muted-foreground); }
 .durf-app .sds--btn--secondary:hover {
-  border-color: var(--sds--palette--support-color--500);
-  background-color: var(--sds--palette--support-color--100);
-  color: var(--sds--palette--support-color--500);
+  border-color: color-mix(in srgb, var(--accent-solid) 78%, var(--foreground));
+  background-color: var(--accent);
+  color: color-mix(in srgb, var(--accent-solid) 78%, var(--foreground));
 }
-.durf-app .sds--btn--tertiary { color: var(--sds--palette--support-color--400); }
+.durf-app .sds--btn--tertiary { color: var(--accent-solid); }
 .durf-app .sds--btn--tertiary:hover {
-  background-color: var(--sds--palette--support-color--100);
-  color: var(--sds--palette--support-color--500);
+  background-color: var(--accent);
+  color: color-mix(in srgb, var(--accent-solid) 78%, var(--foreground));
 }
 
 .durf-app .sds--chips {
   padding: 0 var(--sds--space--1-and-a-half); display: inline-flex; align-items: center;
-  gap: .5em; border-radius: 1rem; background-color: var(--sds--palette--main-color--100);
+  gap: .5em; border-radius: 1rem; background-color: var(--accent);
   transition: background-color .12s ease, color .12s ease;
 }
 .durf-app .sds--chips--textual { padding: var(--sds--space--0-and-a-half) 0; font-weight: 600; font-size: .8125rem; }
-.durf-app button.sds--chips:hover { background-color: var(--sds--palette--main-color--200); }
-.durf-app .sds--chips.is-active { background-color: var(--sds--palette--main-color--400); color: var(--sds--color--white); }
-.durf-app button.sds--chips.is-active:hover { background-color: var(--sds--palette--main-color--500); }
+.durf-app button.sds--chips:hover { background-color: color-mix(in srgb, var(--accent-solid) 24%, var(--background)); }
+.durf-app .sds--chips.is-active { background-color: var(--accent-solid); color: var(--accent-on); }
+.durf-app button.sds--chips.is-active:hover { background-color: color-mix(in srgb, var(--accent-solid) 78%, var(--foreground)); }
 
 .durf-app .sds--badge--number {
   display: inline-flex; align-items: center; justify-content: center;
   min-width: 1.625rem; height: 1.625rem; padding: 0 .375rem; border-radius: .8125rem;
-  border: .0625rem solid var(--sds--color--white);
-  background-color: var(--sds--color--black); color: var(--sds--color--white);
+  border: .0625rem solid var(--background);
+  background-color: var(--foreground); color: var(--background);
   font-weight: 800; font-size: .625rem; line-height: 1;
 }
 .durf-app .sds--badge--number--small { min-width: 1.125rem; height: 1.125rem; border-radius: .5625rem; font-size: .5rem; }
 
 .durf-app .sds--content-card {
-  background-color: var(--sds--color--white); border-radius: .375rem;
-  box-shadow: 0 .25rem .25rem 0 var(--sds--color--pitch-black--dimmed--25);
+  background-color: var(--background); border-radius: .375rem;
+  box-shadow: 0 .25rem .25rem 0 rgba(0, 0, 0, .25);
 }
 .durf-app .sds--content-card--main {
   padding: var(--sds--space--3); display: flex; gap: var(--sds--space--3);
-  border: .0625rem solid var(--sds--color--gray--200); border-radius: .375rem;
+  border: .0625rem solid var(--border); border-radius: .375rem;
 }
 .durf-app .sds--tab-navigation--basic .sds--tab-navigation--nav {
-  border-bottom: .0625rem solid var(--sds--color--gray--300);
+  border-bottom: .0625rem solid var(--input);
 }
 .durf-app .sds--tab-navigation--nav ul { display: flex; gap: var(--sds--space--1); flex-wrap: wrap; }
 .durf-app .sds--tab-navigation--basic .sds--tab-navigation--nav button {
   padding: var(--sds--space--1) var(--sds--space--2); min-height: 2.75rem; font-weight: 600;
-  border-bottom: .25rem solid transparent; color: var(--sds--palette--support-color--400);
+  border-bottom: .25rem solid transparent; color: var(--accent-solid);
 }
-.durf-app .sds--tab-navigation--basic .sds--tab-navigation--nav button:hover { color: var(--sds--palette--support-color--500); }
+.durf-app .sds--tab-navigation--basic .sds--tab-navigation--nav button:hover { color: color-mix(in srgb, var(--accent-solid) 78%, var(--foreground)); }
 .durf-app .sds--tab-navigation--basic .sds--tab-navigation--nav button.active {
-  color: var(--sds--color--black); border-bottom-color: var(--sds--palette--support-color--400);
-  box-shadow: 0 .0625rem 0 0 var(--sds--palette--support-color--400);
+  color: var(--foreground); border-bottom-color: var(--accent-solid);
+  box-shadow: 0 .0625rem 0 0 var(--accent-solid);
 }
 .durf-app .sds--table table { width: 100%; border-collapse: collapse; border-spacing: 0; }
 .durf-app .sds--table table td, .durf-app .sds--table table th {
   padding: var(--sds--space--1) var(--sds--space--2); text-align: left; vertical-align: top;
 }
-.durf-app .sds--table table th { font-weight: 600; border-bottom: .0625rem solid var(--sds--color--black); }
-.durf-app .sds--table table td { border-bottom: .0625rem solid var(--sds--color--gray--300); }
+.durf-app .sds--table table th { font-weight: 600; border-bottom: .0625rem solid var(--foreground); }
+.durf-app .sds--table table td { border-bottom: .0625rem solid var(--input); }
 
 /* ==========================================================================
    Layout
    ========================================================================== */
-.durf-app { display: block; padding: var(--sds--space--4) var(--sds--space--3) var(--sds--space--5); }
-.durf-shell { max-width: 82rem; margin: 0 auto; }
+.durf-app { display: block; padding: var(--sds--space--4) 0 var(--sds--space--5); }
 
 .durf-head { display: flex; flex-wrap: wrap; align-items: flex-end; gap: var(--sds--space--3); }
 .durf-head__text { flex: 1 1 26rem; }
 .durf-eyebrow {
   font-weight: 700; font-size: .8125rem; letter-spacing: .08em; text-transform: uppercase;
-  color: var(--sds--color--blue--400);
+  color: var(--accent-solid);
 }
-.durf-title { font-family: Nunito, "Source Sans 3", sans-serif; letter-spacing: -.01em; }
-.durf-sub { color: var(--sds--color--gray--500); font-weight: 600; }
-.durf-intro { max-width: 46rem; margin-top: var(--sds--space--2) !important; color: var(--sds--color--gray--500); }
-.durf-head__meta { flex: 0 0 auto; text-align: right; color: var(--sds--color--gray--500); }
-.durf-head__span { font-weight: 700; color: var(--sds--color--black); white-space: nowrap; }
+.durf-title { font-family: var(--font-heading); letter-spacing: -.01em; }
+.durf-sub { color: var(--muted-foreground); font-weight: 600; }
+.durf-intro { max-width: 46rem; margin-top: var(--sds--space--2) !important; color: var(--muted-foreground); }
+.durf-head__meta { flex: 0 0 auto; text-align: right; color: var(--muted-foreground); }
+.durf-head__span { font-weight: 700; color: var(--foreground); white-space: nowrap; }
 
 /* ---- toolbar ----------------------------------------------------------- */
 .durf-toolbar { margin-top: var(--sds--space--4); }
@@ -209,73 +166,74 @@
 .durf-edit { text-decoration: none; }
 .durf-edit[hidden] { display: none; }
 .durf-app .sds--btn--primary {
-  background-color: var(--sds--palette--support-color--400); color: var(--sds--color--white);
+  background-color: var(--accent-solid); color: var(--accent-on);
 }
-.durf-app .sds--btn--primary:hover { background-color: var(--sds--palette--support-color--500); }
+.durf-app .sds--btn--primary:hover { background-color: color-mix(in srgb, var(--accent-solid) 78%, var(--foreground)); }
 
 .durf-filters {
   display: flex; flex-wrap: wrap; align-items: center; gap: var(--sds--space--1);
   margin-top: var(--sds--space--2);
 }
 .durf-filters__label {
-  font-weight: 600; font-size: .8125rem; color: var(--sds--color--gray--500);
+  font-weight: 600; font-size: .8125rem; color: var(--muted-foreground);
   margin-right: var(--sds--space--0-and-a-half);
 }
-.durf-filters__count { color: var(--sds--color--gray--500); font-size: .8125rem; }
+.durf-filters__count { color: var(--muted-foreground); font-size: .8125rem; }
 
 /* ---- the chart --------------------------------------------------------- */
 .durf-chart {
   margin-top: var(--sds--space--3);
-  border: .0625rem solid var(--sds--color--gray--300);
+  border: .0625rem solid var(--input);
   border-radius: .375rem;
-  background-color: var(--sds--color--white);
+  background-color: var(--card);
   overflow: hidden;
 }
-.durf-chart.is-dropping { border-color: var(--sds--color--blue--400); box-shadow: inset 0 0 0 .1875rem var(--sds--color--blue--100); }
+.durf-chart.is-dropping { border-color: var(--accent-solid); box-shadow: inset 0 0 0 .1875rem var(--accent); }
 
 .durf-row { display: grid; grid-template-columns: var(--durf--label-width) minmax(0, 1fr); align-items: stretch; }
 
 /* axis */
 .durf-axis {
   position: sticky; top: 0; z-index: 4;
-  background-color: var(--sds--color--gray--100);
-  border-bottom: .0625rem solid var(--sds--color--gray--300);
+  background-color: var(--muted);
+  border-bottom: .0625rem solid var(--input);
 }
 .durf-axis__label { display: flex; align-items: flex-end; padding: var(--sds--space--1) var(--sds--space--2); }
-.durf-axis__legend { font-size: .75rem; font-weight: 600; color: var(--sds--color--gray--500); }
-.durf-axis__track { position: relative; border-left: .0625rem solid var(--sds--color--gray--300); }
+.durf-axis__legend { font-size: .75rem; font-weight: 600; color: var(--muted-foreground); }
+.durf-axis__track { position: relative; border-left: .0625rem solid var(--input); }
 .durf-axis__band { position: relative; display: flex; height: 1.375rem; }
-.durf-axis__band--minor { height: 1.25rem; border-top: .0625rem solid var(--sds--color--gray--250); }
+.durf-axis__band--minor { height: 1.25rem; border-top: .0625rem solid var(--input); }
 .durf-axis__cell {
   position: absolute; top: 0; bottom: 0; display: flex; align-items: center; justify-content: center;
-  font-size: .6875rem; font-weight: 700; letter-spacing: .04em; color: var(--sds--color--gray--500);
-  border-left: .0625rem solid var(--sds--color--gray--250);
+  font-size: .6875rem; font-weight: 700; letter-spacing: .04em; color: var(--muted-foreground);
+  border-left: .0625rem solid var(--input);
   overflow: hidden; white-space: nowrap;
 }
 .durf-axis__cell:first-child { border-left: 0; }
 .durf-axis__band--major .durf-axis__cell {
-  color: var(--sds--color--black); text-transform: uppercase;
-  border-left-color: var(--sds--color--gray--300);
+  color: var(--foreground); text-transform: uppercase;
+  border-left-color: var(--input);
 }
 .durf-axis__band--now { height: 1.125rem; position: relative; }
 .durf-axis__now {
   position: absolute; top: .0625rem; white-space: nowrap;
   font-size: .625rem; font-weight: 800; letter-spacing: .04em;
-  color: var(--sds--color--white); background-color: var(--sds--color--red--400);
+  color: var(--background); background-color: var(--chart-bad);
   padding: 0 .3125rem; border-radius: .125rem;
 }
 .durf-axis__today {
   position: absolute; top: 0; bottom: 0; width: 0; z-index: 3;
-  border-left: .125rem solid var(--sds--color--red--400);
+  border-left: .125rem solid var(--chart-bad);
 }
 
 /* theme block */
-.durf-theme { border-top: .0625rem solid var(--sds--color--gray--200); }
+.durf-theme { border-top: .0625rem solid var(--border); }
 .durf-theme:first-child { border-top: 0; }
-.durf-theme.is-open { background-color: color-mix(in srgb, var(--t) 4%, #fff); }
+.durf-theme { --t-tint: color-mix(in srgb, var(--t) 12%, var(--background)); --t-tint-strong: color-mix(in srgb, var(--t) 24%, var(--background)); }
+.durf-theme.is-open { background-color: color-mix(in srgb, var(--t) 4%, var(--background)); }
 
 .durf-row--theme { min-height: 3.25rem; }
-.durf-row--theme:hover { background-color: var(--sds--color--gray--100); }
+.durf-row--theme:hover { background-color: var(--muted); }
 .durf-cell-label {
   display: flex; align-items: center; gap: var(--sds--space--0-and-a-half);
   padding: var(--sds--space--0-and-a-half) var(--sds--space--1) var(--sds--space--0-and-a-half) var(--sds--space--2);
@@ -285,41 +243,41 @@
   flex: 1 1 auto; min-width: 0; display: flex; align-items: center; gap: var(--sds--space--1);
   padding: var(--sds--space--0-and-a-half); border-radius: .25rem; text-align: left;
 }
-.durf-caret { flex: 0 0 auto; color: var(--sds--color--gray--500); transition: transform .15s ease; display: flex; }
+.durf-caret { flex: 0 0 auto; color: var(--muted-foreground); transition: transform .15s ease; display: flex; }
 .durf-toggle[aria-expanded="true"] .durf-caret { transform: rotate(90deg); }
 .durf-piece { flex: 0 0 auto; width: 1.75rem; height: 1.75rem; position: relative; }
 .durf-piece svg { width: 100%; height: 100%; display: block; color: var(--t); }
 .durf-piece b {
   position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
-  font-family: Nunito, sans-serif; font-size: .8125rem; font-weight: 800; color: var(--t-ink);
+  font-family: var(--font-heading); font-size: .8125rem; font-weight: 800; color: var(--t-ink);
   padding-bottom: .0625rem;
 }
 .durf-tname { flex: 1 1 auto; min-width: 0; font-weight: 700; font-size: .9375rem; line-height: 1.25; }
-.durf-tname small { display: block; font-weight: 400; font-size: .75rem; color: var(--sds--color--gray--500); }
+.durf-tname small { display: block; font-weight: 400; font-size: .75rem; color: var(--muted-foreground); }
 .durf-count { flex: 0 0 auto; background-color: var(--t-deep); }
 .durf-info {
   flex: 0 0 auto; width: 1.75rem; height: 1.75rem; border-radius: 50%;
   display: flex; align-items: center; justify-content: center;
-  border: .0625rem solid var(--sds--color--gray--300); color: var(--sds--color--gray--500);
-  font-weight: 800; font-size: .75rem; font-family: Nunito, serif;
+  border: .0625rem solid var(--input); color: var(--muted-foreground);
+  font-weight: 800; font-size: .75rem; font-family: var(--font-heading);
 }
 .durf-info:hover { border-color: var(--t-deep); color: var(--t-deep); background-color: var(--t-tint); }
-.durf-info[aria-expanded="true"] { background-color: var(--t-deep); border-color: var(--t-deep); color: #fff; }
+.durf-info[aria-expanded="true"] { background-color: var(--t-deep); border-color: var(--t-deep); color: var(--background); }
 
 /* track */
 .durf-cell-track {
-  position: relative; border-left: .0625rem solid var(--sds--color--gray--300);
+  position: relative; border-left: .0625rem solid var(--input);
   background-image: repeating-linear-gradient(to right,
-    var(--sds--color--gray--200) 0 .0625rem, transparent .0625rem var(--durf--unit));
+    var(--border) 0 .0625rem, transparent .0625rem var(--durf--unit));
 }
 .durf-cell-track::after {
   content: ""; position: absolute; inset: 0; pointer-events: none;
   background-image: repeating-linear-gradient(to right,
-    var(--sds--color--gray--300) 0 .0625rem, transparent .0625rem calc(var(--durf--unit) * var(--durf--major, 3)));
+    var(--input) 0 .0625rem, transparent .0625rem calc(var(--durf--unit) * var(--durf--major, 3)));
 }
 .durf-today {
   position: absolute; top: 0; bottom: 0; width: 0; z-index: 2; pointer-events: none;
-  border-left: .0625rem dashed var(--sds--color--red--400);
+  border-left: .0625rem dashed var(--chart-bad);
 }
 
 /* bars */
@@ -335,7 +293,7 @@
   background-color: var(--t); cursor: pointer; z-index: 1;
   transition: filter .12s ease, box-shadow .12s ease;
 }
-.durf-bar--act:hover { filter: brightness(.93); box-shadow: 0 .0625rem .25rem var(--sds--color--pitch-black--dimmed--25); }
+.durf-bar--act:hover { filter: brightness(.93); box-shadow: 0 .0625rem .25rem rgba(0, 0, 0, .25); }
 .durf-bar--point {
   min-width: 0; width: 0 !important; height: 0; background: none !important;
   box-shadow: none !important;
@@ -353,30 +311,30 @@
 .durf-bar--rail .durf-bar__more { color: var(--t-deep); opacity: 1; }
 .durf-bar--rail {
   height: .375rem; border-radius: .1875rem;
-  background-color: color-mix(in srgb, var(--t) 55%, #fff);
+  background-color: color-mix(in srgb, var(--t) 55%, var(--background));
 }
 .durf-bar--rail.durf-bar--point { min-width: .875rem; }
 .durf-milestone {
   position: absolute; top: 50%; width: .6875rem; height: .6875rem;
   margin-left: -.34375rem; margin-top: -.34375rem;
   background-color: var(--t); transform: rotate(45deg);
-  box-shadow: 0 0 0 .09375rem var(--sds--color--white);
+  box-shadow: 0 0 0 .09375rem var(--background);
 }
 .durf-bar--point .durf-milestone {
   width: .8125rem; height: .8125rem; margin-left: -.40625rem; margin-top: -.40625rem;
   background-color: var(--t);
-  box-shadow: 0 0 0 .09375rem var(--sds--color--white), 0 0 0 .15625rem var(--t-deep);
+  box-shadow: 0 0 0 .09375rem var(--background), 0 0 0 .15625rem var(--t-deep);
 }
 .durf-bar--act:not(.durf-bar--rail):not(.durf-bar--point) .durf-milestone {
   background-color: var(--t-ink);
   box-shadow: 0 0 0 .09375rem color-mix(in srgb, var(--t) 70%, var(--t-ink));
 }
-.durf-bar--act.is-selected { box-shadow: 0 0 0 .125rem var(--sds--color--white), 0 0 0 .25rem var(--sds--color--black); }
+.durf-bar--act.is-selected { box-shadow: 0 0 0 .125rem var(--background), 0 0 0 .25rem var(--foreground); }
 
 /* activity rows */
 .durf-theme-body { border-top: .0625rem solid var(--t-tint-strong); }
 .durf-row--act { min-height: var(--durf--row-height); }
-.durf-row--act + .durf-row--act .durf-cell-label { border-top: .0625rem solid var(--sds--color--gray--100); }
+.durf-row--act + .durf-row--act .durf-cell-label { border-top: .0625rem solid var(--muted); }
 .durf-act-btn {
   flex: 1 1 auto; min-width: 0; display: flex; align-items: center; gap: var(--sds--space--1);
   padding: var(--sds--space--0-and-a-half) var(--sds--space--0-and-a-half) var(--sds--space--0-and-a-half) 2rem;
@@ -389,14 +347,14 @@
   display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
 }
 .durf-act-btn .durf-plus { flex: 0 0 auto; color: var(--t-deep); font-weight: 800; }
-.durf-row--act:hover { background-color: color-mix(in srgb, var(--t) 5%, #fff); }
+.durf-row--act:hover { background-color: color-mix(in srgb, var(--t) 5%, var(--background)); }
 
 /* detail panels */
 .durf-detail { padding: 0 var(--sds--space--3) var(--sds--space--3) var(--sds--space--3); }
 .durf-detail[hidden] { display: none; }
 .durf-detail__card {
   border-left: .25rem solid var(--t); border-radius: .375rem;
-  background-color: var(--sds--color--gray--100);
+  background-color: var(--muted);
   padding: var(--sds--space--2) var(--sds--space--3);
 }
 .durf-detail__grid {
@@ -405,7 +363,7 @@
 }
 .durf-detail dt {
   font-size: .6875rem; font-weight: 800; letter-spacing: .07em; text-transform: uppercase;
-  color: var(--sds--color--gray--500); margin-bottom: .125rem;
+  color: var(--muted-foreground); margin-bottom: .125rem;
 }
 .durf-detail dd { margin: 0; font-size: .9375rem; }
 .durf-pair { min-width: 0; }
@@ -415,8 +373,8 @@
   content: ""; position: absolute; left: 0; top: .5625rem;
   width: .375rem; height: .375rem; background-color: var(--t-deep); transform: rotate(45deg);
 }
-.durf-detail a { color: var(--sds--palette--support-color--400); font-weight: 700; }
-.durf-detail a:hover { color: var(--sds--palette--support-color--500); }
+.durf-detail a { color: var(--accent-solid); font-weight: 700; }
+.durf-detail a:hover { color: color-mix(in srgb, var(--accent-solid) 78%, var(--foreground)); }
 .durf-detail a[href^="http"]::after { content: " ↗"; font-weight: 400; }
 .durf-tagrow { display: flex; flex-wrap: wrap; gap: .375rem; margin-top: .25rem; }
 .durf-tag {
@@ -427,8 +385,8 @@
 .durf-note {
   margin-top: var(--sds--space--1-and-a-half);
   padding: var(--sds--space--1) var(--sds--space--1-and-a-half);
-  border-radius: .25rem; background-color: var(--sds--color--blue--100);
-  font-size: .8125rem; border-left: .1875rem solid var(--sds--color--blue--400);
+  border-radius: .25rem; background-color: var(--accent);
+  font-size: .8125rem; border-left: .1875rem solid var(--accent-solid);
 }
 .durf-money { font-variant-numeric: tabular-nums; white-space: nowrap; font-weight: 700; }
 
@@ -436,19 +394,19 @@
 .durf-foot {
   margin-top: var(--sds--space--3); display: flex; flex-wrap: wrap;
   gap: var(--sds--space--1) var(--sds--space--4); align-items: center;
-  font-size: .8125rem; color: var(--sds--color--gray--500);
+  font-size: .8125rem; color: var(--muted-foreground);
 }
 .durf-legend { display: flex; flex-wrap: wrap; gap: var(--sds--space--2); align-items: center; }
 .durf-legend span { display: inline-flex; align-items: center; gap: .375rem; }
-.durf-legend i { display: inline-block; width: 1.5rem; height: .625rem; border-radius: .1875rem; background: var(--sds--color--gray--400); }
-.durf-legend i.dens { background: linear-gradient(to right, #8C969F55, #8C969F); }
-.durf-legend i.ms { width: .5rem; height: .5rem; border-radius: 0; transform: rotate(45deg); background: var(--sds--color--black); }
-.durf-modified { margin-left: auto; font-weight: 600; color: var(--sds--color--black); }
+.durf-legend i { display: inline-block; width: 1.5rem; height: .625rem; border-radius: .1875rem; background: var(--faint-foreground); }
+.durf-legend i.dens { background: linear-gradient(to right, color-mix(in srgb, var(--faint-foreground) 33%, transparent), var(--faint-foreground)); }
+.durf-legend i.ms { width: .5rem; height: .5rem; border-radius: 0; transform: rotate(45deg); background: var(--foreground); }
+.durf-modified { margin-left: auto; font-weight: 600; color: var(--foreground); }
 .durf-modified[hidden] { display: none; }
-.durf-status { color: var(--sds--color--gray--500); }
+.durf-status { color: var(--muted-foreground); }
 
 /* empty / error states */
-.durf-empty { padding: var(--sds--space--5) var(--sds--space--3); text-align: center; color: var(--sds--color--gray--500); }
+.durf-empty { padding: var(--sds--space--5) var(--sds--space--3); text-align: center; color: var(--muted-foreground); }
 
 /* ---- responsive -------------------------------------------------------- */
 @media (max-width: 60rem) {
@@ -456,7 +414,7 @@
   .durf-bar__text { display: none; }
 }
 @media (max-width: 44rem) {
-  .durf-app { padding: var(--sds--space--3) var(--sds--space--2) var(--sds--space--4); }
+  .durf-app { padding: var(--sds--space--3) 0 var(--sds--space--4); }
   .durf-row { grid-template-columns: minmax(0, 1fr); }
   .durf-cell-track { border-left: 0; min-height: 2.25rem; }
   .durf-cell-label { padding-bottom: 0; }
@@ -541,7 +499,7 @@
 
   <div class="durf-foot">
     <div class="durf-legend">
-      <span><i class="dens"></i> theme activity, darker&nbsp;=&nbsp;busier</span>
+      <span><i class="dens"></i> theme activity, stronger&nbsp;=&nbsp;busier</span>
       <span><i class="ms"></i> milestone</span>
       <span>› ‹ continues outside this view</span>
     </div>
@@ -942,7 +900,7 @@ const mix = function (a, b, amount) {
   return a.map(function (v, i) { return v + (b[i] - v) * amount; });
 };
 
-const INK = [5, 14, 29], PAPER = [255, 255, 255];
+const INK = [5, 14, 29], PAPER = [255, 255, 255], NIGHT = [15, 18, 24];
 
 function toHsl(rgb) {
   const r = rgb[0] / 255, g = rgb[1] / 255, b = rgb[2] / 255;
@@ -975,19 +933,23 @@ function fromHsl(hsl) {
 function shades(hex) {
   const base = toRgb(hex);
   const ink = contrast(base, INK) >= contrast(base, PAPER) ? INK : PAPER;
-  /* A readable version of the theme colour for text and small marks on white.
-     Darkening in HSL keeps the hue -- yellow becomes amber, not grey. */
+  /* A readable version of the theme colour for text and small marks, once on
+     the light page background and once on the dark one (durf.css --background).
+     Moving the lightness in HSL keeps the hue -- yellow becomes amber, not grey. */
   const hsl = toHsl(base);
   let deep = base;
   for (let step = 0; step < 30 && contrast(deep, PAPER) < 4.5; step++) {
     deep = fromHsl([hsl[0], Math.min(1, hsl[1] + step * 0.01), Math.max(0.12, hsl[2] - step * 0.025)]);
   }
+  let deepDark = base;
+  for (let step = 0; step < 30 && contrast(deepDark, NIGHT) < 4.5; step++) {
+    deepDark = fromHsl([hsl[0], hsl[1], Math.min(0.88, hsl[2] + step * 0.025)]);
+  }
   return {
     colour: toHex(base),
     ink: toHex(ink),
     deep: toHex(deep),
-    tint: toHex(mix(PAPER, base, 0.12)),
-    tintStrong: toHex(mix(PAPER, base, 0.24))
+    deepDark: toHex(deepDark)
   };
 }
 
@@ -1245,7 +1207,7 @@ function activityDetail(a) {
   when.appendChild(el("span", null, monthRange(a)));
   when.appendChild(el("br"));
   const cal = el("span", "sds--text--body--small");
-  cal.style.color = "var(--sds--color--gray--500)";
+  cal.style.color = "var(--muted-foreground)";
   cal.textContent = a.start === a.end
     ? monthLabel(state.model, a.start)
     : monthLabel(state.model, a.start) + " – " + monthLabel(state.model, a.end);
@@ -1415,7 +1377,7 @@ function activityRow(theme, a) {
     outside.style.position = "relative";
     outside.style.transform = "none";
     const holder = el("div");
-    holder.style.cssText = "display:flex;align-items:center;height:100%;padding-left:.5rem;font-size:.75rem;color:var(--sds--color--gray--400)";
+    holder.style.cssText = "display:flex;align-items:center;height:100%;padding-left:.5rem;font-size:.75rem;color:var(--faint-foreground)";
     holder.textContent = monthRange(a);
     track.appendChild(holder);
   }
@@ -1445,9 +1407,9 @@ function themeSection(theme) {
   const section = el("section", "durf-theme");
   section.style.setProperty("--t", tone.colour);
   section.style.setProperty("--t-ink", tone.ink);
-  section.style.setProperty("--t-deep", tone.deep);
-  section.style.setProperty("--t-tint", tone.tint);
-  section.style.setProperty("--t-tint-strong", tone.tintStrong);
+  /* deep: readable theme colour for text on the page background, one value
+     per colour scheme. The tints are mixed with the page background in CSS. */
+  section.style.setProperty("--t-deep", "light-dark(" + tone.deep + ", " + tone.deepDark + ")");
 
   const isOpen = state.open.has(theme.no);
   if (isOpen) section.classList.add("is-open");
@@ -1667,7 +1629,7 @@ function renderFilters() {
     const text = el("span", "sds--chips--textual", tag);
     btn.appendChild(text);
     const badge = el("span", "sds--badge--number sds--badge--number--small", String(counts.get(tag)));
-    badge.style.background = state.tags.has(tag) ? "rgba(255,255,255,.28)" : "var(--sds--color--gray--500)";
+    badge.style.background = state.tags.has(tag) ? "rgba(255,255,255,.28)" : "var(--muted-foreground)";
     badge.style.borderColor = "transparent";
     btn.appendChild(badge);
     btn.addEventListener("click", function () {
@@ -1708,7 +1670,7 @@ function flash(message, isError) {
   const source = $("durf-source");
   source.hidden = false;
   source.textContent = message;
-  source.style.color = isError ? "var(--sds--color--red--400)" : "var(--sds--color--gray--500)";
+  source.style.color = isError ? "var(--chart-bad)" : "var(--muted-foreground)";
   source.style.fontWeight = isError ? "600" : "400";
 }
 
