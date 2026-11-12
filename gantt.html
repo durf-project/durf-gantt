@@ -5,9 +5,14 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>DURF roadmap</title>
 <meta name="description" content="Gantt chart of the six DURF themes — Dutch Repository Federation.">
-<!-- DURF design system: Oat UI, then durf.css, then durf-nav.js (topbar, menu,
-     theme button, ?embed). No defer: the theme must be set before first paint. -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@knadh/oat@1.0.0/oat.min.css">
+<link rel="icon" type="image/svg+xml" href="https://durf-project.github.io/durf-design-system/assets/favicon.svg">
+<link rel="apple-touch-icon" href="https://durf-project.github.io/durf-design-system/assets/apple-touch-icon.png">
+<meta property="og:title" content="DURF roadmap">
+<meta property="og:description" content="Gantt chart of the six DURF themes, Dutch Repository Federation.">
+<meta property="og:image" content="https://durf-project.github.io/durf-design-system/assets/durf-og.png">
+<!-- DURF design system v1.1: Oat UI (vendored), then durf.css, then durf-nav.js
+     (topbar, menu, theme button, ?embed). No defer: the theme must be set before first paint. -->
+<link rel="stylesheet" href="https://durf-project.github.io/durf-design-system/lib/oat.min.css">
 <link rel="stylesheet" href="https://durf-project.github.io/durf-design-system/durf.css">
 <script src="https://durf-project.github.io/durf-design-system/durf-nav.js"></script>
 <style>
@@ -1132,7 +1137,8 @@ function monthRange(a) {
   return a.start === a.end ? "Month " + a.start : "Months " + a.start + "–" + a.end;
 }
 
-function rollupBackground(activities, from, to, colour) {
+/* Busier months get a stronger theme colour: var(--t) mixed with transparent. */
+function rollupBackground(activities, from, to) {
   const counts = [];
   let max = 0;
   for (let m = from; m <= to; m++) {
@@ -1141,12 +1147,11 @@ function rollupBackground(activities, from, to, colour) {
     counts.push(c);
     if (c > max) max = c;
   }
-  if (max <= 1) return colour;
-  const rgb = toRgb(colour).join(",");
+  if (max <= 1) return "var(--t)";
   const step = 100 / counts.length;
   const stops = counts.map(function (c, i) {
-    const alpha = (0.32 + 0.68 * (c / max)).toFixed(3);
-    return "rgba(" + rgb + "," + alpha + ") " + (i * step).toFixed(3) + "% " +
+    const pct = (100 * (0.32 + 0.68 * (c / max))).toFixed(1);
+    return "color-mix(in srgb, var(--t) " + pct + "%, transparent) " + (i * step).toFixed(3) + "% " +
            ((i + 1) * step).toFixed(3) + "%";
   });
   return "linear-gradient(to right," + stops.join(",") + ")";
@@ -1400,16 +1405,36 @@ function activityRow(theme, a) {
   return [row, detail];
 }
 
+/* When the workbook colour of a theme is the design system's colour for that
+   theme number (durf.css --durf-theme-N), the chart uses the design system's
+   tokens, so the fill, the text on it and the readable ink follow the DURF look
+   in light and dark. Any other colour (a custom workbook) gets computed shades. */
+function dsTheme(theme) {
+  const n = theme.no;
+  if (!(n >= 1 && n <= 6)) return 0;
+  const token = getComputedStyle(document.documentElement)
+    .getPropertyValue("--durf-theme-" + n).trim().toLowerCase();
+  return token && token === toHex(toRgb(theme.colour)) ? n : 0;
+}
+
 function themeSection(theme) {
   const activities = visibleActivities(theme.no);
   const tone = shades(theme.colour);
+  const n = dsTheme(theme);
 
   const section = el("section", "durf-theme");
-  section.style.setProperty("--t", tone.colour);
-  section.style.setProperty("--t-ink", tone.ink);
-  /* deep: readable theme colour for text on the page background, one value
-     per colour scheme. The tints are mixed with the page background in CSS. */
-  section.style.setProperty("--t-deep", "light-dark(" + tone.deep + ", " + tone.deepDark + ")");
+  if (n) {
+    section.dataset.themeN = String(n);
+    section.style.setProperty("--t", "var(--durf-theme-" + n + ")");
+    section.style.setProperty("--t-ink", "var(--durf-theme-" + n + "-on)");
+    section.style.setProperty("--t-deep", "var(--durf-theme-" + n + "-ink)");
+  } else {
+    section.style.setProperty("--t", tone.colour);
+    section.style.setProperty("--t-ink", tone.ink);
+    /* deep: readable theme colour for text on the page background, one value
+       per colour scheme. The tints are mixed with the page background in CSS. */
+    section.style.setProperty("--t-deep", "light-dark(" + tone.deep + ", " + tone.deepDark + ")");
+  }
 
   const isOpen = state.open.has(theme.no);
   if (isOpen) section.classList.add("is-open");
@@ -1456,7 +1481,7 @@ function themeSection(theme) {
     if (box) {
       const bar = el("div", "durf-bar durf-bar--rollup");
       setBox(bar, box);
-      bar.style.background = rollupBackground(activities, from, to, tone.colour);
+      bar.style.background = rollupBackground(activities, from, to);
       bar.title = theme.short + " — " + activities.length + " activities, months " + from + "–" + to;
       overflowMark(box, bar);
       track.appendChild(bar);
