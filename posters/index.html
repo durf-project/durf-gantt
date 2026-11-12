@@ -60,9 +60,9 @@
   .p-head { display: grid; grid-template-columns: auto 1fr auto; gap: 7mm; align-items: start; padding: 10mm 14mm 6mm; background: var(--t-tint); border-bottom: 2.4mm solid var(--t); }
   /* The theme's own piece of the DURF puzzle (design system: .durf-piece), with the pictogram in it.
      The piece's frame is larger than the piece (room for the knobs), hence the negative margins. */
-  .p-mark { position: relative; width: 78mm; height: 78mm; margin: -9mm -5mm -11mm -11mm; }
+  .p-mark { position: relative; width: 48mm; height: 48mm; margin: -8mm -6mm -8mm -8mm; }
   .p-mark .durf-piece { --durf-piece-size: 100%; position: absolute; inset: 0; }
-  .p-mark .durf-pictogram { position: absolute; inset: 0; width: 100%; height: 100%; background-color: var(--t-on); -webkit-mask-size: 82%; mask-size: 82%; }
+  .p-mark .durf-pictogram { position: absolute; inset: 0; width: 100%; height: 100%; background-color: #fff; -webkit-mask-size: 100%; mask-size: 100%; }
   /* the theme pictogram, large, in the dark theme colour so it also reads on the yellow tint */
   .p-eyebrow { font-weight: 800; font-size: calc(var(--fs) * .95); letter-spacing: .09em; text-transform: uppercase; color: var(--t-ink); margin: 0 0 1.5mm; }
   .p-title { font-size: calc(var(--fs) * 3); line-height: 1.02; }
@@ -143,12 +143,12 @@
   .o-leads { list-style: none; margin: 0; padding: 0; display: grid; gap: 1.6mm; font-size: 10pt; line-height: 1.25; }
   .o-leads li { display: grid; grid-template-columns: 11mm 1fr; gap: 2mm; align-items: center; }
   .o-leads .durf-piece { --durf-piece-size: 11mm; }
-  .o-puzzle { position: relative; width: 100%; aspect-ratio: 370 / 270; filter: drop-shadow(0 1mm 1.4mm rgba(5, 14, 29, .25)); }
-  .o-piece { position: absolute; width: calc(170 / 370 * 100%); height: calc(170 / 270 * 100%); }
-  .o-piece .durf-piece { --durf-piece-size: 100%; position: absolute; inset: 0; }
+  .o-puzzle { position: relative; width: 100%; aspect-ratio: 352 / 252; filter: drop-shadow(0 1mm 1.4mm rgba(5, 14, 29, .25)); }
+  .o-piece { position: absolute; width: calc(152 / 352 * 100%); height: calc(152 / 252 * 100%); }
+  .o-piece .durf-piece { --durf-piece-size: 100%; position: absolute; inset: 0; transform: scale(.985); }   /* a hairline gap between the pieces */
   /* pictogram in the middle of the piece, number and name in the top-left corner (knobs sit mid-edge) */
-  .o-piece .durf-pictogram { position: absolute; inset: 0; width: 100%; height: 100%; background-color: var(--theme-on); -webkit-mask-size: 62%; mask-size: 62%; }
-  .o-label { position: absolute; left: 23.5%; top: 23%; color: var(--theme-on); font-family: var(--font-heading); font-weight: 800; font-size: 11pt; line-height: 1.05; }
+  .o-piece .durf-pictogram { position: absolute; inset: 0; width: 100%; height: 100%; background-color: #fff; -webkit-mask-size: 82%; mask-size: 82%; }
+  .o-label { position: absolute; left: 21%; top: 21%; color: var(--theme-on); font-family: var(--font-heading); font-weight: 800; font-size: 11pt; line-height: 1.05; }
   .o-label b { display: block; font-size: 20pt; font-weight: 900; line-height: 1; }
 
   .err { max-width: 40rem; margin: 2rem auto; }
@@ -264,7 +264,7 @@
     var pieces = themes.map(function (t) {
       var col = (t.n - 1) % 3, row = Math.floor((t.n - 1) / 3);
       var ds = (window.DURF && window.DURF.theme && window.DURF.theme(t.n)) || null;
-      return '<div class="o-piece" data-theme-n="' + t.n + '" style="left:' + (col * 100 / 370 * 100) + '%;top:' + (row * 100 / 270 * 100) + '%">' + piece(t.n) +
+      return '<div class="o-piece" data-theme-n="' + t.n + '" style="left:' + (col * 100 / 352 * 100) + '%;top:' + (row * 100 / 252 * 100) + '%">' + piece(t.n) +
         '<span class="o-label"><b>' + t.n + '</b>' + esc(t.short) + '</span></div>';
     }).join("");
     var leads = themes.map(function (t) {

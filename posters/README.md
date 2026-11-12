@@ -8,7 +8,7 @@ which activity, and who in their organisation could do it.
 
 Online: https://durf-project.github.io/durf-gantt/posters/ (everything), `?theme=0` for the opening poster, or `?theme=1` to `?theme=6`.
 
-The **opening poster** shows the six themes as pieces of one puzzle, with how the carousel works and the theme leads. Each theme poster carries its own piece of that puzzle, with the theme pictogram in it. The pieces are the DURF puzzle from the design system (`assets/icons/puzzle-set/`, class `.durf-piece`).
+The **opening poster** shows the six themes as pieces of one puzzle, with how the carousel works and the theme leads. Each theme poster carries its own piece of that puzzle, with the theme pictogram in white in it, in the SURF puzzle style. The pieces are the DURF puzzle from the design system (`assets/icons/puzzle-set/`, class `.durf-piece`).
 
 ## Where the content comes from
 
