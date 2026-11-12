@@ -39,7 +39,7 @@
   .toolbar .durf-puzzle { --durf-puzzle-size: 1.35rem; }
   .toolbar .spacer { flex: 1; }
   .toolbar .hint { color: var(--muted-foreground); font-size: .875rem; margin: 0; }
-  .sheets { display: flex; flex-direction: column; align-items: center; gap: 12mm; padding: 4mm 0 16mm; }
+  .sheets { display: flex; flex-direction: column; align-items: center; gap: 12mm; padding: 4mm 0 16mm; overflow-x: hidden; }
 
   /* ---------- the poster ---------- */
   .poster {
@@ -130,7 +130,7 @@
     html, body { background: #fff; }
     .durf-topbar, #durf-feedback, .toolbar { display: none !important; }
     .sheets { display: block; padding: 0; }
-    .poster { box-shadow: none; break-after: page; page-break-after: always; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .poster { zoom: 1 !important; box-shadow: none; break-after: page; page-break-after: always; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
     .poster:last-child { break-after: auto; page-break-after: auto; }
   }
 </style>
@@ -286,7 +286,12 @@
     var box = document.getElementById("sheets");
     box.innerHTML = show.map(function (t) { return poster(t, acts.filter(function (a) { return +a.theme_no === t.n; }), settings); }).join("");
     if (want) document.title = "DURF theme " + want + " poster";
-    var go = function () { box.querySelectorAll(".poster").forEach(fit); document.documentElement.dataset.ready = "1"; };
+    /* On screen the A3 sheets are scaled down to the window width; printing uses the real size. */
+    var scale = function () { box.querySelectorAll(".poster").forEach(function (el) { el.style.zoom = ""; var z = Math.min(1, (document.documentElement.clientWidth - 24) / el.offsetWidth); if (z < 1) el.style.zoom = z; }); };
+    var go = function () { box.querySelectorAll(".poster").forEach(fit); scale(); document.documentElement.dataset.ready = "1"; };
+    window.addEventListener("resize", scale);
+    window.addEventListener("beforeprint", function () { box.querySelectorAll(".poster").forEach(function (el) { el.style.zoom = ""; }); });
+    window.addEventListener("afterprint", scale);
     (document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve()).then(go);
   }).catch(function (e) {
     document.getElementById("sheets").innerHTML = '<p class="err">Could not load the roadmap data (' + esc(e.message) + '). Open this page through a web server, for example <code>python3 -m http.server</code> in the repository folder.</p>';
