@@ -1,7 +1,8 @@
 # DURF roadmap Gantt
 
 A single standalone HTML page showing the six DURF themes across the 48-month
-project, built on the [SURF Design System](https://surfnet.github.io/DesignSystem/).
+project, built on the [DURF design system](https://durf-project.github.io/durf-design-system/)
+(which follows the [SURF Design System](https://surfnet.github.io/DesignSystem/)).
 The content comes from an Excel workbook that a project assistant can edit
 without touching any code.
 
@@ -201,11 +202,20 @@ from theme 1's orange. Going dark pushes the worst pair to ΔE 15.9 across
 normal, protanopic, deuteranopic and tritanopic vision, with every pair at
 ΔE 46 or more in normal vision.
 
-Change any of them in the `colour` column of the `Themes` sheet. Bar text,
-badges and markers are derived from whatever you set, and the derivation keeps
-each hue while darkening it far enough to clear 4.5:1 — so the chart stays
-readable, but a palette of your own choosing is worth re-checking for the same
-kind of ambiguity.
+These are the same six colours as the theme tokens of the
+[DURF design system](https://durf-project.github.io/durf-design-system/)
+(`--durf-theme-1` to `--durf-theme-6`). When a theme's colour in the workbook
+matches the design system's colour for that theme number, the chart uses the
+design system's tokens: the bar fill, the text on it (`--durf-theme-N-on`) and
+the readable theme ink for text and markers (`--durf-theme-N-ink`, with its own
+light and dark value). So the roadmap looks the same as every other DURF page.
+
+Change any of them in the `colour` column of the `Themes` sheet. A colour that
+differs from the design system wins: bar text, badges and markers are then
+derived from whatever you set, and the derivation keeps each hue while darkening
+it far enough to clear 4.5:1, so the chart stays readable. A palette of your own
+choosing is worth re-checking for the same kind of ambiguity, and if the DURF
+theme colours themselves change, change them in the design system too.
 
 ## Resolved ambiguities from the source deck
 

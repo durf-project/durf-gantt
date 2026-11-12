@@ -9,20 +9,18 @@
      Change the data= value to point at a different file. -->
 <meta http-equiv="refresh" content="0; url=gantt.html">
 <link rel="canonical" href="gantt.html">
-<style>
-  body {
-    margin: 0; min-height: 100vh;
-    display: flex; align-items: center; justify-content: center;
-    font-family: "Source Sans 3", "Source Sans Pro", system-ui, sans-serif;
-    color: #050E1D; background: #F4F6F8;
-  }
-  a { color: #008939; font-weight: 700; }
-</style>
 <script>
   /* replace() rather than assign() so Back does not bounce the visitor here.
-     Query and anchor go along, so /durf-gantt/?embed opens the chart in embed mode. */
+     Query and anchor go along, so /durf-gantt/?embed opens the chart in embed mode.
+     Runs before the stylesheet below, so the redirect never waits for it. */
   window.location.replace("gantt.html" + window.location.search + window.location.hash);
 </script>
+<link rel="icon" type="image/svg+xml" href="https://durf-project.github.io/durf-design-system/assets/favicon.svg">
+<link rel="stylesheet" href="https://durf-project.github.io/durf-design-system/durf.css">
+<style>
+  body { min-height: 100vh; display: flex; align-items: center; justify-content: center; }
+  a { font-weight: 700; }
+</style>
 </head>
 <body>
   <p>Opening the <a href="gantt.html">DURF roadmap</a>…</p>
