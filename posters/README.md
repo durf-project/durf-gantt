@@ -8,7 +8,7 @@ which activity, and who in their organisation could do it.
 
 Online: https://durf-project.github.io/durf-gantt/posters/ (everything), `?theme=0` for the opening poster, or `?theme=1` to `?theme=6`.
 
-The **opening poster** shows the six themes as pieces of one puzzle, with how the carousel works and the theme leads. Each theme poster carries its own piece of that puzzle, with the theme pictogram in white in it, in the SURF puzzle style. The pieces are the DURF puzzle from the design system (`assets/icons/puzzle-set/`, class `.durf-piece`).
+The **opening poster** shows the six themes as pieces of one puzzle, with how the carousel works and the theme leads. Each theme poster carries its own piece of that puzzle (in the SURF puzzle style) with the theme number in it. The pieces are the DURF puzzle from the design system (`assets/icons/puzzle-set/`, class `.durf-piece`).
 
 ## Where the content comes from
 
@@ -44,8 +44,8 @@ largest text. Today that happens for themes 1 and 2, so a full print is 9 pages 
 texts in the workbook give larger text (the size used is in the `data-font-size` attribute of
 each poster).
 
-The rows are banded in a light and a lighter tint of the theme colour. The theme pictogram sits in
-the theme's puzzle piece; the footer uses the DURF logo without
+The rows are banded in a light and a lighter tint of the theme colour. The theme's puzzle piece carries
+the theme number; the footer uses the DURF logo without
 ring text.
 
 Print from Chrome or Edge with **Print or save as PDF**: paper size A3, landscape, margins
@@ -54,5 +54,5 @@ the print.
 
 ## Files
 
-- `index.html`: the posters (DURF design system: colours, fonts, puzzle pieces, pictograms).
+- `index.html`: the posters (DURF design system: colours, fonts, puzzle pieces).
 - `qr-roadmap.svg`, `qr-home.svg`: QR codes to the roadmap and the DURF home page.
