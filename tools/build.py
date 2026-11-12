@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Bake data/durf-roadmap.xlsx into index.html and export per-sheet CSVs.
+"""Bake data/durf-roadmap.xlsx into gantt.html, export per-sheet CSVs and data/roadmap.json.
 
     python3 tools/build.py
 
@@ -20,6 +20,8 @@ ROOT = Path(__file__).resolve().parent.parent
 XLSX = ROOT / "data" / "durf-roadmap.xlsx"
 HTML = ROOT / "gantt.html"
 CSV_DIR = ROOT / "data" / "csv"
+# The same rows as JSON, read by the theme posters (posters/index.html).
+JSON_OUT = ROOT / "data" / "roadmap.json"
 
 SKIP_SHEETS = {"READ ME"}
 # Not a worksheet: carries the workbook's own metadata alongside the sheets, so
@@ -100,6 +102,8 @@ def main():
                       if k != META_KEY))
     print(f"  workbook last modified: {sheets[META_KEY]['modified'] or 'unknown'}")
     write_csvs(sheets)
+    JSON_OUT.write_text(json.dumps(sheets, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
+    print(f"  {JSON_OUT.relative_to(ROOT)}")
     if HTML.exists():
         bake(sheets)
     else:

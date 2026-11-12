@@ -1,0 +1,297 @@
+<!doctype html>
+<html lang="en" data-accent="blue">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light">
+<title>DURF theme posters: Federation Day carousel</title>
+<!--
+  DURF theme posters, one A3 landscape page per theme, for the theme carousel at the DURF
+  Federation Day (18 November 2026). The theme lead explains the goal, the activities that lead
+  to it, and what we expect institutions to contribute, and when. People at the table write down
+  which in-kind contribution their institution could make, for which activity, and who could do it.
+
+  Content: everything about the themes and activities comes from the roadmap workbook
+  (data/durf-roadmap.xlsx, baked into data/roadmap.json by tools/build.py). Edit the workbook,
+  not this file. The texts that belong to the poster itself (event line, question, icons) are in
+  POSTER below. Leads come from the DURF design system (window.DURF.themes).
+
+  Show one poster:  posters/?theme=3      All six: posters/      Print: A3 landscape, margins none,
+  background graphics on (the Print button does this for you in Chrome and Edge).
+-->
+<link rel="icon" type="image/svg+xml" href="https://durf-project.github.io/durf-design-system/assets/favicon.svg">
+<link rel="stylesheet" href="https://durf-project.github.io/durf-design-system/lib/oat.min.css">
+<link rel="stylesheet" href="https://durf-project.github.io/durf-design-system/durf.css">
+<script src="https://durf-project.github.io/durf-design-system/durf-nav.js"></script>
+<style>
+  /* A3 landscape. Change --poster-w / --poster-h and @page together for another size. */
+  :root { --poster-w: 420mm; --poster-h: 297mm; }
+  @page { size: 420mm 297mm; margin: 0; }
+  html, body { background: var(--surface); }
+  body { margin: 0; }
+
+  /* ---------- screen toolbar ---------- */
+  .toolbar { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem 1rem; padding: 1rem 1.5rem; }
+  .toolbar h1 { font-size: 1.25rem; margin: 0 1rem 0 0; }
+  .toolbar nav { display: flex; flex-wrap: wrap; gap: .35rem; }
+  .toolbar nav a { display: inline-flex; align-items: center; gap: .35rem; padding: .25rem .6rem; border-radius: 999px; text-decoration: none; font-weight: 700; font-size: .875rem; color: var(--foreground); background: var(--card); border: 1px solid var(--border); }
+  .toolbar nav a[aria-current="page"] { background: var(--accent-solid); color: var(--accent-on); border-color: transparent; }
+  .toolbar .durf-puzzle { --durf-puzzle-size: 1.35rem; }
+  .toolbar .spacer { flex: 1; }
+  .toolbar .hint { color: var(--muted-foreground); font-size: .875rem; margin: 0; }
+  .sheets { display: flex; flex-direction: column; align-items: center; gap: 12mm; padding: 4mm 0 16mm; }
+
+  /* ---------- the poster ---------- */
+  .poster {
+    --fs: 10.5pt;                     /* base size; the fit script lowers it when a theme has a lot of text */
+    width: var(--poster-w); height: var(--poster-h); box-sizing: border-box;
+    background: #fff; color: var(--durf-black, #050E1D); color-scheme: light;
+    box-shadow: 0 2mm 8mm rgba(5, 14, 29, .18);
+    display: grid; grid-template-rows: auto auto minmax(0, 1fr) auto; overflow: hidden; position: relative;
+    font-family: var(--font-sans); font-size: var(--fs); line-height: 1.32;
+    --t: var(--theme-color); --t-ink: var(--theme-ink); --t-tint: var(--theme-tint); --t-on: var(--theme-on);
+  }
+  .poster * { box-sizing: border-box; }
+  /* head, question and footer keep their size; only the activity table is fitted */
+  .p-head, .p-ask, .p-foot { --fs: 10.5pt; }
+  .poster h2, .poster h3 { font-family: var(--font-heading); font-weight: 800; letter-spacing: -.01em; margin: 0; }
+
+  /* head */
+  .p-head { display: grid; grid-template-columns: auto 1fr auto; gap: 7mm; align-items: start; padding: 10mm 14mm 6mm; background: var(--t-tint); border-bottom: 2.4mm solid var(--t); }
+  .p-mark { position: relative; width: 34mm; height: 34mm; }
+  .p-mark .durf-puzzle { --durf-puzzle-size: 34mm; }
+  .p-icon { position: absolute; right: -5mm; bottom: -4mm; width: 18mm; height: 18mm; border-radius: 50%; background: #fff; display: grid; place-items: center; box-shadow: 0 .6mm 2mm rgba(5,14,29,.2); }
+  .p-icon .durf-pictogram { width: 13mm; }
+  .p-eyebrow { font-weight: 800; font-size: calc(var(--fs) * .95); letter-spacing: .09em; text-transform: uppercase; color: var(--t-ink); margin: 0 0 1.5mm; }
+  .p-title { font-size: calc(var(--fs) * 3); line-height: 1.02; }
+  .p-goal { margin: 3mm 0 0; font-size: calc(var(--fs) * 1.35); line-height: 1.3; max-width: 235mm; }
+  .p-goal b { font-family: var(--font-heading); }
+  .p-people { min-width: 78mm; max-width: 96mm; font-size: calc(var(--fs) * 1.05); background: #fff; border-radius: 3mm; padding: 4mm 5mm; border-left: 1.6mm solid var(--t); }
+  .p-people dt { font-weight: 800; font-size: calc(var(--fs) * .8); letter-spacing: .07em; text-transform: uppercase; color: var(--muted-foreground); }
+  .p-people dd { margin: 0 0 2mm; }
+  .p-people dd:last-child { margin-bottom: 0; }
+
+  /* the question to the table */
+  .p-ask { display: grid; grid-template-columns: auto 1fr; gap: 5mm; align-items: center; margin: 5mm 14mm 0; padding: 3.5mm 6mm; border-radius: 3mm; background: var(--durf-black, #050E1D); color: #fff; }
+  .p-ask .num { font-family: var(--font-heading); font-weight: 900; font-size: calc(var(--fs) * 2.2); color: var(--t); line-height: 1; }
+  .p-ask p { margin: 0; font-size: calc(var(--fs) * 1.3); line-height: 1.3; }
+  .p-ask strong { font-family: var(--font-heading); }
+
+  /* activity table */
+  .p-table { margin: 4mm 14mm 0; display: grid; grid-template-columns: 74mm 92mm 1fr 78mm; grid-auto-rows: auto; align-content: start; min-height: 0; }
+  .p-th { font-weight: 800; font-size: calc(var(--fs) * .8); letter-spacing: .07em; text-transform: uppercase; color: var(--muted-foreground); padding: 0 3mm 1.5mm; border-bottom: .5mm solid var(--durf-black, #050E1D); align-self: end; }
+  .p-cell { padding: calc(var(--fs) * .62) calc(var(--fs) * .8); border-bottom: .3mm solid #CDD0D5; min-width: 0; }
+  .p-cell.gantt { position: relative; }
+  .p-act-code { display: inline-block; font-family: var(--font-heading); font-weight: 900; color: var(--t-on); background: var(--t); border-radius: 1.2mm; padding: .2mm 1.6mm; margin-right: 1.5mm; font-size: calc(var(--fs) * .9); }
+  .p-act-name { font-family: var(--font-heading); font-weight: 800; font-size: calc(var(--fs) * 1.05); line-height: 1.22; }
+  .p-outcome { margin-top: 1.4mm; color: #3a4350; font-size: calc(var(--fs) * .9); }
+  .p-outcome b { color: var(--durf-black, #050E1D); }
+
+  /* mini gantt */
+  .p-axis { position: relative; height: 9mm; }
+  .p-axis span { position: absolute; top: 0; bottom: 0; display: flex; align-items: flex-end; justify-content: center; font-weight: 800; font-size: calc(var(--fs) * .78); color: var(--muted-foreground); border-left: .3mm solid #CDD0D5; }
+  .p-axis span:first-child { border-left: 0; }
+  .p-barbox { position: relative; height: calc(var(--fs) * 1.7); }
+  .p-grid { position: absolute; inset: 0 calc(var(--fs) * .8); background-image: repeating-linear-gradient(to right, #CDD0D5 0 .3mm, transparent .3mm 25%), repeating-linear-gradient(to right, #EAECF0 0 .2mm, transparent .2mm 6.25%); }
+  .p-bar { position: absolute; top: calc(var(--fs) * .3); height: calc(var(--fs) * 1.1); border-radius: 1.2mm; background: var(--t); }
+  .p-ms { position: absolute; top: calc(var(--fs) * .5); width: calc(var(--fs) * .7); height: calc(var(--fs) * .7); margin-left: calc(var(--fs) * -.35); transform: rotate(45deg); background: var(--durf-black, #050E1D); box-shadow: 0 0 0 .5mm #fff; }
+  .p-when-months { position: relative; margin-top: calc(var(--fs) * .3); font-weight: 700; font-size: calc(var(--fs) * .82); color: var(--durf-black, #050E1D); }
+  .p-timing { position: relative; font-size: calc(var(--fs) * .82); color: #3a4350; line-height: 1.25; background: rgba(255,255,255,.85); }
+
+  /* asks */
+  .p-asks { list-style: none; margin: 0; padding: 0; display: grid; gap: 1.3mm; }
+  .p-asks li { display: grid; grid-template-columns: auto 1fr; gap: 1.6mm; align-items: baseline; font-size: calc(var(--fs) * .92); }
+  .lvl { font-weight: 800; font-size: calc(var(--fs) * .7); letter-spacing: .04em; text-transform: uppercase; border-radius: 1mm; padding: .2mm 1.3mm; white-space: nowrap; }
+  .lvl.essential { background: var(--t); color: var(--t-on); }
+  .lvl.optional  { background: #fff; color: var(--t-ink); box-shadow: inset 0 0 0 .35mm var(--t); }
+  .tm { display: inline-block; margin-left: 1mm; font-weight: 700; font-size: calc(var(--fs) * .72); color: #3a4350; background: #EAECF0; border-radius: 99px; padding: 0 1.6mm; white-space: nowrap; }
+  .p-none { color: #5E6873; font-style: italic; font-size: calc(var(--fs) * .9); }
+
+  /* write-in */
+  .p-write { position: relative; height: 100%; background: var(--t-tint); border-radius: 2mm; padding: calc(var(--fs) * .45) calc(var(--fs) * .7); display: flex; flex-direction: column; gap: calc(var(--fs) * .2); min-height: calc(var(--fs) * 5.6); }
+  .p-write label { font-weight: 800; font-size: calc(var(--fs) * .72); letter-spacing: .05em; text-transform: uppercase; color: var(--t-ink); }
+  .p-write .line { flex: 1; min-height: calc(var(--fs) * 1.3); border-bottom: .3mm dashed color-mix(in srgb, var(--t) 70%, #050E1D); }
+
+  /* foot */
+  .p-foot { display: grid; grid-template-columns: auto 1fr auto auto; gap: 6mm; align-items: center; padding: 4mm 14mm 6mm; position: relative; }
+  .p-foot::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 2.4mm; background: linear-gradient(90deg, var(--durf-theme-1) 0 16.667%, var(--durf-theme-2) 0 33.333%, var(--durf-theme-3) 0 50%, var(--durf-theme-4) 0 66.667%, var(--durf-theme-5) 0 83.333%, var(--durf-theme-6) 0); }
+  .p-foot img.logo { width: 20mm; height: 20mm; }
+  .p-foot .who { font-size: calc(var(--fs) * 1); }
+  .p-foot .who strong { font-family: var(--font-heading); font-size: calc(var(--fs) * 1.2); display: block; }
+  .p-foot .card { display: grid; gap: 2mm; font-size: calc(var(--fs) * .85); min-width: 92mm; }
+  .p-foot .card div { border-bottom: .3mm dashed #8C969F; padding-top: 3.5mm; color: #5E6873; }
+  .p-qr { display: flex; gap: 4mm; }
+  .p-qr figure { margin: 0; text-align: center; font-size: calc(var(--fs) * .7); color: #3a4350; }
+  .p-qr img { width: 20mm; height: 20mm; display: block; }
+
+  .err { max-width: 40rem; margin: 2rem auto; }
+
+  @media print {
+    html, body { background: #fff; }
+    .durf-topbar, #durf-feedback, .toolbar { display: none !important; }
+    .sheets { display: block; padding: 0; }
+    .poster { box-shadow: none; break-after: page; page-break-after: always; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .poster:last-child { break-after: auto; page-break-after: auto; }
+  }
+</style>
+</head>
+<body>
+<div class="toolbar">
+  <h1>Theme posters</h1>
+  <nav id="pick" aria-label="Choose a theme"></nav>
+  <span class="spacer"></span>
+  <p class="hint">A3 landscape. Print with margins none and background graphics on.</p>
+  <button type="button" onclick="window.print()">Print or save as PDF</button>
+</div>
+<main class="sheets" id="sheets"><p class="err">Loading the roadmap…</p></main>
+
+<script>
+(function () {
+  "use strict";
+
+  /* ---------- texts that belong to the poster, not to the roadmap ---------- */
+  var POSTER = {
+    event: "DURF Federation Day · 18 November 2026 · Theme carousel",
+    question: "Which in-kind contribution could your institution make, to which activity, and who in your organisation could do it? Write it in the column on the right.",
+    // A pictogram per theme from the DURF design system (assets/icons/surf/). A first proposal.
+    icons: { 1: "strategy/strategy-18", 2: "data/data-03", 3: "research/research-17", 4: "data/data-07", 5: "research/research-10", 6: "collaboration/collaboration-20" }
+  };
+  var DATA_URL = "../data/roadmap.json";
+  var DS = "https://durf-project.github.io/durf-design-system/";
+
+  var esc = function (s) { return String(s == null ? "" : s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); };
+
+  /* rows -> objects by header; columns are found by the start of their header, so a renamed
+     header ("needs: in-kind contributions ...") keeps working */
+  function table(rows) {
+    var head = rows[0].map(function (h) { return String(h).trim(); });
+    return rows.slice(1).filter(function (r) { return r.some(function (v) { return String(v).trim(); }); }).map(function (r) {
+      var o = {}; head.forEach(function (h, i) { o[h] = r[i] == null ? "" : r[i]; }); return o;
+    });
+  }
+  function col(o, start) {
+    start = start.toLowerCase();
+    for (var k in o) if (k.toLowerCase().indexOf(start) === 0) return o[k];
+    return "";
+  }
+
+  /* "1.1. Develop ..." -> ["1.1", "Develop ..."] */
+  function splitCode(name) {
+    var m = /^\s*(\d+\.\d+)\.?\s+(.*)$/.exec(name || "");
+    return m ? [m[1], m[2]] : ["", name || ""];
+  }
+
+  /* The in-kind column is free text written by theme leads. Turn it into items with a level
+     (essential / optional) and an optional timing tag [during] [after] [both]. */
+  function parseAsks(text) {
+    var items = [], level = "", cur = null;
+    String(text || "").split(/\n/).forEach(function (raw) {
+      var line = raw.replace(/\t/g, " ").trim();
+      if (!line) { cur = null; return; }
+      if (/^from the position paper commitments:?$/i.test(line)) { cur = null; return; }
+      var head = /^(?:\d+\.\s*)?(?:[-*•]\s*)?(essential|optional|mandatory)(\s*\([^)]*\))?(?:\s+for [^:]+)?\s*:\s*(.*)$/i.exec(line);
+      if (head) {
+        level = /optional/i.test(head[1]) ? "optional" : "essential";
+        var rest = head[3].trim();
+        if (!rest) { cur = null; return; }               // "Optional:" on its own line sets the level
+        cur = { level: level, who: (head[2] || "").replace(/[()\s]/g, ""), text: rest }; items.push(cur); return;
+      }
+      if (/^[-*•]/.test(line)) { cur = { level: level, text: line.replace(/^[-*•]\s*/, "") }; items.push(cur); return; }
+      if (/^\d+\.\s+/.test(line)) { cur = { level: level, text: line.replace(/^\d+\.\s+/, "") }; items.push(cur); return; }
+      if (cur && !level) { cur.text += " " + line; return; }
+      cur = { level: level, text: line }; items.push(cur);
+    });
+    return items.map(function (it) {
+      var t = it.text.replace(/^(?:\.\.\.|…)\s*/, "").replace(/^to\s+/i, "");
+      var m = /\[(during|after|both)\]\s*$/i.exec(t);
+      var timing = m ? m[1].toLowerCase() : "";
+      t = t.replace(/\s*\[(during|after|both)\]\s*$/i, "");
+      t = t.charAt(0).toUpperCase() + t.slice(1);
+      return { level: it.level || "ask", who: it.who || "", text: t, timing: timing };
+    });
+  }
+
+  function monthLabel(startYM, m) {
+    var y = +startYM.slice(0, 4), mo = +startYM.slice(5, 7) - 1 + (m - 1);
+    var names = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+    return names[((mo % 12) + 12) % 12] + " " + (y + Math.floor(mo / 12));
+  }
+
+  function poster(theme, acts, settings) {
+    var n = theme.n, total = +settings.total_months || 48, start = settings.start_year_month || "2026-06";
+    var ds = (window.DURF && window.DURF.theme && window.DURF.theme(n)) || null;
+    var lead = ds && ds.lead ? (ds.lead.vacant ? "Vacant: the DURF project team answers for now" :
+      esc(ds.lead.name) + " (" + esc(ds.lead.institution) + ")" + (ds.lead.coLead ? " and " + esc(ds.lead.coLead.name) + " (" + esc(ds.lead.coLead.institution) + ")" : "")) : esc(theme.lead);
+    var partners = ds && ds.partners && ds.partners.length ? ds.partners.map(function (p) { return esc(p.name) + " (" + esc(p.role) + ")"; }).join("; ") : esc(theme.partners || "None listed yet");
+    var years = Math.ceil(total / 12), axis = "";
+    for (var y = 0; y < years; y++) {
+      var a = monthLabel(start, y * 12 + 1).slice(-4), b = monthLabel(start, Math.min((y + 1) * 12, total)).slice(-2);
+      axis += '<span style="left:' + (y * 12 / total * 100) + '%;width:' + (12 / total * 100) + '%">Y' + (y + 1) + ' · ' + a + '–' + b + '</span>';
+    }
+    var rows = acts.map(function (a) {
+      var code = splitCode(a.activity), s = +a.start_month || 1, e = +a.end_month || s;
+      var ms = String(a.milestone_months || "").split(/[,;]/).map(function (x) { return +x; }).filter(Boolean);
+      var bar = '<div class="p-bar" style="left:' + ((s - 1) / total * 100) + '%;width:' + (Math.max(e - s + 1, .6) / total * 100) + '%"></div>' +
+        ms.map(function (m) { return '<i class="p-ms" style="left:' + ((m - .5) / total * 100) + '%"></i>'; }).join("");
+      var span = s === e ? "Month " + s + " (" + monthLabel(start, s) + ")" : "Months " + s + "–" + e + " (" + monthLabel(start, s) + " – " + monthLabel(start, e) + ")";
+      var asks = parseAsks(col(a, "needs: in-kind"));
+      var askHtml = asks.length ? '<ul class="p-asks">' + asks.map(function (k) {
+        return '<li><span class="lvl ' + (k.level === "optional" ? "optional" : "essential") + '">' + (k.level === "optional" ? "optional" : "essential") + (k.who ? " · " + esc(k.who) : "") + '</span><span>' + esc(k.text) +
+          (k.timing ? '<span class="tm">' + (k.timing === "both" ? "during and after" : k.timing === "after" ? "after the project" : "during the project") + '</span>' : '') + '</span></li>';
+      }).join("") + '</ul>' : '<p class="p-none">To be discussed at the table.</p>';
+      var timing = col(a, "when");
+      return '<div class="p-cell"><span class="p-act-code">' + esc(code[0] || n) + '</span><span class="p-act-name">' + esc(code[1]) + '</span>' +
+               '<div class="p-outcome"><b>Output:</b> ' + esc(String(a.outcomes || "").replace(/\s*\|\s*/g, " · ")) + '</div></div>' +
+             '<div class="p-cell gantt"><div class="p-grid"></div><div class="p-barbox">' + bar + '</div><div class="p-when-months">' + span + '</div>' +
+               (timing ? '<div class="p-timing">' + esc(timing) + '</div>' : '') + '</div>' +
+             '<div class="p-cell">' + askHtml + '</div>' +
+             '<div class="p-cell"><div class="p-write"><label>Our contribution</label><div class="line"></div><label>Who in our organisation</label><div class="line"></div></div></div>';
+    }).join("");
+    var icon = POSTER.icons[n] ? '<span class="p-icon"><span class="durf-pictogram" data-theme-n="' + n + '" style="--durf-pictogram:url(' + DS + 'assets/icons/surf/' + POSTER.icons[n] + '.png)"></span></span>' : "";
+    return '<section class="poster" data-theme-n="' + n + '" id="theme-' + n + '" aria-label="Theme ' + n + ' poster">' +
+      '<header class="p-head"><div class="p-mark"><span class="durf-puzzle" data-theme-n="' + n + '">' + n + '</span>' + icon + '</div>' +
+        '<div><p class="p-eyebrow">' + esc(POSTER.event) + '</p><h2 class="p-title">Theme ' + n + ' · ' + esc(theme.name) + '</h2>' +
+        '<p class="p-goal"><b>Goal:</b> ' + esc(theme.goal) + '</p></div>' +
+        '<dl class="p-people"><dt>Theme lead</dt><dd>' + lead + '</dd><dt>Partners</dt><dd>' + partners + '</dd></dl></header>' +
+      '<div class="p-ask"><span class="num">?</span><p><strong>Your contribution.</strong> ' + esc(POSTER.question) + '</p></div>' +
+      '<div class="p-table"><div class="p-th">Activity and output</div><div class="p-th"><div class="p-axis">' + axis + '</div></div>' +
+        '<div class="p-th">What we ask from institutions</div><div class="p-th">Your answer</div>' + rows + '</div>' +
+      '<footer class="p-foot"><img class="logo" src="' + DS + 'assets/durf-logo.svg" alt="DURF">' +
+        '<div class="who"><strong>Dutch Repository Federation</strong>Making the Dutch scholarly corpus global, open and resilient. Questions: durf@surf.nl</div>' +
+        '<div class="card"><div>Your name</div><div>Institution and role</div></div>' +
+        '<div class="p-qr"><figure><img src="qr-roadmap.svg" alt="QR code to the DURF roadmap">Roadmap</figure><figure><img src="qr-home.svg" alt="QR code to the DURF home page">DURF home</figure></div></footer>' +
+      '</section>';
+  }
+
+  /* Shrink the base font size of a poster until it fits on one page. */
+  function fit(el) {
+    var size = 12.5;   /* start large and step down until the table ends above the footer */
+    el.style.setProperty("--fs", size + "pt");
+    var over = function () { return el.scrollHeight > el.clientHeight + 1 || lastBottom(el) > el.querySelector(".p-foot").getBoundingClientRect().top - 4; };
+    function lastBottom(p) { var cells = p.querySelectorAll(".p-table > *"); var m = 0; cells.forEach(function (c) { m = Math.max(m, c.getBoundingClientRect().bottom); }); return m; }
+    while (over() && size > 6) { size -= .25; el.style.setProperty("--fs", size + "pt"); }
+    el.dataset.fontSize = size;
+  }
+
+  fetch(DATA_URL, { cache: "no-store" }).then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); }).then(function (data) {
+    var themes = table(data.Themes).map(function (t) { return { n: +t.theme_no, name: t.name, short: t.short_name, goal: t.goal, lead: t.lead, partners: t.partners }; });
+    var acts = table(data.Activities);
+    var settings = {}; table(data.Settings || [["key", "value"]]).forEach(function (s) { settings[s.key] = s.value; });
+    var want = +new URLSearchParams(location.search).get("theme");
+    var pick = document.getElementById("pick");
+    pick.innerHTML = '<a href="./"' + (want ? "" : ' aria-current="page"') + '>All six</a>' + themes.map(function (t) {
+      return '<a href="?theme=' + t.n + '"' + (want === t.n ? ' aria-current="page"' : "") + '><span class="durf-puzzle" data-theme-n="' + t.n + '">' + t.n + '</span>' + esc(t.short) + '</a>';
+    }).join("");
+    var show = themes.filter(function (t) { return !want || t.n === want; });
+    var box = document.getElementById("sheets");
+    box.innerHTML = show.map(function (t) { return poster(t, acts.filter(function (a) { return +a.theme_no === t.n; }), settings); }).join("");
+    if (want) document.title = "DURF theme " + want + " poster";
+    var go = function () { box.querySelectorAll(".poster").forEach(fit); document.documentElement.dataset.ready = "1"; };
+    (document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve()).then(go);
+  }).catch(function (e) {
+    document.getElementById("sheets").innerHTML = '<p class="err">Could not load the roadmap data (' + esc(e.message) + '). Open this page through a web server, for example <code>python3 -m http.server</code> in the repository folder.</p>';
+  });
+})();
+</script>
+</body>
+</html>
