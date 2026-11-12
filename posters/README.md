@@ -6,7 +6,7 @@ theme, the activities that lead to it, what we expect institutions to contribute
 People at the table write down which in-kind contribution their institution could make, to
 which activity, and who in their organisation could do it.
 
-Online: https://durf-project.github.io/durf-gantt/posters/ (all six) or `?theme=1` to `?theme=6`.
+Online: https://durf-project.github.io/durf-gantt/posters/ (all themes) or `?theme=1` to `?theme=6`.
 
 ## Where the content comes from
 
@@ -36,9 +36,15 @@ after the project, or during and after.
 ## Size and printing
 
 The posters are A3 landscape (420 × 297 mm). The activity table shrinks its font until it fits
-on the page, so a theme with many activities or long texts gets smaller text: shorten the
-in-kind texts in the workbook when that gets too small to read (the font size used is in the
-`data-font-size` attribute of each poster).
+on the page. When a theme would come out smaller than 8.5 pt (`MIN_PT` in `index.html`), it is
+spread over two posters ("part 1 of 2", "part 2 of 2"), split where both sheets get the
+largest text. Today that happens for themes 1 and 2, so a full print is 8 pages. Shorter in-kind
+texts in the workbook give larger text (the size used is in the `data-font-size` attribute of
+each poster).
+
+The rows are banded in a light and a lighter tint of the theme colour. The theme pictogram is
+drawn in the dark theme colour next to the puzzle piece; the footer uses the DURF logo without
+ring text.
 
 Print from Chrome or Edge with **Print or save as PDF**: paper size A3, landscape, margins
 *None*, *Background graphics* on. The topbar, the toolbar and the feedback button are left out of
