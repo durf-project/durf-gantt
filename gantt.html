@@ -64,7 +64,7 @@
 }
 
 /* --- SDS typography ---------------------------------------------------- */
-.durf-app .sds--text--h1 { font-weight: 600; font-size: 2.25rem; line-height: calc(42 / 36); }
+.durf-app .sds--text--h1 { font-weight: 800; font-size: 2.25rem; line-height: calc(42 / 36); }
 .durf-app .sds--text--h3 { font-weight: 600; font-size: 1.5rem; line-height: calc(30 / 24); }
 .durf-app .sds--text--h4 { font-weight: 600; font-size: 1.25rem; line-height: calc(30 / 20); }
 .durf-app .sds--text--h5 { font-weight: 600; font-size: 1.125rem; line-height: calc(26 / 18); }
@@ -82,12 +82,12 @@
 
 .durf-app .sds--btn {
   font-weight: 600; padding: var(--sds--space--1) var(--sds--space--3);
-  min-height: 2.5rem; border-radius: .375rem;
+  min-height: 2.5rem; border-radius: var(--durf-radius, .5rem);
   border: .0625rem solid transparent;
   display: inline-flex; align-items: center; gap: .5em; justify-content: center;
   transition: background-color .12s ease, color .12s ease, border-color .12s ease;
 }
-.durf-app .sds--btn--secondary { border-color: var(--faint-foreground); color: var(--muted-foreground); }
+.durf-app .sds--btn--secondary { border-color: var(--input); color: var(--foreground); background-color: var(--card); }
 .durf-app .sds--btn--secondary:hover {
   border-color: color-mix(in srgb, var(--accent-solid) 78%, var(--foreground));
   background-color: var(--accent);
@@ -154,11 +154,13 @@
 .durf-head { display: flex; flex-wrap: wrap; align-items: flex-end; gap: var(--sds--space--3); }
 .durf-head__text { flex: 1 1 26rem; }
 .durf-eyebrow {
-  font-weight: 700; font-size: .8125rem; letter-spacing: .08em; text-transform: uppercase;
+  font-weight: 800; font-size: .8125rem; letter-spacing: .09em; text-transform: uppercase;
   color: var(--accent-solid);
 }
 .durf-title { font-family: var(--font-heading); letter-spacing: -.01em; }
-.durf-sub { color: var(--muted-foreground); font-weight: 600; }
+.durf-sub { color: var(--muted-foreground); font-family: var(--font-heading); font-weight: 700; }
+/* Headings inside the chart (theme info, budget) use the DURF heading font, like every DURF page. */
+.durf-app :is(.sds--text--h3, .sds--text--h4, .sds--text--h5, .sds--text--h6) { font-family: var(--font-heading); font-weight: 800; }
 .durf-intro { max-width: 46rem; margin-top: var(--sds--space--2) !important; color: var(--muted-foreground); }
 .durf-head__meta { flex: 0 0 auto; text-align: right; color: var(--muted-foreground); }
 .durf-head__span { font-weight: 700; color: var(--foreground); white-space: nowrap; }
@@ -250,15 +252,15 @@
 }
 .durf-caret { flex: 0 0 auto; color: var(--muted-foreground); transition: transform .15s ease; display: flex; }
 .durf-toggle[aria-expanded="true"] .durf-caret { transform: rotate(90deg); }
-.durf-piece { flex: 0 0 auto; width: 1.75rem; height: 1.75rem; position: relative; }
+.durf-piece { flex: 0 0 auto; width: 2rem; height: 2rem; position: relative; }
 .durf-piece svg { width: 100%; height: 100%; display: block; color: var(--t); }
 .durf-piece b {
-  position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+  /* centred on the body of the piece (x 18-82, y 22-86 in the 100 x 100 shape) */
+  position: absolute; inset: 22% 18% 14% 18%; display: flex; align-items: center; justify-content: center;
   font-family: var(--font-heading); font-size: .8125rem; font-weight: 800; color: var(--t-ink);
-  padding-bottom: .0625rem;
 }
-.durf-tname { flex: 1 1 auto; min-width: 0; font-weight: 700; font-size: .9375rem; line-height: 1.25; }
-.durf-tname small { display: block; font-weight: 400; font-size: .75rem; color: var(--muted-foreground); }
+.durf-tname { flex: 1 1 auto; min-width: 0; font-family: var(--font-heading); font-weight: 800; font-size: 1rem; line-height: 1.25; }
+.durf-tname small { display: block; font-family: var(--font-sans); font-weight: 400; font-size: .75rem; color: var(--muted-foreground); }
 .durf-count { flex: 0 0 auto; background-color: var(--t-deep); }
 .durf-info {
   flex: 0 0 auto; width: 1.75rem; height: 1.75rem; border-radius: 50%;
@@ -517,7 +519,8 @@
 
 <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
   <symbol id="durf-puzzle" viewBox="0 0 100 100">
-    <path d="M14 6h20a12 12 0 0 1 32 0h20a8 8 0 0 1 8 8v20a12 12 0 0 0 0 32v20a8 8 0 0 1-8 8H66a12 12 0 0 0-32 0H14a8 8 0 0 1-8-8V66a12 12 0 0 1 0-32V14a8 8 0 0 1 8-8z"/>
+    <!-- Same shape as durf-design-system/assets/icons/puzzle-piece.svg -->
+    <path d="M25 22H42.5C40.6 18.4 40.2 14.6 41.6 11.2A9.4 9.4 0 0 1 58.4 11.2C59.8 14.6 59.4 18.4 57.5 22H75A7 7 0 0 1 82 29V44.5C85.6 42.6 89.4 42.2 92.8 43.6A9.4 9.4 0 0 1 92.8 60.4C89.4 61.8 85.6 61.4 82 59.5V79A7 7 0 0 1 75 86H57.5C59.4 82.4 59.8 78.6 58.4 75.2A9.4 9.4 0 0 0 41.6 75.2C40.2 78.6 40.6 82.4 42.5 86H25A7 7 0 0 1 18 79V29A7 7 0 0 1 25 22Z"/>
   </symbol>
 </svg>
 
