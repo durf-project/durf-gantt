@@ -36,7 +36,7 @@
   .toolbar nav { display: flex; flex-wrap: wrap; gap: .35rem; }
   .toolbar nav a { display: inline-flex; align-items: center; gap: .35rem; padding: .25rem .6rem; border-radius: 999px; text-decoration: none; font-weight: 700; font-size: .875rem; color: var(--foreground); background: var(--card); border: 1px solid var(--border); }
   .toolbar nav a[aria-current="page"] { background: var(--accent-solid); color: var(--accent-on); border-color: transparent; }
-  .toolbar .durf-puzzle { --durf-puzzle-size: 1.35rem; }
+  .toolbar .durf-piece { --durf-piece-size: 1.7rem; margin: -.2rem 0; }
   .toolbar .spacer { flex: 1; }
   .toolbar .hint { color: var(--muted-foreground); font-size: .875rem; margin: 0; }
   .sheets { display: flex; flex-direction: column; align-items: center; gap: 12mm; padding: 4mm 0 16mm; overflow-x: hidden; }
@@ -57,13 +57,13 @@
   .poster h2, .poster h3 { font-family: var(--font-heading); font-weight: 800; letter-spacing: -.01em; margin: 0; }
 
   /* head */
-  .p-head { display: grid; grid-template-columns: auto auto 1fr auto; gap: 7mm; align-items: start; padding: 10mm 14mm 6mm; background: var(--t-tint); border-bottom: 2.4mm solid var(--t); }
-  .p-mark { width: 34mm; height: 34mm; }
-  .p-mark .durf-puzzle { --durf-puzzle-size: 34mm; }
+  .p-head { display: grid; grid-template-columns: auto 1fr auto; gap: 7mm; align-items: start; padding: 10mm 14mm 6mm; background: var(--t-tint); border-bottom: 2.4mm solid var(--t); }
+  /* The theme's own piece of the DURF puzzle (design system: .durf-piece), with the pictogram in it.
+     The piece's frame is larger than the piece (room for the knobs), hence the negative margins. */
+  .p-mark { position: relative; width: 78mm; height: 78mm; margin: -9mm -5mm -11mm -11mm; }
+  .p-mark .durf-piece { --durf-piece-size: 100%; position: absolute; inset: 0; }
+  .p-mark .durf-pictogram { position: absolute; inset: 0; width: 100%; height: 100%; background-color: var(--t-on); -webkit-mask-size: 82%; mask-size: 82%; }
   /* the theme pictogram, large, in the dark theme colour so it also reads on the yellow tint */
-  /* the SURF pictograms have a lot of empty space around them, so the mask is drawn larger than its box */
-  .p-icon { display: block; width: 38mm; height: 36mm; margin-top: -1mm; }
-  .p-icon .durf-pictogram { display: block; width: 100%; height: 100%; background-color: var(--t-ink); -webkit-mask-size: 230%; mask-size: 230%; }
   .p-eyebrow { font-weight: 800; font-size: calc(var(--fs) * .95); letter-spacing: .09em; text-transform: uppercase; color: var(--t-ink); margin: 0 0 1.5mm; }
   .p-title { font-size: calc(var(--fs) * 3); line-height: 1.02; }
   .p-part { font-size: .45em; font-weight: 800; vertical-align: middle; color: var(--t-on); background: var(--t); border-radius: 99px; padding: .1em .6em; white-space: nowrap; }
@@ -94,7 +94,7 @@
 
   /* mini gantt */
   .p-axis { position: relative; height: 9mm; }
-  .p-axis span { position: absolute; top: 0; bottom: 0; display: flex; align-items: flex-end; justify-content: center; font-weight: 800; font-size: calc(var(--fs) * .78); color: var(--muted-foreground); border-left: .3mm solid #CDD0D5; }
+  .p-axis span { position: absolute; top: 0; bottom: 0; display: flex; align-items: flex-end; justify-content: center; font-weight: 800; font-size: min(calc(var(--fs) * .78), 8.5pt); white-space: nowrap; color: var(--muted-foreground); border-left: .3mm solid #CDD0D5; }
   .p-axis span:first-child { border-left: 0; }
   .p-barbox { position: relative; height: calc(var(--fs) * 1.7); }
   .p-grid { position: absolute; inset: 0; }
@@ -130,6 +130,27 @@
   .p-qr figure { margin: 0; text-align: center; font-size: calc(var(--fs) * .7); color: #3a4350; }
   .p-qr img { width: 20mm; height: 20mm; display: block; }
 
+  /* opening poster */
+  .p-open { grid-template-rows: minmax(0, 1fr) auto; --t: var(--durf-blue, #177ABF); }
+  .o-main { display: grid; grid-template-columns: 150mm 1fr; gap: 14mm; padding: 16mm 16mm 4mm; align-items: center; min-height: 0; }
+  .o-title { font-size: 34pt; line-height: 1.05; margin: 0 0 6mm; }
+  .p-open .p-eyebrow { color: var(--durf-blue, #177ABF); font-size: 11pt; }
+  .o-lead { font-size: 14pt; line-height: 1.35; margin: 0 0 6mm; }
+  .o-steps { margin: 0 0 7mm; padding: 0; list-style: none; counter-reset: s; display: grid; gap: 3mm; font-size: 12pt; line-height: 1.3; }
+  .o-steps li { counter-increment: s; display: grid; grid-template-columns: 9mm 1fr; gap: 3mm; align-items: start; }
+  .o-steps li::before { content: counter(s); font-family: var(--font-heading); font-weight: 900; font-size: 13pt; width: 9mm; height: 9mm; border-radius: 50%; display: grid; place-items: center; background: var(--durf-black, #050E1D); color: #fff; }
+  .o-h { font-size: 12pt; margin: 0 0 2.5mm; }
+  .o-leads { list-style: none; margin: 0; padding: 0; display: grid; gap: 1.6mm; font-size: 10pt; line-height: 1.25; }
+  .o-leads li { display: grid; grid-template-columns: 11mm 1fr; gap: 2mm; align-items: center; }
+  .o-leads .durf-piece { --durf-piece-size: 11mm; }
+  .o-puzzle { position: relative; width: 100%; aspect-ratio: 370 / 270; filter: drop-shadow(0 1mm 1.4mm rgba(5, 14, 29, .25)); }
+  .o-piece { position: absolute; width: calc(170 / 370 * 100%); height: calc(170 / 270 * 100%); }
+  .o-piece .durf-piece { --durf-piece-size: 100%; position: absolute; inset: 0; }
+  /* pictogram in the middle of the piece, number and name in the top-left corner (knobs sit mid-edge) */
+  .o-piece .durf-pictogram { position: absolute; inset: 0; width: 100%; height: 100%; background-color: var(--theme-on); -webkit-mask-size: 62%; mask-size: 62%; }
+  .o-label { position: absolute; left: 23.5%; top: 23%; color: var(--theme-on); font-family: var(--font-heading); font-weight: 800; font-size: 11pt; line-height: 1.05; }
+  .o-label b { display: block; font-size: 20pt; font-weight: 900; line-height: 1; }
+
   .err { max-width: 40rem; margin: 2rem auto; }
 
   @media print {
@@ -158,6 +179,15 @@
   /* ---------- texts that belong to the poster, not to the roadmap ---------- */
   var POSTER = {
     event: "DURF Federation Day · 18 November 2026 · Theme carousel",
+    openingEvent: "DURF Federation Day · 18 November 2026",
+    openingTitle: "Theme carousel: six pieces, one puzzle",
+    openingLead: "Together the six DURF themes make the Dutch scholarly corpus global, open and resilient. Each theme has its own table. None of the pieces works without the others, and none of them works without your institution.",
+    openingSteps: [
+      "Join a table. The theme lead explains the goal of the theme and the activities that lead to it.",
+      "See what we ask from institutions for each activity, and whether that is during the project, after it, or both.",
+      "Write down which in-kind contribution your institution could make, to which activity, and who in your organisation could do it.",
+      "Move on to the next table when the carousel turns."
+    ],
     question: "Which in-kind contribution could your institution make, to which activity, and who in your organisation could do it? Write it in the column on the right.",
     // A pictogram per theme from the DURF design system (assets/icons/surf/). A first proposal.
     icons: { 1: "strategy/strategy-18", 2: "data/data-03", 3: "research/research-17", 4: "data/data-07", 5: "research/research-10", 6: "collaboration/collaboration-20" }
@@ -223,6 +253,39 @@
     return names[((mo % 12) + 12) % 12] + " " + (y + Math.floor(mo / 12));
   }
 
+  /* the theme's puzzle piece with its pictogram */
+  function piece(n) {
+    return '<span class="durf-piece" data-theme-n="' + n + '"></span>' + (POSTER.icons[n] ?
+      '<span class="durf-pictogram" style="--durf-pictogram:url(' + DS + 'assets/icons/surf/' + POSTER.icons[n] + '.png)"></span>' : "");
+  }
+
+  /* The opening poster: the six pieces fitted together, and how the carousel works. */
+  function opening(themes) {
+    var pieces = themes.map(function (t) {
+      var col = (t.n - 1) % 3, row = Math.floor((t.n - 1) / 3);
+      var ds = (window.DURF && window.DURF.theme && window.DURF.theme(t.n)) || null;
+      return '<div class="o-piece" data-theme-n="' + t.n + '" style="left:' + (col * 100 / 370 * 100) + '%;top:' + (row * 100 / 270 * 100) + '%">' + piece(t.n) +
+        '<span class="o-label"><b>' + t.n + '</b>' + esc(t.short) + '</span></div>';
+    }).join("");
+    var leads = themes.map(function (t) {
+      var ds = (window.DURF && window.DURF.theme && window.DURF.theme(t.n)) || null, l = ds && ds.lead;
+      var who = !l ? esc(t.lead) : l.vacant ? "Vacant: the DURF project team" : esc(l.name) + " (" + esc(l.institution) + ")" + (l.coLead ? " and " + esc(l.coLead.name) + " (" + esc(l.coLead.institution) + ")" : "");
+      return '<li data-theme-n="' + t.n + '"><span class="durf-piece" data-theme-n="' + t.n + '"></span><span><b>Theme ' + t.n + ' · ' + esc(t.name) + '</b><br>' + who + '</span></li>';
+    }).join("");
+    return '<section class="poster p-open" id="opening" aria-label="Opening poster">' +
+      '<div class="o-main"><div class="o-text">' +
+        '<p class="p-eyebrow">' + esc(POSTER.openingEvent) + '</p>' +
+        '<h2 class="o-title">' + esc(POSTER.openingTitle) + '</h2>' +
+        '<p class="o-lead">' + esc(POSTER.openingLead) + '</p>' +
+        '<ol class="o-steps">' + POSTER.openingSteps.map(function (x) { return '<li>' + esc(x) + '</li>'; }).join("") + '</ol>' +
+        '<h3 class="o-h">The tables and their theme leads</h3><ul class="o-leads">' + leads + '</ul>' +
+      '</div><div class="o-puzzle" role="img" aria-label="The six DURF themes as pieces of one puzzle">' + pieces + '</div></div>' +
+      '<footer class="p-foot"><img class="logo" src="' + DS + 'assets/durf-logo.svg" alt="DURF">' +
+        '<div class="who"><strong>Dutch Repository Federation</strong>Making the Dutch scholarly corpus global, open and resilient. Questions: durf@surf.nl</div><span></span>' +
+        '<div class="p-qr"><figure><img src="qr-roadmap.svg" alt="QR code to the DURF roadmap">Roadmap</figure><figure><img src="qr-home.svg" alt="QR code to the DURF home page">DURF home</figure></div></footer>' +
+      '</section>';
+  }
+
   function poster(theme, acts, settings, part) {
     var n = theme.n, total = +settings.total_months || 48, start = settings.start_year_month || "2026-06";
     var ds = (window.DURF && window.DURF.theme && window.DURF.theme(n)) || null;
@@ -255,9 +318,9 @@
              '<div class="' + c + '">' + askHtml + '</div>' +
              '<div class="' + c + '"><div class="p-write"><label>Our contribution</label><div class="line"></div><label>Who in our organisation</label><div class="line"></div></div></div>';
     }).join("");
-    var icon = POSTER.icons[n] ? '<span class="p-icon"><span class="durf-pictogram" data-theme-n="' + n + '" style="--durf-pictogram:url(' + DS + 'assets/icons/surf/' + POSTER.icons[n] + '.png)"></span></span>' : "<span></span>";
+    var mark = piece(n);
     return '<section class="poster" data-theme-n="' + n + '" id="theme-' + n + '" aria-label="Theme ' + n + ' poster">' +
-      '<header class="p-head"><div class="p-mark"><span class="durf-puzzle" data-theme-n="' + n + '">' + n + '</span></div>' + icon +
+      '<header class="p-head"><div class="p-mark">' + mark + '</div>' +
         '<div><p class="p-eyebrow">' + esc(POSTER.event) + '</p><h2 class="p-title">Theme ' + n + ' · ' + esc(theme.name) + (part ? ' <span class="p-part">' + part + '</span>' : '') + '</h2>' +
         '<p class="p-goal"><b>Goal:</b> ' + esc(theme.goal) + '</p></div>' +
         '<dl class="p-people"><dt>Theme lead</dt><dd>' + lead + '</dd><dt>Partners</dt><dd>' + partners + '</dd></dl></header>' +
@@ -285,16 +348,17 @@
     var themes = table(data.Themes).map(function (t) { return { n: +t.theme_no, name: t.name, short: t.short_name, goal: t.goal, lead: t.lead, partners: t.partners }; });
     var acts = table(data.Activities);
     var settings = {}; table(data.Settings || [["key", "value"]]).forEach(function (s) { settings[s.key] = s.value; });
-    var want = +new URLSearchParams(location.search).get("theme");
+    var q = new URLSearchParams(location.search).get("theme"), want = q === null ? null : +q;   /* 0 = the opening poster */
     var pick = document.getElementById("pick");
-    pick.innerHTML = '<a href="./"' + (want ? "" : ' aria-current="page"') + '>All six</a>' + themes.map(function (t) {
-      return '<a href="?theme=' + t.n + '"' + (want === t.n ? ' aria-current="page"' : "") + '><span class="durf-puzzle" data-theme-n="' + t.n + '">' + t.n + '</span>' + esc(t.short) + '</a>';
+    pick.innerHTML = '<a href="./"' + (want === null ? ' aria-current="page"' : "") + '>All</a>' +
+      '<a href="?theme=0"' + (want === 0 ? ' aria-current="page"' : "") + '>Opening</a>' + themes.map(function (t) {
+      return '<a href="?theme=' + t.n + '"' + (want === t.n ? ' aria-current="page"' : "") + '><span class="durf-piece" data-theme-n="' + t.n + '"></span>' + esc(t.short) + '</a>';
     }).join("");
-    var show = themes.filter(function (t) { return !want || t.n === want; });
+    var show = themes.filter(function (t) { return want === null || t.n === want; });
     var box = document.getElementById("sheets");
     /* A theme whose text would come out smaller than MIN_PT on one A3 is spread over two. */
     var MIN_PT = 8.5;
-    box.innerHTML = show.map(function (t) { return poster(t, acts.filter(function (a) { return +a.theme_no === t.n; }), settings); }).join("");
+    box.innerHTML = (want === null || want === 0 ? opening(themes) : "") + show.map(function (t) { return poster(t, acts.filter(function (a) { return +a.theme_no === t.n; }), settings); }).join("");
     var split = function () {
       show.forEach(function (t) {
         var el = document.getElementById("theme-" + t.n); fit(el);
@@ -315,10 +379,10 @@
         el.remove();
       });
     };
-    if (want) document.title = "DURF theme " + want + " poster";
+    if (want) document.title = "DURF theme " + want + " poster"; else if (want === 0) document.title = "DURF theme carousel: opening poster";
     /* On screen the A3 sheets are scaled down to the window width; printing uses the real size. */
     var scale = function () { box.querySelectorAll(".poster").forEach(function (el) { el.style.zoom = ""; var z = Math.min(1, (document.documentElement.clientWidth - 24) / el.offsetWidth); if (z < 1) el.style.zoom = z; }); };
-    var go = function () { split(); box.querySelectorAll(".poster").forEach(fit); scale(); document.documentElement.dataset.ready = "1"; };
+    var go = function () { split(); box.querySelectorAll(".poster:not(.p-open)").forEach(fit); scale(); document.documentElement.dataset.ready = "1"; };
     window.addEventListener("resize", scale);
     window.addEventListener("beforeprint", function () { box.querySelectorAll(".poster").forEach(function (el) { el.style.zoom = ""; }); });
     window.addEventListener("afterprint", scale);
