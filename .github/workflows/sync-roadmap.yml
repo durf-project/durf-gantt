@@ -42,7 +42,7 @@ jobs:
 
       - name: Download the workbook
         env:
-          SHARE_URL: ${{ vars.ROADMAP_SHARE_URL || 'https://surf.works.surf.nl/public.php/dav/files/WP9W6mL7QHsxRKz' }}
+          SHARE_URL: ${{ vars.ROADMAP_SHARE_URL || 'https://surf.works.surf.nl/public.php/dav/files/rZdbSgE2Z8gdzLk' }}
         run: |
           set -euo pipefail
           url="${SHARE_URL%/}"
