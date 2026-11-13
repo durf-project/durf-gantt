@@ -252,13 +252,15 @@
 }
 .durf-caret { flex: 0 0 auto; color: var(--muted-foreground); transition: transform .15s ease; display: flex; }
 .durf-toggle[aria-expanded="true"] .durf-caret { transform: rotate(90deg); }
-.durf-piece { flex: 0 0 auto; width: 2rem; height: 2rem; position: relative; }
-.durf-piece svg { width: 100%; height: 100%; display: block; color: var(--t); }
-.durf-piece b {
-  /* centred on the body of the piece (x 18-82, y 22-86 in the 100 x 100 shape) */
-  position: absolute; inset: 22% 18% 14% 18%; display: flex; align-items: center; justify-content: center;
-  font-family: var(--font-heading); font-size: .8125rem; font-weight: 800; color: var(--t-ink);
+/* The theme's own piece of the DURF puzzle (design system: .durf-piece, as on the theme posters).
+   Its frame is larger than the piece (room for the knobs), hence the negative margin. */
+.durf-tpiece { flex: 0 0 auto; width: 3rem; height: 3rem; margin: -.5rem -.125rem -.5rem -.5rem; position: relative; }
+.durf-tpiece .durf-piece { --durf-piece-size: 100%; position: absolute; inset: 0; }
+.durf-tpiece b {
+  position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-heading); font-size: .875rem; font-weight: 900; color: #fff;
 }
+.durf-tpiece[data-theme-n="2"] b { color: #050E1D; }
 .durf-tname { flex: 1 1 auto; min-width: 0; font-family: var(--font-heading); font-weight: 800; font-size: 1rem; line-height: 1.25; }
 .durf-tname small { display: block; font-family: var(--font-sans); font-weight: 400; font-size: .75rem; color: var(--muted-foreground); }
 .durf-count { flex: 0 0 auto; background-color: var(--t-deep); }
@@ -389,6 +391,25 @@
   background-color: var(--t-tint-strong); color: var(--t-deep);
   font-size: .6875rem; font-weight: 700; letter-spacing: .02em;
 }
+/* in-kind contributions, as on the theme posters */
+.durf-when { color: var(--muted-foreground); display: inline-block; margin-top: .25rem; }
+.durf-asks { margin-top: var(--sds--space--2); padding-top: var(--sds--space--1-and-a-half); border-top: .0625rem solid var(--border); }
+.durf-asks__title {
+  margin: 0 0 .5rem; font-size: .6875rem; font-weight: 700; letter-spacing: .08em;
+  text-transform: uppercase; color: var(--muted-foreground);
+}
+.durf-asks ul { list-style: none; margin: 0; padding: 0; display: grid; gap: .5rem; }
+.durf-asks li { display: grid; grid-template-columns: auto 1fr; gap: .625rem; align-items: baseline; font-size: .9375rem; line-height: 1.45; }
+.durf-lvl {
+  font-size: .625rem; font-weight: 800; letter-spacing: .05em; text-transform: uppercase;
+  border-radius: .25rem; padding: .0625rem .375rem; white-space: nowrap;
+}
+.durf-lvl--essential { background-color: var(--t-deep); color: var(--background); }
+.durf-lvl--optional { color: var(--t-deep); box-shadow: inset 0 0 0 .0625rem var(--t-deep); }
+.durf-tm {
+  display: inline-block; margin-left: .375rem; padding: 0 .4375rem; border-radius: 1rem;
+  background-color: var(--muted); color: var(--muted-foreground); font-size: .6875rem; font-weight: 700; white-space: nowrap;
+}
 .durf-note {
   margin-top: var(--sds--space--1-and-a-half);
   padding: var(--sds--space--1) var(--sds--space--1-and-a-half);
@@ -438,7 +459,7 @@
   .durf-chart { border-color: #999; }
   .durf-axis { position: static; }
   .durf-theme-body[hidden], .durf-detail[hidden] { display: block !important; }
-  .durf-bar--act, .durf-bar--rollup, .durf-piece svg, .durf-tag {
+  .durf-bar--act, .durf-bar--rollup, .durf-tpiece .durf-piece, .durf-tag {
     -webkit-print-color-adjust: exact; print-color-adjust: exact;
   }
 }
@@ -518,10 +539,6 @@
 </div>
 
 <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
-  <symbol id="durf-puzzle" viewBox="0 0 100 100">
-    <!-- Same shape as durf-design-system/assets/icons/puzzle-piece.svg -->
-    <path d="M25 22H42.5C40.6 18.4 40.2 14.6 41.6 11.2A9.4 9.4 0 0 1 58.4 11.2C59.8 14.6 59.4 18.4 57.5 22H75A7 7 0 0 1 82 29V44.5C85.6 42.6 89.4 42.2 92.8 43.6A9.4 9.4 0 0 1 92.8 60.4C89.4 61.8 85.6 61.4 82 59.5V79A7 7 0 0 1 75 86H57.5C59.4 82.4 59.8 78.6 58.4 75.2A9.4 9.4 0 0 0 41.6 75.2C40.2 78.6 40.6 82.4 42.5 86H25A7 7 0 0 1 18 79V29A7 7 0 0 1 25 22Z"/>
-  </symbol>
 </svg>
 
 <script>
@@ -803,6 +820,42 @@ function parseLinks(v) {
   }).filter(function (l) { return l.url; });
 }
 
+function byPrefix(row, start) {
+  for (const k in row) if (k.indexOf(start) === 0) return row[k];
+  return "";
+}
+
+/* The in-kind column is free text written by theme leads: one contribution per line, starting
+   with essential: or optional:, and ending with [during], [after] or [both]. Same rules as
+   posters/index.html. */
+function parseAsks(text) {
+  const items = [];
+  let level = "", cur = null;
+  String(text || "").split(/\n/).forEach(function (raw) {
+    const line = raw.replace(/\t/g, " ").trim();
+    if (!line) { cur = null; return; }
+    if (/^from the position paper commitments:?$/i.test(line)) { cur = null; return; }
+    const head = /^(?:\d+\.\s*)?(?:[-*•]\s*)?(essential|optional|mandatory)(\s*\([^)]*\))?(?:\s+for [^:]+)?\s*:\s*(.*)$/i.exec(line);
+    if (head) {
+      level = /optional/i.test(head[1]) ? "optional" : "essential";
+      const rest = head[3].trim();
+      if (!rest) { cur = null; return; }
+      cur = { level: level, who: (head[2] || "").replace(/[()\s]/g, ""), text: rest }; items.push(cur); return;
+    }
+    if (/^[-*•]/.test(line)) { cur = { level: level, text: line.replace(/^[-*•]\s*/, "") }; items.push(cur); return; }
+    if (/^\d+\.\s+/.test(line)) { cur = { level: level, text: line.replace(/^\d+\.\s+/, "") }; items.push(cur); return; }
+    if (cur && !level) { cur.text += " " + line; return; }
+    cur = { level: level, text: line }; items.push(cur);
+  });
+  return items.map(function (it) {
+    let t = it.text.replace(/^(?:\.\.\.|…)\s*/, "").replace(/^to\s+/i, "");
+    const m = /\[(during|after|both)\]\s*$/i.exec(t);
+    t = t.replace(/\s*\[(during|after|both)\]\s*$/i, "");
+    return { level: it.level === "optional" ? "optional" : "essential", who: it.who || "",
+             text: t.charAt(0).toUpperCase() + t.slice(1), timing: m ? m[1].toLowerCase() : "" };
+  });
+}
+
 function normalise(sheets) {
   const get = function (name) { return indexRows(sheets[name]); };
   const meta = sheets[META_KEY] || {};
@@ -841,6 +894,10 @@ function normalise(sheets) {
       status: str(r.status),
       /* Shown on the public chart. */
       publicNote: str(r.public_note || r["public note"] || r["note (public)"]),
+      /* What institutions are asked to contribute in kind, and when (as on the theme posters).
+         Columns are found by the start of their header, so a longer header keeps working. */
+      asks: parseAsks(byPrefix(r, "needs: in-kind")),
+      when: str(byPrefix(r, "when")),
       /* Deliberately not rendered: the workbook is edited by theme leads and
          `notes` is where their working remarks land. Kept in the model only so
          a future internal view could use it. */
@@ -977,7 +1034,7 @@ const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
                 "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
 /* The team folder's share link. Set edit_url in the Settings sheet to override. */
-const DEFAULT_EDIT_URL = "https://surf.works.surf.nl/s/rjDi6bPYpyTrQBi";
+const DEFAULT_EDIT_URL = "https://surf.works.surf.nl/f/6388354";
 
 const state = {
   model: null,
@@ -1220,6 +1277,11 @@ function activityDetail(a) {
     ? monthLabel(state.model, a.start)
     : monthLabel(state.model, a.start) + " – " + monthLabel(state.model, a.end);
   when.appendChild(cal);
+  if (a.when) {
+    const w = el("span", "sds--text--body--small durf-when", a.when);
+    when.appendChild(el("br"));
+    when.appendChild(w);
+  }
   definition(grid, "Timing", when);
 
   if (a.tags.length) {
@@ -1231,6 +1293,22 @@ function activityDetail(a) {
   if (a.links.length) definition(grid, "Reference", linkList(a.links));
 
   card.appendChild(grid);
+  if (a.asks.length) {
+    const box = el("div", "durf-asks");
+    box.appendChild(el("p", "durf-asks__title", "What we ask from institutions, in kind"));
+    const ul = el("ul");
+    a.asks.forEach(function (k) {
+      const li = el("li");
+      li.appendChild(el("span", "durf-lvl durf-lvl--" + k.level, k.level + (k.who ? " · " + k.who : "")));
+      const txt = el("span", null, k.text);
+      if (k.timing) txt.appendChild(el("span", "durf-tm",
+        k.timing === "both" ? "during and after" : k.timing === "after" ? "after the project" : "during the project"));
+      li.appendChild(txt);
+      ul.appendChild(li);
+    });
+    box.appendChild(ul);
+    card.appendChild(box);
+  }
   if (a.publicNote) card.appendChild(el("p", "durf-note", a.publicNote));
   wrap.appendChild(card);
   return wrap;
@@ -1319,14 +1397,12 @@ function themeDetail(theme) {
 
 /* ---- rows -------------------------------------------------------------- */
 function puzzle(number) {
-  const box = el("span", "durf-piece");
-  const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-  const use = document.createElementNS("http://www.w3.org/2000/svg", "use");
-  use.setAttribute("href", "#durf-puzzle");
-  svg.appendChild(use);
-  svg.setAttribute("aria-hidden", "true");
-  svg.setAttribute("focusable", "false");
-  box.appendChild(svg);
+  const box = el("span", "durf-tpiece");
+  box.setAttribute("data-theme-n", String(number));
+  const piece = el("span", "durf-piece");
+  piece.setAttribute("data-theme-n", String(number));
+  piece.setAttribute("aria-hidden", "true");
+  box.appendChild(piece);
   box.appendChild(el("b", null, String(number)));
   return box;
 }
@@ -1590,8 +1666,8 @@ function renderChrome() {
   if (url) {
     edit.href = url;
     edit.querySelector(".text").textContent = str(s.edit_label) || "Log in to edit";
-    edit.title = "Opens the planning workbook in SURF Research Drive. " +
-      "Theme leads need the password.";
+    edit.title = "Opens the planning workbook in SURF Works. " +
+      "Theme leads log in with their SURF Works account.";
   }
 }
 
