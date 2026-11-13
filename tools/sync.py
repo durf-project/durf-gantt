@@ -22,7 +22,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 TARGET = ROOT / "data" / "durf-roadmap.xlsx"
 # The WebDAV public endpoint serves the file itself, so nothing is appended.
-DEFAULT_URL = "https://surf.works.surf.nl/public.php/dav/files/WP9W6mL7QHsxRKz"
+DEFAULT_URL = "https://surf.works.surf.nl/public.php/dav/files/rZdbSgE2Z8gdzLk"
 TIMEOUT = 60
 
 # A Nextcloud/ownCloud /s/<token> link serves a viewer page; the file is one

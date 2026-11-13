@@ -1,6 +1,6 @@
 {
  "__meta__": {
-  "modified": "2026-11-13T00:26:33Z"
+  "modified": "2026-11-13T07:55:40Z"
  },
  "Themes": [
   [
@@ -28,7 +28,7 @@
    "Metadata",
    "#F6DA44",
    "Repository/CRIS systems have adopted the updated metadata- and exchange-standards for high-quality research metadata that comply with international guidelines and meet national requirements.",
-   "Leiden",
+   "UL",
    "WUR (tech lead), SURF (community management, legal advice, project assistance, architect), KB (WISH)"
   ],
   [
@@ -46,7 +46,7 @@
    "Archive",
    "#17A95D",
    "Comprehensive preservation achieved of Dutch scholarly output in the KB e-Depot.",
-   "KB National Library",
+   "KB",
    "WUR (tech lead), SURF (legal)"
   ],
   [
@@ -55,7 +55,7 @@
    "Discovery",
    "#5C1B61",
    "Increase the visibility of Dutch research content in major international indexes.",
-   "Leiden",
+   "UL",
    "WUR (tech lead)"
   ],
   [
