@@ -1,6 +1,6 @@
 {
  "__meta__": {
-  "modified": "2026-11-12T16:20:31Z"
+  "modified": "2026-11-13T00:26:33Z"
  },
  "Themes": [
   [
@@ -45,7 +45,7 @@
    "KB National Library e-Depot Archiving",
    "Archive",
    "#17A95D",
-   "Comprehensive preservation achieved of Dutch scientific output in the KB e-Depot.",
+   "Comprehensive preservation achieved of Dutch scholarly output in the KB e-Depot.",
    "KB National Library",
    "WUR (tech lead), SURF (legal)"
   ],
@@ -63,7 +63,7 @@
    "NL Research Portal Update",
    "Portal",
    "#83201B",
-   "Deliver a fully-functional, user-centered Netherlands Research Portal that serves as the primary discovery point for Dutch research outputs.",
+   "Deliver a fully-functional, user-centered Netherlands Research Portal that serves as the primary discovery point for Dutch scholarly output.",
    "vacant"
   ]
  ],
@@ -473,7 +473,7 @@
    "In order to develop mappings and best practices for major indexes to improve Dutch research visibility, the in-kind contribution needed is an inventory of the indexes currently covered by participating institutions and their priorities for new indexes or improvements. In addition, 2–3 institutions per use case are needed to document best practices and explore suitable methods for measuring implementation and impact. This will contribute to a guideline for adding repository content to OpenAlex, WorldCat and Google Scholar.",
    "Optional:\n\t- Brainstorming and ranking the outlets/dissemination formats that are most important to target specifically (for example OpenAlex, CORE and Wikidata). At most three meetings totalling 16 hours.\n\t- Developing a mapping towards the new standards and writing a best practice for implementation as also developed for the Dutch application profile. This will take around 24 hours per standard.\nEssential:\nWillingness to implement new standards. The amount of time needed is standard and system dependent.\n\nFrom the position paper commitments:\noptional: ... to share and teach your tools and methods for discoverability with the other institutions, for example at the DURF Federation Day. [both]",
    "",
-   "OPERATIONAL (Discoverability): UBs will share and teach each other the tools and methods to maximise the discoverability of Dutch research output, for human consumption and machines alike.",
+   "OPERATIONAL (Discoverability): UBs will share and teach each other the tools and methods to maximise the discoverability of Dutch scholarly output, for human consumption and machines alike.",
    "During the project: mappings and best practices (M1 to M12). After the project: implementing new standards as they come. So: both."
   ],
   [
@@ -507,7 +507,7 @@
    "In order to create a monitoring system for tracking the visibility of DURF content across major indexes, the in-kind contribution needed is access to monitoring reports, recommendations for improvement and practical input from participating institutions. All participating members are expected to contribute to a shared meeting, supported by a small committee of 1–2 members to prepare the findings and recommendations. This will contribute to a discoverability health dashboard showing the implementation of Google Scholar index guidelines per repository over time.",
    "Optional:\n\t- Reviewing and giving input for the design of the discoverability monitor and helping it create actionable reports. Three or four meetings and homework totalling no more than 20 hours.\nWilling participants for best practices to be presented. Datacombing and implementing changes as forerunner, approximately 8-16 hours.",
    "",
-   "OPERATIONAL (Discoverability): UBs will share and teach each other the tools and methods to maximise the discoverability of Dutch research output, for human consumption and machines alike.",
+   "OPERATIONAL (Discoverability): UBs will share and teach each other the tools and methods to maximise the discoverability of Dutch scholarly output, for human consumption and machines alike.",
    "During the project: the discoverability monitor (M12 to M18)."
   ],
   [
@@ -774,7 +774,7 @@
   ],
   [
    "intro",
-   "DURF reinforces the Netherlands Research Portal and the institutional repository/CRIS landscape so Dutch research output is more robust, sovereign and findable. Six themes run in parallel over four years.",
+   "DURF reinforces the Netherlands Research Portal and the institutional repository/CRIS landscape so Dutch scholarly output is more robust, sovereign and findable. Six themes run in parallel over four years.",
    "Short paragraph under the title. Leave blank to hide."
   ],
   [

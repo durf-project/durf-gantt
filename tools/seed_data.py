@@ -22,7 +22,7 @@ SETTINGS = [
     ("total_months", 48, "Project length in months. Drives the timeline width."),
     ("intro",
      "DURF reinforces the Netherlands Research Portal and the institutional "
-     "repository/CRIS landscape so Dutch research output is more robust, "
+     "repository/CRIS landscape so Dutch scholarly output is more robust, "
      "sovereign and findable. Six themes run in parallel over four years.",
      "Short paragraph under the title. Leave blank to hide."),
     ("source_note",
@@ -75,7 +75,7 @@ THEMES = [
         name="KB National Library e-Depot Archiving",
         short="e-Depot Archiving",
         color="#17A95D",
-        goal="Comprehensive preservation achieved of Dutch scientific output in the "
+        goal="Comprehensive preservation achieved of Dutch scholarly output in the "
              "KB e-Depot.",
         lead="KB National Library",
         partners="WUR (tech lead), SURF (legal)",
@@ -96,7 +96,7 @@ THEMES = [
         short="NL Research Portal",
         color="#83201B",
         goal="Deliver a fully-functional, user-centered Netherlands Research Portal "
-             "that serves as the primary discovery point for Dutch research outputs.",
+             "that serves as the primary discovery point for Dutch scholarly output.",
         lead="TU Delft",
         partners="",
     ),
