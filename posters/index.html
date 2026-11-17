@@ -39,6 +39,10 @@
   .toolbar .durf-piece { --durf-piece-size: 1.7rem; margin: -.2rem 0; }
   .toolbar .spacer { flex: 1; }
   .toolbar .hint { color: var(--muted-foreground); font-size: .875rem; margin: 0; }
+  /* ?embed (e.g. in the Federation Day slides): only the posters, no toolbar or margins */
+  html[data-embed] .toolbar { display: none; }
+  html[data-embed] .sheets { padding: 0; gap: 0; }
+  html[data-embed] .poster { box-shadow: none; }
   .sheets { display: flex; flex-direction: column; align-items: center; gap: 12mm; padding: 4mm 0 16mm; overflow-x: hidden; }
 
   /* ---------- the poster ---------- */
@@ -380,7 +384,7 @@
     };
     if (want) document.title = "DURF theme " + want + " poster"; else if (want === 0) document.title = "DURF theme carousel: opening poster";
     /* On screen the A3 sheets are scaled down to the window width; printing uses the real size. */
-    var scale = function () { box.querySelectorAll(".poster").forEach(function (el) { el.style.zoom = ""; var z = Math.min(1, (document.documentElement.clientWidth - 24) / el.offsetWidth); if (z < 1) el.style.zoom = z; }); };
+    var scale = function () { box.querySelectorAll(".poster").forEach(function (el) { el.style.zoom = ""; var emb = document.documentElement.hasAttribute("data-embed"); var z = Math.min(1, (document.documentElement.clientWidth - (emb ? 0 : 24)) / el.offsetWidth, emb ? window.innerHeight / el.offsetHeight : 1); if (z < 1) el.style.zoom = z; }); };
     var go = function () { split(); box.querySelectorAll(".poster:not(.p-open)").forEach(fit); scale(); document.documentElement.dataset.ready = "1"; };
     window.addEventListener("resize", scale);
     window.addEventListener("beforeprint", function () { box.querySelectorAll(".poster").forEach(function (el) { el.style.zoom = ""; }); });
