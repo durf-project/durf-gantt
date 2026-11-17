@@ -1,6 +1,6 @@
 {
  "__meta__": {
-  "modified": "2026-11-13T07:55:40Z"
+  "modified": "2026-11-17T21:33:21Z"
  },
  "Themes": [
   [
@@ -92,9 +92,9 @@
    "report",
    1,
    12,
-   "",
+   "6,12",
    "GORC Commons Model template :: https://view.officeapps.live.com/op/view.aspx?src=https%3A%2F%2Fwww.rd-alliance.org%2Fwp-content%2Fuploads%2F2024%2F07%2FGORC-International-Model-WG-Commons-Model-V1.1.xlsx&wdOrigin=BROWSELINK",
-   "Not started",
+   "In progress",
    "",
    "",
    "1. optional: ... to have a chief open science or library director carefully review and provide feedback to the pledges of the draft position paper (https://durf-project.github.io/position-paper/) by M6 of the project. (1 hour)\n2. essential: ... to have your library director or mandated person sign the position paper, before M12 in the project. (1 hour)",
@@ -111,7 +111,7 @@
    12,
    "",
    "NaMeCo template :: https://www.openaire.eu/public-documents/nameco-template",
-   "Not started",
+   "In progress",
    "",
    "",
    "1. essential: … to have your institution become member of OpenAIRE [is also part of position paper, for sustainable governance] before M12\n2. optional: ... to have someone represent your institution, and take part in the Dutch OpenAIRE National Membership Consortium meetings. (4x a year, hybrid) [is also part of position paper, for sustainable governance] , before M12\n\nFrom the position paper commitments:\nessential: ... to keep your OpenAIRE membership and your seat in the NaMeCo after the project ends. [after]",
@@ -213,7 +213,7 @@
    3,
    "",
    "EduStandaard werkgroepen :: https://www.edustandaard.nl/standaard_werkgroepen/",
-   "Not started",
+   "In progress",
    "",
    "Formalising WISH 2.0:\nIn order to form and formalise the NL Research Information Content Board through EduStandard, the in-kind contribution needed is the time and commitment of all UKB+ members to review the inventory of existing agreements and provide formal approval of the consolidated agreement. This will contribute to the formalisation of WISH 2.0 at EduStandard.nl through a signed agreement.",
    "Essential: for a legal basis document KB and DANS need to provide as background all contracts regarding metadata delivery, the WISH working group, URN:NBN, ISNI, ORCID, Narcis and e-depot.\nOptional: a new contract/letter of intent has to be setup for delivering metadata according to the new application profiles around the Netherlands Research Portal.\nMandatory: \n\t- all UKB partnershave to sign the new contract/letter of intent to adhere to the new standards. Non UKB-partners may sign the new contract.\n- DANS/WISH has to approve the new standard as follow-up to the current NL_DIDL agreements on Edustandaard\n\nFrom the position paper commitments:\nessential: ... to delegate a representative to the NL Research Information Content Board (EduStandaard.nl) that stewards the shared metadata standard. [both]",
@@ -230,7 +230,7 @@
    12,
    "",
    "NL-DIDL-MODS :: https://www.edustandaard.nl/standaard_afspraken/?edu_orderby=title&werkgebieden%5B%5D=ho&registratiestatussen%5B%5D=geregistreerd&registratiestatussen%5B%5D=aangemeld&gebruiksadviezen%5B%5D=verplicht&gebruiksadviezen%5B%5D=aangeraden&gebruiksadviezen%5B%5D=onder-voorwaarden&gebruiksadviezen%5B%5D=onbekend | OpenAIRE CERIF and DC guidelines :: https://guidelines.openaire.eu/ | RSL: Really Simple Licensing :: https://rslstandard.org/",
-   "Not started",
+   "In progress",
    "",
    "Developing the application profile:\nIn order to develop the metadata application profile by translating current NL-DI4MODS requirements into OpenAIRE CERIF and DC guidelines, the in-kind contribution needed is a working group of 6–8 experts who can contribute domain knowledge, participate in 3–4 half-day meetings, and carry out approximately 48 hours of preparatory work and review. This will contribute to the publication of the OAI-CERIF OpenAIRE-NL and OAI-DC OpenAIRE-NL application profiles as standards on EduStandard.nl.",
    "Optional: contribute to reviewing, elaborating and clarifying the new proposed application profile. Estimated time cost is 3-4 half days and homework for about 48 hours.",
@@ -264,7 +264,7 @@
    48,
    "",
    "CRIS/Repo Dashboard :: https://surf-ori.github.io/dashboards/cris-repository-overview.html",
-   "Not started",
+   "In progress",
    "",
    "Monitoring compliance and sharing best practices:\nIn order to monitor compliance with the new standard and share implementation best practices, the in-kind contribution needed is a small expert committee to identify, document, and share good practices, supported by practical experience and staff time from participating institutions. This will contribute to the development of an OAI Compliance Validator, a compliance health dashboard, and best-practice workshops for repository and CRIS managers.",
    "Optional:\n\t- Reviewing proposed monitoring/validation service and discussing how to provide actionable results for the community. Three meetings and homework totalling 32hours. \n\t- Writing down best practices for solving issues found while monitoring. 16 hours expected per case. Results will be hosted and presented at suitable locations such as the DURF federation day, WISH for repository/CRIS managers, and for increasing visibility at the Barcelona signatories meeting and RINN.\n\t- attending a workshop on best practices. Approximately 4 hours.\nEssential:\n- Making local improvements based on the monitoring as far as possible. This may involve data issues as well as incomplete implementation of the application profile.\n\nFrom the position paper commitments:\nessential: ... to keep your records compliant with the application profile after the project, using the monitoring results. [after]",
@@ -298,7 +298,7 @@
    48,
    "",
    "CRIS/Repo Dashboard :: https://surf-ori.github.io/dashboards/cris-repository-overview.html",
-   "Not started",
+   "In progress",
    "",
    "Monitoring PID health:\nIn order to monitor the usage of core entity PIDs (ROR, ORCID and DOI) and promote local implementation, the in-kind contribution needed is a small working group representing 3–4 institutions to develop and share materials that improve identifier coverage. In addition, the research intelligence teams of all participating members are expected to contribute their expertise and support local implementation within their universities. This will contribute to the delivery of a PID health dashboard showing ROR, ORCID and DOI coverage in records per repository over time.",
    "Optional:\nHelp create communication materials for improving coverage with PIDS such as ORCID for researchers and lobbying for funding/implementation of local pids (handle/doi/ROR) if not yet available. 24 hours\n\nFrom the position paper commitments:\nessential: ... to monitor and improve the completeness of ROR, ORCID and DOI in your records, and to include these identifiers in what you expose for harvesting. [both]",
@@ -332,7 +332,7 @@
    6,
    "Write a proposal (2)\nApproval of the proposal (3)\nCollect data for the monitor (4)\nDevelop the monitor (4 – 5)\nLaunch of the monitor (6)",
    "CRIS/Repo Dashboard :: https://surf-ori.github.io/dashboards/cris-repository-overview.html",
-   "Started",
+   "In progress",
    "",
    "Provide insight – via a monitor or dashboard – of the current state of affairs in the Netherlands, a baseline measurement. How many Dutch scientific publications currently also have a copy – file, PDF – available in the NL repositories? The monitor provides insight into how resilient (digital sovereignty) we currently are and thereby demonstrates the necessity for the subsequent activities within this theme.",
    "- essential: help define the scope of records to add the full text\n- essential: data delivery (all insitutions)\n- optional: feedback on development of the monitor\n\nFrom the position paper commitments:\nessential: ... to agree, together with the other UBs, on the financial business case for adding full texts to the back-log within the agreed scope. [during]",
@@ -400,7 +400,7 @@
    12,
    "",
    "",
-   "Not started",
+   "In progress",
    "",
    "",
    "optional: attend meetings to define the delivery method and route of open and closed access papers to the edepot",
@@ -434,7 +434,7 @@
    38,
    "",
    "CRIS/Repo Dashboard :: https://surf-ori.github.io/dashboards/cris-repository-overview.html",
-   "Not started",
+   "In progress",
    "",
    "",
    "optional: provide feedback on the monitor dashboard",
@@ -779,7 +779,7 @@
   ],
   [
    "source_note",
-   "Source: DURF presentation, 19 March 2026 — theme slides 5–10.",
+   "Source: DURF planning workbook in SURF Works, maintained by the theme leads.",
    "Footer provenance line."
   ]
  ]
