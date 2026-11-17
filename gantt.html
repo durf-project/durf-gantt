@@ -15,6 +15,10 @@
 <link rel="stylesheet" href="https://durf-project.github.io/durf-design-system/lib/oat.min.css">
 <link rel="stylesheet" href="https://durf-project.github.io/durf-design-system/durf.css">
 <script src="https://durf-project.github.io/durf-design-system/durf-nav.js"></script>
+<script>
+/* ?only=chart shows just the chart, its legend and footer: for embedding in slides. */
+if (new URLSearchParams(location.search).get("only") === "chart") document.documentElement.dataset.only = "chart";
+</script>
 <style>
 /* ==========================================================================
    DURF roadmap
@@ -466,6 +470,10 @@
 @media (prefers-reduced-motion: reduce) {
   .durf-app *, .durf-app *::before { transition: none !important; }
 }
+
+/* ?only=chart: no heading, tabs, buttons or filters */
+html[data-only="chart"] .durf-head,
+html[data-only="chart"] .durf-toolbar { display: none; }
 </style>
 </head>
 <body>
