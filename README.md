@@ -78,6 +78,9 @@ gantt.html?data=data/durf-roadmap.xlsx          <- URL parameter
 <div class="durf-app" id="durf-app" data-src="data/durf-roadmap.xlsx">
 ```
 
+For slides, `gantt.html?embed&only=chart` shows just the chart, its legend and footer: no
+heading, tabs, buttons or filters.
+
 `index.html` is a one-line redirect to the first of those, so publishing the
 whole folder and linking to it just works. The footer says which file was
 loaded, or why it was not. A fetch that fails falls back to the baked-in copy,
