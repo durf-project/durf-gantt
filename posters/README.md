@@ -40,7 +40,9 @@ after the project, or during and after.
 `../survey/` is the online version of these posters, for the follow-up email to the people who
 came: the same goal, activities, timeline and asks per theme, generated from the same workbook. People
 say who in their organisation can help with which activity (or per in-kind contribution), in
-which role, with an email address and an optional note. People they have entered once can be
+which role, with an email address, the community groups the person takes part in (WISH, PUGNL,
+COS, NaMeCo, UKB working groups and networks), how they are involved (RACI: the respondent is
+Accountable; others Responsible, Consulted or Informed) and an optional note. People they have entered once can be
 picked from a drop-down everywhere. Answers stay in the browser until the respondent downloads
 them as an Excel file and emails it to durf@surf.nl (one row per person and contribution, the
 same columns in every file, so the files can be stacked).
