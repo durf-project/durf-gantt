@@ -44,9 +44,24 @@
   .toc .bar i { display: block; height: 100%; width: 0; background: var(--theme-color, var(--accent-solid)); border-radius: 99px; transition: width .3s ease; }
   .toc .total { margin: .75rem .375rem 0; padding-top: .625rem; border-top: 1px solid var(--border); color: var(--muted-foreground); font-size: .8125rem; }
   .toc .total b { color: var(--foreground); }
+  .toc .total a { display: inline; padding: 0; color: var(--accent-solid); text-decoration: underline; }
   @media (min-width: 75rem) { .tnav { display: none !important; } }
   @media (max-width: 74.99rem) { .layout { grid-template-columns: minmax(0, 1fr); } .toc { display: none; } }
   .other-inst { margin-top: .375rem; }
+  /* the period filter */
+  .period { margin-top: 1rem; padding: .875rem 1rem; border-radius: .625rem; background: color-mix(in srgb, var(--accent-solid) 7%, var(--background)); display: grid; gap: .625rem; }
+  .period .ph { font-weight: 700; }
+  .period .years { display: flex; flex-wrap: wrap; gap: .375rem; }
+  .period .years button[aria-pressed="true"] { background: var(--accent-solid); color: #fff; border-color: var(--accent-solid); }
+  .period .months { display: flex; flex-wrap: wrap; gap: .5rem .75rem; align-items: center; font-size: .9375rem; }
+  .period .months label { display: inline-flex; gap: .375rem; align-items: center; font-weight: 600; }
+  .period .months input { width: 4.75rem; min-height: 2.25rem; }
+  .period .span { font-weight: 700; color: var(--accent-solid); }
+  .period .count { margin: 0; color: var(--muted-foreground); font-size: .875rem; }
+  .t-empty { margin: 0; padding: .875rem; border-top: 1px solid var(--border); color: var(--muted-foreground); font-style: italic; }
+  .t-empty[hidden] { display: none; }
+  .toc .period-line { margin: 0 .375rem .5rem; font-size: .8125rem; color: var(--muted-foreground); }
+  .toc .period-line a { color: var(--accent-solid); }
   .sv * { box-sizing: border-box; }
   .sv h1 { font-family: var(--font-heading); font-weight: 900; font-size: clamp(1.75rem, 4vw, 2.75rem); line-height: 1.1; margin: .25rem 0 .75rem; }
   .eyebrow { font-family: var(--font-heading); font-weight: 800; letter-spacing: .12em; text-transform: uppercase; font-size: .8125rem; color: var(--accent-solid); margin: 0; }
@@ -207,7 +222,17 @@
 
   <section class="card" id="themes-intro" style="margin-bottom:0">
     <h2>3 · The six themes</h2>
-    <p class="hint">Per activity: pick who can help. That person then counts for all in-kind contributions of the activity. Want a different person per contribution? Tick <b>Different people per contribution</b>. Optionally say how each person is involved (<b>Responsible</b>, <b>Consulted</b> or <b>Informed</b><button type="button" class="outline info" data-raci-info aria-label="About RACI" title="About RACI">i</button>), and add a note if needed, for example "available from June, because of our CRIS migration".</p>
+    <p class="hint">To keep the list short, you first see the activities of the first project year. Choose other months below whenever you like. Per activity: pick who can help. That person then counts for all in-kind contributions of the activity. Want a different person per contribution? Tick <b>Different people per contribution</b>. Optionally say how each person is involved (<b>Responsible</b>, <b>Consulted</b> or <b>Informed</b><button type="button" class="outline info" data-raci-info aria-label="About RACI" title="About RACI">i</button>), and add a note if needed, for example "available from June, because of our CRIS migration".</p>
+    <div class="period" id="period">
+      <div class="ph">Which activities do you want to see?</div>
+      <div class="years" data-years role="group" aria-label="Project years"></div>
+      <div class="months">
+        <label>From month <input type="number" min="1" step="1" inputmode="numeric" data-from></label>
+        <label>to month <input type="number" min="1" step="1" inputmode="numeric" data-to></label>
+        <span class="span" data-span></span>
+      </div>
+      <p class="count" data-count></p>
+    </div>
   </section>
   <nav class="tnav" id="tnav" aria-label="Themes"></nav>
   <div id="themes"><p class="err">Loading the roadmap…</p></div>
@@ -343,6 +368,7 @@
   var S;
   try { S = JSON.parse(localStorage.getItem(KEY)); } catch (e) { S = null; }
   if (!S || !S.people) S = { me: { name: "", inst: "", role: "", email: "" }, people: [], acts: {} };
+  if (!S.range) S.range = { from: 1, to: 12 };   /* by default only the first project year, so the list stays short */
   var savedAt = null, saveTimer = null;
   function save() {
     clearTimeout(saveTimer);
@@ -404,26 +430,26 @@
       esc(ds.lead.name) + " (" + esc(ds.lead.institution) + ")" + (ds.lead.coLead ? " and " + esc(ds.lead.coLead.name) + " (" + esc(ds.lead.coLead.institution) + ")" : "")) : esc(t.lead);
     var partners = ds && ds.partners && ds.partners.length ? ds.partners.map(function (p) { return esc(p.name) + " (" + esc(p.role) + ")"; }).join("; ") : esc(t.partners || "None listed yet");
     var rows = acts.map(function (A, i) {
-      var c = "cell" + (i % 2 ? " alt" : ""), a = A.row, s = +a.start_month || 1, e = +a.end_month || s;
+      var c = "cell" + (i % 2 ? " alt" : ""), da = ' data-act="' + esc(A.key) + '"', a = A.row, s = +a.start_month || 1, e = +a.end_month || s;
       var span = s === e ? monthLabel(start, s) : monthLabel(start, s) + " – " + monthLabel(start, e);
       var askHtml = A.asks.length ? '<ul class="asks">' + A.asks.map(function (k) {
         return '<li><span class="lvl ' + (k.level === "optional" ? "optional" : "essential") + '">' + (k.level === "optional" ? "optional" : "essential") + (k.who ? " · " + esc(k.who) : "") + "</span><span>" + esc(k.text) +
           (k.timing ? '<span class="tm">' + (k.timing === "both" ? "during and after" : k.timing === "after" ? "after the project" : "during the project") + "</span>" : "") + "</span></li>";
       }).join("") + "</ul>" : '<p class="none">To be discussed with the theme lead.</p>';
       var timing = col(a, "when");
-      return '<div class="' + c + ' first" data-h="Activity and output"><span class="code">' + esc(A.code) + '</span><span class="act-name">' + esc(A.name) + "</span>" +
+      return '<div' + da + ' class="' + c + ' first" data-h="Activity and output"><span class="code">' + esc(A.code) + '</span><span class="act-name">' + esc(A.name) + "</span>" +
           '<div class="outcome"><b>Output:</b> ' + esc(String(a.outcomes || "").replace(/\s*\|\s*/g, " · ")) + "</div></div>" +
-        '<div class="' + c + '" data-h="When"><div class="barbox"><i style="left:' + ((s - 1) / total * 100) + "%;width:" + (Math.max(e - s + 1, .6) / total * 100) + '%"></i></div>' +
+        '<div' + da + ' class="' + c + '" data-h="When"><div class="barbox"><i style="left:' + ((s - 1) / total * 100) + "%;width:" + (Math.max(e - s + 1, .6) / total * 100) + '%"></i></div>' +
           '<div class="months">' + span + "</div>" + (timing ? '<div class="timing">' + esc(timing) + "</div>" : "") + "</div>" +
-        '<div class="' + c + '" data-h="What we ask from institutions">' + askHtml + "</div>" +
-        '<div class="' + c + '" data-h="Who in your organisation can help?"><div class="ans" id="ans-' + A.key.replace(/\W/g, "_") + '"></div></div>';
+        '<div' + da + ' class="' + c + '" data-h="What we ask from institutions">' + askHtml + "</div>" +
+        '<div' + da + ' class="' + c + '" data-h="Who in your organisation can help?"><div class="ans" id="ans-' + A.key.replace(/\W/g, "_") + '"></div></div>';
     }).join("");
     return '<section class="theme" data-theme-n="' + n + '" id="theme-' + n + '" aria-label="Theme ' + n + '">' +
       '<header class="t-head"><div class="t-mark"><span class="durf-piece" data-theme-n="' + n + '"></span><b>' + n + "</b></div>" +
         "<div><h2>Theme " + n + " · " + esc(t.name) + '</h2><p class="goal"><b>Goal:</b> ' + esc(t.goal) + "</p></div>" +
         "<dl><dt>Theme lead</dt><dd>" + lead + "</dd><dt>Partners</dt><dd>" + partners + "</dd></dl></header>" +
       '<div class="t-table"><div class="t-th">Activity and output</div><div class="t-th">When</div><div class="t-th">What we ask from institutions</div><div class="t-th">Who in your organisation can help?</div>' +
-        rows + "</div></section>";
+        rows + '</div><p class="t-empty" hidden>No activity of this theme runs in the months you chose.</p></section>';
   }
 
   function assignments() {
@@ -466,12 +492,59 @@
     paintPeople();
   }
 
+  /* ---------- the period filter ---------- */
+  function total() { return +SETTINGS.total_months || 48; }
+  function inRange(A) { var s = +A.row.start_month || 1, e = +A.row.end_month || s; return s <= S.range.to && e >= S.range.from; }
+  function linked() { var d = {}; assignments().forEach(function (x) { d[x.A.key] = 1; }); return d; }
+  function visibleActs() { var d = linked(); return ACTS.filter(function (A) { return inRange(A) || d[A.key]; }); }
+  function applyFilter() {
+    if (!ACTS.length) return;
+    var vis = {}; visibleActs().forEach(function (A) { vis[A.key] = 1; });
+    THEMES.forEach(function (t) {
+      var sec = document.getElementById("theme-" + t.n); if (!sec) return;
+      var k = 0;
+      ACTS.filter(function (A) { return A.theme === t.n; }).forEach(function (A) {
+        var show = !!vis[A.key], alt = show && k % 2 === 1;
+        $$('[data-act="' + A.key + '"]', sec).forEach(function (c) { c.hidden = !show; c.classList.toggle("alt", alt); });
+        if (show) k++;
+      });
+      sec.querySelector(".t-empty").hidden = k > 0;
+      $$(".t-th", sec).forEach(function (h) { h.hidden = k === 0; });
+    });
+    var start = SETTINGS.start_year_month || "2026-06";
+    $("[data-from]").value = S.range.from; $("[data-to]").value = S.range.to;
+    $("[data-from]").max = $("[data-to]").max = total();
+    $("[data-span]").textContent = monthLabel(start, S.range.from) + " – " + monthLabel(start, S.range.to);
+    var nIn = ACTS.filter(inRange).length, nVis = Object.keys(vis).length;
+    $("[data-count]").textContent = nVis + " of " + ACTS.length + " activities shown." + (nVis > nIn ? " Activities where you already linked someone stay visible." : "") +
+      " Change the months to see more; your answers are kept.";
+    $$("[data-years] button").forEach(function (b) { b.setAttribute("aria-pressed", String(+b.dataset.f === S.range.from && +b.dataset.t === S.range.to)); });
+  }
+  function setRange(f, t) {
+    var T = total();
+    f = Math.max(1, Math.min(T, Math.round(+f) || 1)); t = Math.max(1, Math.min(T, Math.round(+t) || T));
+    if (t < f) { var x = f; f = t; t = x; }
+    S.range = { from: f, to: t }; save(); applyFilter(); paintSummary();
+  }
+  function buildYears() {
+    var T = total(), start = SETTINGS.start_year_month || "2026-06", h = "";
+    for (var y = 0; y * 12 < T; y++) {
+      var f = y * 12 + 1, t = Math.min(T, (y + 1) * 12);
+      h += '<button type="button" class="outline small" data-f="' + f + '" data-t="' + t + '" title="' + monthLabel(start, f) + " – " + monthLabel(start, t) + '">Year ' + (y + 1) + "</button>";
+    }
+    h += '<button type="button" class="outline small" data-f="1" data-t="' + T + '">All four years</button>';
+    $("[data-years]").innerHTML = h;
+    $$("[data-years] button").forEach(function (b) { b.addEventListener("click", function () { setRange(b.dataset.f, b.dataset.t); }); });
+    $("[data-from]").addEventListener("change", function () { setRange(this.value, S.range.to); });
+    $("[data-to]").addEventListener("change", function () { setRange(S.range.from, this.value); });
+  }
+
   function paintToc(list) {
     var ol = $("#toc-list"); if (!ol) return;
     var me = S.me, youDone = !!(me.name && me.inst && /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(me.email || ""));
     var done = {}; (list || assignments()).forEach(function (x) { done[x.A.key] = 1; });
     var themes = THEMES.map(function (t) {
-      var acts = ACTS.filter(function (A) { return A.theme === t.n; }), n = acts.filter(function (A) { return done[A.key]; }).length;
+      var acts = ACTS.filter(function (A) { return A.theme === t.n && (inRange(A) || done[A.key]); }), n = acts.filter(function (A) { return done[A.key]; }).length;
       return '<li><a href="#theme-' + t.n + '" data-theme-n="' + t.n + '"><span class="durf-piece" data-theme-n="' + t.n + '"></span><span>' + t.n + " " + esc(t.short) + "</span>" +
         '<span class="st' + (n === acts.length && n ? " done" : "") + '">' + n + " / " + acts.length + '</span><span class="bar"><i style="width:' + (acts.length ? n / acts.length * 100 : 0) + '%"></i></span></a></li>';
     }).join("");
@@ -480,8 +553,9 @@
       '<li><a href="#people-card"><span class="n">2</span><span>People</span><span class="st">' + S.people.length + "</span></a></li>" +
       '<li><a href="#themes-intro"><span class="n">3</span><span>The six themes</span><span class="st"></span></a><ol class="themes">' + themes + "</ol></li>" +
       '<li><a href="#send"><span class="n">4</span><span>Send your answers</span><span class="st"></span></a></li>';
-    var nDone = Object.keys(done).length;
-    $("#toc-total").innerHTML = "<b>" + nDone + "</b> of " + ACTS.length + " activities have someone linked.";
+    var nDone = Object.keys(done).length, nShown = ACTS.filter(function (A) { return inRange(A) || done[A.key]; }).length;
+    $("#toc-total").innerHTML = "<b>" + nDone + "</b> of " + nShown + " shown activities have someone linked." +
+      (ACTS.length ? '<br><a href="#period">Months ' + S.range.from + "–" + S.range.to + "</a> of " + total() + " · " + ACTS.length + " activities in all" : "");
     markHere();
   }
   /* highlight the section in view */
@@ -684,7 +758,7 @@
       return '<a href="#theme-' + t.n + '" data-n="' + t.n + '" data-theme-n="' + t.n + '"><span class="durf-piece" data-theme-n="' + t.n + '"></span>' + t.n + " " + esc(t.short) + '<span class="cnt" title="activities with someone linked"></span></a>';
     }).join("") + '<a href="#send">Send</a>';
     $("#themes").innerHTML = THEMES.map(function (t) { return themeHtml(t, ACTS.filter(function (A) { return A.theme === t.n; })); }).join("");
-    paintAllAnswers(); paintSummary();
+    paintAllAnswers(); buildYears(); applyFilter(); paintSummary();
     /* the theme bar sticks just below the DURF topbar */
     var bar = function () { var t = document.querySelector(".durf-topbar"); document.documentElement.style.setProperty("--bar-h", (t ? t.offsetHeight : 0) + "px"); };
     bar(); window.addEventListener("resize", bar);
