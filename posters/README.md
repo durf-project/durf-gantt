@@ -35,6 +35,16 @@ Each contribution on its own line, starting with its level:
 `[during]`, `[after]` or `[both]` at the end becomes a small label: during the project,
 after the project, or during and after.
 
+## Online survey after the day
+
+`../survey/` is the online version of these posters, for the follow-up email to the people who
+came: the same goal, activities, timeline and asks per theme, generated from the same workbook. People
+say who in their organisation can help with which activity (or per in-kind contribution), in
+which role, with an email address and an optional note. People they have entered once can be
+picked from a drop-down everywhere. Answers stay in the browser until the respondent downloads
+them as an Excel file and emails it to durf@surf.nl (one row per person and contribution, the
+same columns in every file, so the files can be stacked).
+
 ## Size and printing
 
 The posters are A3 landscape (420 × 297 mm). The activity table shrinks its font until it fits
