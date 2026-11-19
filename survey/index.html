@@ -21,10 +21,32 @@
 <link rel="icon" type="image/svg+xml" href="https://durf-project.github.io/durf-design-system/assets/favicon.svg">
 <link rel="stylesheet" href="https://durf-project.github.io/durf-design-system/lib/oat.min.css">
 <link rel="stylesheet" href="https://durf-project.github.io/durf-design-system/durf.css">
-<script src="https://durf-project.github.io/durf-design-system/durf-nav.js" data-feedback="off"></script>
+<script src="https://durf-project.github.io/durf-design-system/durf-nav.js"></script>
 <style>
   body { margin: 0; background: var(--surface); color: var(--foreground); font-family: var(--font-sans); }
-  .sv { max-width: 78rem; margin: 0 auto; padding: 1.5rem 1rem 6rem; }
+  .layout { max-width: 94rem; margin: 0 auto; padding: 0 1rem; display: grid; grid-template-columns: 15.5rem minmax(0, 1fr); gap: 1.75rem; }
+  .sv { min-width: 0; padding: 1.5rem 0 6rem; }
+  /* the page navigator */
+  .toc { position: sticky; top: calc(var(--bar-h, 0px) + 1rem); align-self: start; margin-top: 1.5rem; max-height: calc(100vh - var(--bar-h, 0px) - 2rem); overflow-y: auto;
+    background: var(--background); border: 1px solid var(--border); border-radius: .875rem; padding: .875rem .75rem; font-size: .875rem; }
+  .toc h2 { font-family: var(--font-heading); font-weight: 800; font-size: .75rem; letter-spacing: .08em; text-transform: uppercase; color: var(--muted-foreground); margin: 0 0 .5rem .375rem; }
+  .toc ol { list-style: none; margin: 0; padding: 0; display: grid; gap: .125rem; }
+  .toc a { display: grid; grid-template-columns: 1.5rem 1fr auto; gap: .375rem; align-items: center; padding: .3rem .375rem; border-radius: .5rem; color: var(--foreground); text-decoration: none; }
+  .toc a:hover { background: color-mix(in srgb, var(--foreground) 6%, transparent); }
+  .toc a.is-here { background: color-mix(in srgb, var(--accent-solid) 12%, transparent); font-weight: 700; }
+  .toc .n { font-family: var(--font-heading); font-weight: 900; text-align: center; color: var(--muted-foreground); }
+  .toc .durf-piece { --durf-piece-size: 1.4rem; }
+  .toc .st { font-size: .75rem; color: var(--muted-foreground); font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .toc .st.done { color: var(--durf-theme-4-ink, #0B7A40); font-weight: 700; }
+  .toc .themes { margin: .125rem 0 .25rem 1rem; }
+  .toc .themes a { grid-template-columns: 1.5rem 1fr auto; }
+  .toc .bar { grid-column: 2 / -1; height: .25rem; border-radius: 99px; background: color-mix(in srgb, var(--theme-color, var(--accent-solid)) 18%, transparent); overflow: hidden; }
+  .toc .bar i { display: block; height: 100%; width: 0; background: var(--theme-color, var(--accent-solid)); border-radius: 99px; transition: width .3s ease; }
+  .toc .total { margin: .75rem .375rem 0; padding-top: .625rem; border-top: 1px solid var(--border); color: var(--muted-foreground); font-size: .8125rem; }
+  .toc .total b { color: var(--foreground); }
+  @media (min-width: 75rem) { .tnav { display: none !important; } }
+  @media (max-width: 74.99rem) { .layout { grid-template-columns: minmax(0, 1fr); } .toc { display: none; } }
+  .other-inst { margin-top: .375rem; }
   .sv * { box-sizing: border-box; }
   .sv h1 { font-family: var(--font-heading); font-weight: 900; font-size: clamp(1.75rem, 4vw, 2.75rem); line-height: 1.1; margin: .25rem 0 .75rem; }
   .eyebrow { font-family: var(--font-heading); font-weight: 800; letter-spacing: .12em; text-transform: uppercase; font-size: .8125rem; color: var(--accent-solid); margin: 0; }
@@ -136,6 +158,8 @@
 
   @media (max-width: 40rem) {
     .tnav { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; }
+    .layout { padding: 0; }
+    .sv { padding-inline: 1rem; }
     .tnav a { flex: 0 0 auto; }
   }
   @media (max-width: 62rem) {
@@ -150,6 +174,8 @@
 </style>
 </head>
 <body>
+<div class="layout">
+<aside class="toc" id="toc" aria-label="On this page"><h2>On this page</h2><ol id="toc-list"></ol><p class="total" id="toc-total"></p></aside>
 <main class="sv">
   <p class="eyebrow">DURF Federation Day · follow-up of the theme carousel</p>
   <h1>Who in your organisation can help?</h1>
@@ -157,11 +183,12 @@
   <p class="hint">Takes about 15 minutes. Your answers are saved in this browser as you type, so you can stop and come back later. Nothing is sent until you download your answers and email them to us (step 4). Fill in only what applies; empty activities are fine.</p>
 
   <section class="card" id="you">
-    <h2>1 · About you</h2>
+    <h2>1 · About you (cooperation partner coordinator)</h2>
     <p class="hint">So we know who sent these answers.</p>
     <div class="fields">
       <label><span class="req">Your name</span><input type="text" autocomplete="name" data-me="name"></label>
-      <label><span class="req">Institution</span><input type="text" list="institutions" autocomplete="organization" data-me="inst"></label>
+      <label><span class="req">Institution</span><select data-inst><option value="">Choose your institution…</option></select>
+        <input class="other-inst" type="text" autocomplete="organization" placeholder="Name of your institution" data-inst-other hidden aria-label="Name of your institution"></label>
       <label>Your role or position<input type="text" autocomplete="organization-title" data-me="role"></label>
       <label><span class="req">Your email address</span><input type="email" autocomplete="email" data-me="email"></label>
     </div>
@@ -178,7 +205,7 @@
     </div>
   </section>
 
-  <section class="card" style="margin-bottom:0">
+  <section class="card" id="themes-intro" style="margin-bottom:0">
     <h2>3 · The six themes</h2>
     <p class="hint">Per activity: pick who can help. That person then counts for all in-kind contributions of the activity. Want a different person per contribution? Tick <b>Different people per contribution</b>. Optionally say how each person is involved (<b>Responsible</b>, <b>Consulted</b> or <b>Informed</b><button type="button" class="outline info" data-raci-info aria-label="About RACI" title="About RACI">i</button>), and add a note if needed, for example "available from June, because of our CRIS migration".</p>
   </section>
@@ -198,8 +225,8 @@
     <p><button type="button" class="outline small" data-clear>Clear all my answers in this browser</button></p>
   </section>
 </main>
+</div>
 
-<datalist id="institutions"></datalist>
 
 <dialog class="person" id="person-dlg" aria-labelledby="person-title">
   <form method="dialog">
@@ -240,10 +267,12 @@
     mailTo: "durf@surf.nl",
     mailSubject: "DURF Federation Day: who in our organisation can help",
     fileName: "durf-in-kind-contributions",
+    /* the institutions in "The federation and its circles" on the project page (project-page/tools/durf-circles.py) */
     institutions: ["Erasmus University Rotterdam", "Leiden University", "Maastricht University", "Open Universiteit", "Radboud University",
       "Tilburg University", "TU Delft", "TU Eindhoven", "University of Amsterdam", "University of Groningen", "University of Humanistic Studies",
-      "University of Twente", "Utrecht University", "VU Amsterdam", "Wageningen University & Research", "Amsterdam UMC", "Saxion",
-      "KB National Library", "SURF", "OpenAIRE", "Netherlands eScience Center", "DANS", "RIVM", "CWI", "KNAW", "NWO",
+      "University of Twente", "Utrecht University", "VU Amsterdam", "Wageningen University & Research", "Amsterdam UMC (for the NFU)",
+      "Saxion (for the universities of applied sciences)", "KB National Library", "SURF", "OpenAIRE",
+      "Netherlands eScience Center", "DANS", "RIVM", "CWI", "Jan IngenHousz Institute", "KNAW", "NWO",
       "Amsterdam University of Applied Sciences", "Hanze University of Applied Sciences", "Breda University of Applied Sciences",
       "Protestant Theological University"]
   };
@@ -432,9 +461,37 @@
       var c = {}; list.forEach(function (x) { if (x.A.theme === t.n) c[x.A.key] = 1; });
       var el = $('#tnav a[data-n="' + t.n + '"] .cnt'); if (el) el.textContent = Object.keys(c).length || "";
     });
+    paintToc(list);
     $("#saved").textContent = savedAt ? "Saved in this browser at " + savedAt.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }) + "." : "";
     paintPeople();
   }
+
+  function paintToc(list) {
+    var ol = $("#toc-list"); if (!ol) return;
+    var me = S.me, youDone = !!(me.name && me.inst && /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(me.email || ""));
+    var done = {}; (list || assignments()).forEach(function (x) { done[x.A.key] = 1; });
+    var themes = THEMES.map(function (t) {
+      var acts = ACTS.filter(function (A) { return A.theme === t.n; }), n = acts.filter(function (A) { return done[A.key]; }).length;
+      return '<li><a href="#theme-' + t.n + '" data-theme-n="' + t.n + '"><span class="durf-piece" data-theme-n="' + t.n + '"></span><span>' + t.n + " " + esc(t.short) + "</span>" +
+        '<span class="st' + (n === acts.length && n ? " done" : "") + '">' + n + " / " + acts.length + '</span><span class="bar"><i style="width:' + (acts.length ? n / acts.length * 100 : 0) + '%"></i></span></a></li>';
+    }).join("");
+    ol.innerHTML =
+      '<li><a href="#you"><span class="n">1</span><span>About you</span><span class="st' + (youDone ? " done" : "") + '">' + (youDone ? "✓ done" : "to do") + "</span></a></li>" +
+      '<li><a href="#people-card"><span class="n">2</span><span>People</span><span class="st">' + S.people.length + "</span></a></li>" +
+      '<li><a href="#themes-intro"><span class="n">3</span><span>The six themes</span><span class="st"></span></a><ol class="themes">' + themes + "</ol></li>" +
+      '<li><a href="#send"><span class="n">4</span><span>Send your answers</span><span class="st"></span></a></li>';
+    var nDone = Object.keys(done).length;
+    $("#toc-total").innerHTML = "<b>" + nDone + "</b> of " + ACTS.length + " activities have someone linked.";
+    markHere();
+  }
+  /* highlight the section in view */
+  function markHere() {
+    var ids = ["you", "people-card", "themes-intro"].concat(THEMES.map(function (t) { return "theme-" + t.n; })).concat(["send"]), here = ids[0];
+    var top = (parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--bar-h")) || 0) + 120;
+    ids.forEach(function (id) { var el = document.getElementById(id); if (el && el.getBoundingClientRect().top < top) here = id; });
+    $$("#toc-list a").forEach(function (a) { a.classList.toggle("is-here", a.getAttribute("href") === "#" + here); });
+  }
+  window.addEventListener("scroll", function () { requestAnimationFrame(markHere); }, { passive: true });
 
   /* ---------- the person dialog ---------- */
   var dlg = $("#person-dlg"), pending = null;
@@ -473,7 +530,21 @@
     inp.value = S.me[inp.dataset.me] || "";
     inp.addEventListener("input", function () { S.me[inp.dataset.me] = inp.value.trim(); save(); });
   });
-  $("#institutions").innerHTML = SURVEY.institutions.map(function (x) { return '<option value="' + esc(x) + '">'; }).join("");
+  /* institution: a drop-down of the federation, or "Other" with a text field */
+  (function () {
+    var sel = $("[data-inst]"), other = $("[data-inst-other]");
+    sel.innerHTML += SURVEY.institutions.map(function (x) { return '<option value="' + esc(x) + '">' + esc(x) + "</option>"; }).join("") +
+      '<option value="__other">Other: my institution is not in this list</option>';
+    var known = SURVEY.institutions.indexOf(S.me.inst) >= 0;
+    if (known) sel.value = S.me.inst; else if (S.me.inst) { sel.value = "__other"; other.hidden = false; other.value = S.me.inst; }
+    sel.addEventListener("change", function () {
+      other.hidden = sel.value !== "__other";
+      S.me.inst = sel.value === "__other" ? other.value.trim() : sel.value;
+      if (!other.hidden) other.focus();
+      save();
+    });
+    other.addEventListener("input", function () { S.me.inst = other.value.trim(); save(); });
+  })();
   $("[data-mailto]").textContent = SURVEY.mailTo;
 
   document.addEventListener("change", function (e) {
