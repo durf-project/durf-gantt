@@ -222,7 +222,7 @@
 
   <section class="card" id="themes-intro" style="margin-bottom:0">
     <h2>3 · The six themes</h2>
-    <p class="hint">To keep the list short, you first see the activities of the first project year. Choose other months below whenever you like. Per activity: pick who can help. That person then counts for all in-kind contributions of the activity. Want a different person per contribution? Tick <b>Different people per contribution</b>. Optionally say how each person is involved (<b>Responsible</b>, <b>Consulted</b> or <b>Informed</b><button type="button" class="outline info" data-raci-info aria-label="About RACI" title="About RACI">i</button>), and add a note if needed, for example "available from June, because of our CRIS migration".</p>
+    <p class="hint">To keep the list short, you first see the activities of the first six months. Choose other months below whenever you like. Per activity: pick who can help. That person then counts for all in-kind contributions of the activity. Want a different person per contribution? Tick <b>Different people per contribution</b>. Optionally say how each person is involved (<b>Responsible</b>, <b>Consulted</b> or <b>Informed</b><button type="button" class="outline info" data-raci-info aria-label="About RACI" title="About RACI">i</button>), and add a note if needed, for example "available from June, because of our CRIS migration".</p>
     <div class="period" id="period">
       <div class="ph">Which activities do you want to see?</div>
       <div class="years" data-years role="group" aria-label="Project years"></div>
@@ -368,7 +368,7 @@
   var S;
   try { S = JSON.parse(localStorage.getItem(KEY)); } catch (e) { S = null; }
   if (!S || !S.people) S = { me: { name: "", inst: "", role: "", email: "" }, people: [], acts: {} };
-  if (!S.range) S.range = { from: 1, to: 12 };   /* by default only the first project year, so the list stays short */
+  if (!S.range) S.range = { from: 1, to: 6 };    /* by default only the first six months, so the list stays short */
   var savedAt = null, saveTimer = null;
   function save() {
     clearTimeout(saveTimer);
