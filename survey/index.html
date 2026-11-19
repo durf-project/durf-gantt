@@ -143,6 +143,8 @@
   .summary li { margin: .25rem 0; }
   .msg { padding: .625rem .875rem; border-radius: .5rem; background: color-mix(in srgb, var(--durf-theme-6) 12%, var(--background)); color: var(--foreground); }
   .msg:empty { display: none; }
+  .deadline[hidden] { display: none; }
+  .deadline { display: inline-block; margin: .25rem 0 .75rem; padding: .375rem .75rem; border-radius: .5rem; background: color-mix(in srgb, var(--durf-theme-1) 16%, var(--background)); }
   .ok { background: color-mix(in srgb, var(--durf-theme-4) 14%, var(--background)); }
   .err { padding: 2rem; color: var(--muted-foreground); }
   .saved { font-size: .8125rem; color: var(--muted-foreground); }
@@ -196,7 +198,7 @@
   <h1>Your in-kind contribution: who does what?</h1>
   <p class="lead">When DURF applied to Open Science NL, your institution committed to an in-kind contribution as a cooperation partner. Since the Federation Day we all know much better what those contributions involve. This form makes that commitment concrete: for each DURF activity, tell us who in your organisation takes on the in-kind contributions, in which role, and how we can reach them.</p>
   <p class="hint">In the <a href="https://durf-project.github.io/project-page/assets/docs/durf-full-proposal-open-science-nl.pdf">project proposal</a> each cooperation partner named a contact who organises the in-kind support within their own institution. This form is for that coordinator. It follows the theme carousel posters of the Federation Day. Questions about the form? Lois van Zomeren (project lead) and Melanie Fuchs (project office) are happy to help: <a href="mailto:durf@surf.nl">durf@surf.nl</a>.</p>
-  <p class="hint">Takes about 15 minutes. Your answers are saved in this browser as you type, so you can stop and come back later. Nothing is sent until you download your answers and email them to us (step 4). Fill in only what applies; empty activities are fine.</p>
+  <p class="hint">Takes about 15 minutes. Your answers are saved in this browser as you type, so you can stop and come back later. <b data-deadline-top hidden></b> Nothing is sent until you download your answers and email them to us (step 4). Fill in only what applies; empty activities are fine.</p>
 
   <section class="card" id="you">
     <h2>1 · About you (cooperation partner coordinator)</h2>
@@ -240,6 +242,7 @@
 
   <section class="card send" id="send">
     <h2>4 · Send your answers</h2>
+    <p class="deadline" data-deadline hidden></p>
     <p class="stats" id="stats"></p>
     <ul class="summary" id="summary"></ul>
     <p class="msg" id="msg"></p>
@@ -291,6 +294,7 @@
   /* ---------- texts that belong to the survey, not to the roadmap ---------- */
   var SURVEY = {
     mailTo: "durf@surf.nl",
+    deadline: "Thursday 26 November 2026",   /* shown at the top and in step 4; leave empty for none */
     mailSubject: "DURF Federation Day: who in our organisation can help",
     fileName: "durf-in-kind-contributions",
     /* the institutions in "The federation and its circles" on the project page (project-page/tools/durf-circles.py) */
@@ -621,6 +625,10 @@
     other.addEventListener("input", function () { S.me.inst = other.value.trim(); save(); });
   })();
   $("[data-mailto]").textContent = SURVEY.mailTo;
+  if (SURVEY.deadline) {
+    var dl = $("[data-deadline]"); dl.hidden = false; dl.innerHTML = "Please send your answers <b>before " + esc(SURVEY.deadline) + "</b>.";
+    var dt = $("[data-deadline-top]"); dt.hidden = false; dt.textContent = "Please send your answers before " + SURVEY.deadline + ".";
+  }
 
   document.addEventListener("change", function (e) {
     var t = e.target;
