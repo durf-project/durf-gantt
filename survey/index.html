@@ -110,7 +110,27 @@
   .err { padding: 2rem; color: var(--muted-foreground); }
   .saved { font-size: .8125rem; color: var(--muted-foreground); }
 
-  dialog.person { width: min(30rem, calc(100vw - 2rem)); }
+  dialog.person { width: min(36rem, calc(100vw - 2rem)); max-height: calc(100vh - 2rem); }
+  dialog.person form { display: flex; flex-direction: column; max-height: calc(100vh - 4rem); }
+  dialog.person form > div { overflow-y: auto; }
+  fieldset.groups { border: 1px solid var(--border); border-radius: .625rem; padding: .5rem .875rem .75rem; margin: 0; }
+  fieldset.groups legend { font-weight: 600; padding: 0 .25rem; }
+  .groups .gl { display: grid; grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr)); gap: .125rem .75rem; }
+  .groups label.ck { display: flex; gap: .5rem; align-items: baseline; font-weight: 400; font-size: .9375rem; }
+  .groups label.ck input { min-height: 0; flex: 0 0 auto; }
+  .groups label.ck small { color: var(--muted-foreground); }
+  .groups h3 { font-size: .8125rem; font-weight: 800; letter-spacing: .05em; text-transform: uppercase; color: var(--muted-foreground); margin: .625rem 0 .25rem; }
+  .people .groups-line { display: block; font-size: .8125rem; color: var(--muted-foreground); }
+  /* RACI */
+  .info { display: inline-grid; place-items: center; width: 1.25rem; height: 1.25rem; min-height: 0; padding: 0; border-radius: 50%; font: italic 700 .8125rem/1 Georgia, serif; vertical-align: .1em; margin-left: .25rem; }
+  .ans .raci { grid-column: 1 / -1; }
+  .accountable { margin: 1rem 0 0; padding: .625rem .875rem; border-radius: .5rem; background: color-mix(in srgb, var(--accent-solid) 9%, var(--background)); font-size: .9375rem; }
+  dialog.raci-info { width: min(34rem, calc(100vw - 2rem)); }
+  dialog.raci-info form { padding: 1.25rem 1.5rem; }
+  dialog.raci-info h2 { font-family: var(--font-heading); font-weight: 800; font-size: 1.375rem; margin: 0 0 1rem; }
+  dialog.raci-info dl { margin: 0; display: grid; grid-template-columns: auto 1fr; gap: .5rem .875rem; }
+  dialog.raci-info dt { font-weight: 800; }
+  dialog.raci-info dd { margin: 0; }
   dialog.person form > div { display: grid; gap: .75rem; }
   dialog.person label { display: grid; gap: .25rem; font-weight: 600; }
 
@@ -145,6 +165,7 @@
       <label>Your role or position<input type="text" autocomplete="organization-title" data-me="role"></label>
       <label><span class="req">Your email address</span><input type="email" autocomplete="email" data-me="email"></label>
     </div>
+    <p class="accountable">As the cooperation partner who fills in this form, you are <b>Accountable</b> for the in-kind contributions of your institution: you make sure they happen, so that the project succeeds.<button type="button" class="outline info" data-raci-info aria-label="What do Responsible, Accountable, Consulted and Informed mean?" title="About RACI">i</button></p>
   </section>
 
   <section class="card" id="people-card">
@@ -159,7 +180,7 @@
 
   <section class="card" style="margin-bottom:0">
     <h2>3 · The six themes</h2>
-    <p class="hint">Per activity: pick who can help. That person then counts for all in-kind contributions of the activity. Want a different person per contribution? Tick <b>Different people per contribution</b>. Add a note per person if needed, for example "available from June, because of our CRIS migration".</p>
+    <p class="hint">Per activity: pick who can help. That person then counts for all in-kind contributions of the activity. Want a different person per contribution? Tick <b>Different people per contribution</b>. Optionally say how each person is involved (<b>Responsible</b>, <b>Consulted</b> or <b>Informed</b><button type="button" class="outline info" data-raci-info aria-label="About RACI" title="About RACI">i</button>), and add a note if needed, for example "available from June, because of our CRIS migration".</p>
   </section>
   <nav class="tnav" id="tnav" aria-label="Themes"></nav>
   <div id="themes"><p class="err">Loading the roadmap…</p></div>
@@ -187,11 +208,26 @@
       <label><span class="req">Name</span><input type="text" name="name" required autocomplete="off"></label>
       <label><span class="req">Role or position</span><input type="text" name="role" required autocomplete="off" placeholder="for example repository manager, CRIS functional administrator"></label>
       <label><span class="req">Email address</span><input type="email" name="email" required autocomplete="off"></label>
+      <fieldset class="groups"><legend>Community groups this person takes part in</legend><div data-groups></div>
+        <label style="margin-top:.5rem">Other group or network<input type="text" name="otherGroup" autocomplete="off"></label></fieldset>
     </div>
     <footer class="btnrow" style="margin-top:1rem">
       <button type="submit" value="save">Save</button>
       <button type="submit" value="cancel" class="outline" formnovalidate>Cancel</button>
     </footer>
+  </form>
+</dialog>
+
+<dialog class="raci-info" id="raci-dlg" aria-labelledby="raci-title">
+  <form method="dialog">
+    <header><h2 id="raci-title">How is someone involved? (RACI)</h2></header>
+    <dl>
+      <dt>Responsible</dt><dd>Actively contributes to the activity, for example as part of the writing team, by delivering data, or by signing a document.</dd>
+      <dt>Accountable</dt><dd>Makes sure the in-kind contribution of the institution happens. That is you, the cooperation partner who fills in this form.</dd>
+      <dt>Consulted</dt><dd>Gives input or feedback when asked, for example on a draft.</dd>
+      <dt>Informed</dt><dd>Is kept up to date on progress, for example through an update or newsletter.</dd>
+    </dl>
+    <footer class="btnrow" style="margin-top:1rem"><button type="submit">Close</button></footer>
   </form>
 </dialog>
 
@@ -211,6 +247,22 @@
       "Amsterdam University of Applied Sciences", "Hanze University of Applied Sciences", "Breda University of Applied Sciences",
       "Protestant Theological University"]
   };
+  /* community groups a person can take part in */
+  var GROUPS = [
+    { h: "Communities", items: [
+      ["WISH", "repository managers, metadata standards at EduStandaard"],
+      ["PUGNL", "Pure user group NL, CRIS managers"],
+      ["COS", "UNL Chiefs Open Science"],
+      ["NaMeCo", "representing your institution in the National OpenAIRE Membership Consortium"] ] },
+    { h: "UKB working groups", items: [
+      ["UKB Copyright"], ["UKB Benchmarking"], ["UKB Open and Online Education Libraries (B-OOO)"], ["UKB Special collections"], ["UKB CAMBIN"],
+      ["UKB Collection Management"], ["UKB Content and Metadata Management"], ["UKB Digital Services"], ["UKB Digital Scholarship and Skills"],
+      ["UKB Information Literacy"], ["UKB Licences"], ["UKB Open Access"] ] },
+    { h: "UKB networks", items: [
+      ["UKB Public Services"], ["UKB Research Data"], ["UKB Research Support"], ["UKB User Experience"], ["UKB communications advisors"],
+      ["UKB policy and management support staff"], ["UKB Lokale Library Basics-cursussen"], ["UKB decolonisation, inclusivity and equity"], ["UKB AI and libraries"] ] }
+  ];
+  var RACI = [["R", "Responsible"], ["C", "Consulted"], ["I", "Informed"]];
   var DATA_URL = "../data/roadmap.json";
   var KEY = "durf-survey-federation-day-2026";
 
@@ -288,9 +340,11 @@
   }
   function rowHtml(key, slot, i, r) {
     return '<div class="row' + (r.p ? " is-set" : "") + '" data-key="' + esc(key) + '" data-slot="' + slot + '" data-i="' + i + '">' +
-      '<select aria-label="Person">' + options(r.p) + "</select>" +
+      '<select class="who" aria-label="Person">' + options(r.p) + "</select>" +
       '<button type="button" class="outline x" data-remove aria-label="Remove this person" title="Remove">×</button>' +
-      (r.p ? '<input class="note" type="text" placeholder="Note (optional), e.g. available from June because of our CRIS migration" value="' + esc(r.note) + '">' : "") +
+      (r.p ? '<select class="raci" aria-label="Involvement">' + '<option value="">Involvement (optional)…</option>' +
+        RACI.map(function (x) { return '<option value="' + x[0] + '"' + (r.raci === x[0] ? " selected" : "") + ">" + x[1] + "</option>"; }).join("") + "</select>" +
+        '<input class="note" type="text" placeholder="Note (optional), e.g. available from June because of our CRIS migration" value="' + esc(r.note) + '">' : "") +
       "</div>";
   }
   function slotHtml(key, slot, rows, label) {
@@ -349,18 +403,19 @@
     ACTS.forEach(function (A) {
       var a = S.acts[A.key]; if (!a) return;
       var asks = A.asks.length ? A.asks : [{ level: "", text: "(the activity in general)" }];
-      var add = function (r, k, i) { var p = person(r.p); if (p) out.push({ A: A, ask: k, no: A.asks.length ? i + 1 : "", p: p, note: r.note || "", all: !a.split }); };
+      var add = function (r, k, i) { var p = person(r.p); if (p) out.push({ A: A, ask: k, no: A.asks.length ? i + 1 : "", p: p, raci: r.raci || "", note: r.note || "", all: !a.split }); };
       if (a.split && A.asks.length) A.asks.forEach(function (k, i) { (a.per[i] || []).forEach(function (r) { add(r, k, i); }); });
       else a.all.forEach(function (r) { asks.forEach(function (k, i) { add(r, k, i); }); });
     });
     return out;
   }
+  function groupsOf(p) { return (p.groups || []).concat(p.otherGroup ? [p.otherGroup] : []).join(", "); }
   function paintPeople() {
     var used = {};
     assignments().forEach(function (x) { (used[x.p.id] = used[x.p.id] || {})[x.A.code || x.A.key] = 1; });
     $("#people").innerHTML = S.people.map(function (p) {
       var acts = Object.keys(used[p.id] || {});
-      return '<li data-id="' + esc(p.id) + '"><span class="ini">' + esc(initials(p.name)) + "</span><span><b>" + esc(p.name) + "</b><small>" + esc(p.role) + " · " + esc(p.email) + "</small>" +
+      return '<li data-id="' + esc(p.id) + '"><span class="ini">' + esc(initials(p.name)) + "</span><span><b>" + esc(p.name) + "</b><small>" + esc(p.role) + " · " + esc(p.email) + "</small>" + (groupsOf(p) ? '<span class="groups-line">' + esc(groupsOf(p)) + "</span>" : "") +
         (acts.length ? '<span class="acts">Activities: ' + esc(acts.join(", ")) + "</span>" : "") + "</span>" +
         '<span class="btns"><button type="button" class="outline small" data-edit>Edit</button><button type="button" class="outline small" data-delete aria-label="Remove ' + esc(p.name) + '">Remove</button></span></li>';
     }).join("");
@@ -388,6 +443,8 @@
     pending = { id: id, done: done };
     $("#person-title").textContent = p ? "Edit " + p.name : "Add a person";
     f.name.value = p ? p.name : ""; f.role.value = p ? p.role : ""; f.email.value = p ? p.email : "";
+    f.otherGroup.value = p && p.otherGroup ? p.otherGroup : "";
+    $$('[name="group"]', f).forEach(function (c) { c.checked = !!(p && p.groups && p.groups.indexOf(c.value) >= 0); });
     dlg.returnValue = "";
     dlg.showModal();
     setTimeout(function () { f.name.focus(); }, 30);
@@ -396,13 +453,20 @@
     var f = dlg.querySelector("form"), pend = pending; pending = null;
     if (!pend) return;
     if (dlg.returnValue !== "save") { if (pend.done) pend.done(null); return; }
-    var v = { name: f.name.value.trim(), role: f.role.value.trim(), email: f.email.value.trim() };
+    var v = { name: f.name.value.trim(), role: f.role.value.trim(), email: f.email.value.trim(), otherGroup: f.otherGroup.value.trim(),
+      groups: $$('[name="group"]', f).filter(function (c) { return c.checked; }).map(function (c) { return c.value; }) };
     var p = pend.id ? person(pend.id) : null;
-    if (p) { p.name = v.name; p.role = v.role; p.email = v.email; }
-    else { p = { id: "p" + Date.now().toString(36) + Math.random().toString(36).slice(2, 5), name: v.name, role: v.role, email: v.email }; S.people.push(p); }
+    if (!p) { p = { id: "p" + Date.now().toString(36) + Math.random().toString(36).slice(2, 5) }; S.people.push(p); }
+    p.name = v.name; p.role = v.role; p.email = v.email; p.groups = v.groups; p.otherGroup = v.otherGroup;
     save(); paintAllAnswers(); paintSummary();
     if (pend.done) pend.done(p.id);
   });
+
+  $("[data-groups]").innerHTML = GROUPS.map(function (g) {
+    return "<h3>" + esc(g.h) + '</h3><div class="gl">' + g.items.map(function (it) {
+      return '<label class="ck"><input type="checkbox" name="group" value="' + esc(it[0]) + '"><span>' + esc(it[0].replace(/^UKB /, "")) + (it[1] ? " <small>(" + esc(it[1]) + ")</small>" : "") + "</span></label>";
+    }).join("") + "</div>";
+  }).join("");
 
   /* ---------- events ---------- */
   $$("[data-me]").forEach(function (inp) {
@@ -414,7 +478,10 @@
 
   document.addEventListener("change", function (e) {
     var t = e.target;
-    if (t.matches(".row select")) {
+    if (t.matches(".row select.raci")) {
+      var rw = t.closest(".row"), rr = slotRows(act(rw.dataset.key), rw.dataset.slot === "all" ? "all" : +rw.dataset.slot)[+rw.dataset.i];
+      rr.raci = t.value; save();
+    } else if (t.matches(".row select.who")) {
       var row = t.closest(".row"), a = act(row.dataset.key), rows = slotRows(a, row.dataset.slot === "all" ? "all" : +row.dataset.slot), r = rows[+row.dataset.i];
       if (t.value === "__add") {
         editPerson(null, function (id) { if (id) r.p = id; save(); paintAnswer(row.dataset.key); paintSummary(); });
@@ -425,7 +492,7 @@
     } else if (t.matches("[data-split]")) {
       var a2 = act(t.dataset.key); a2.split = t.checked;
       /* start each contribution with the people chosen for the whole activity */
-      if (a2.split) { var A = ACTS.filter(function (x) { return x.key === t.dataset.key; })[0]; A.asks.forEach(function (k, i) { if (!a2.per[i] || !a2.per[i].some(function (r) { return r.p; })) a2.per[i] = a2.all.filter(function (r) { return r.p; }).map(function (r) { return { p: r.p, note: r.note }; }); if (!a2.per[i].length) a2.per[i] = [{ p: "", note: "" }]; }); }
+      if (a2.split) { var A = ACTS.filter(function (x) { return x.key === t.dataset.key; })[0]; A.asks.forEach(function (k, i) { if (!a2.per[i] || !a2.per[i].some(function (r) { return r.p; })) a2.per[i] = a2.all.filter(function (r) { return r.p; }).map(function (r) { return { p: r.p, raci: r.raci || "", note: r.note }; }); if (!a2.per[i].length) a2.per[i] = [{ p: "", note: "" }]; }); }
       save(); paintAnswer(t.dataset.key);
     }
   });
@@ -440,6 +507,7 @@
     } else if (b.hasAttribute("data-remove")) {
       var row = b.closest(".row"), rs = slotRows(act(row.dataset.key), row.dataset.slot === "all" ? "all" : +row.dataset.slot);
       rs.splice(+row.dataset.i, 1); if (!rs.length) rs.push({ p: "", note: "" }); save(); paintAnswer(row.dataset.key);
+    } else if (b.hasAttribute("data-raci-info")) { $("#raci-dlg").showModal();
     } else if (b.hasAttribute("data-add-person")) { editPerson(null);
     } else if (b.hasAttribute("data-add-me")) {
       S.people.push({ id: "p" + Date.now().toString(36), name: S.me.name, role: S.me.role, email: S.me.email }); save(); paintAllAnswers(); paintSummary();
@@ -472,11 +540,12 @@
   function fileName() { return SURVEY.fileName + "-" + (S.me.inst || "answers").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") + ".xlsx"; }
   function download() {
     if (!check()) return;
-    var head = ["Respondent", "Respondent institution", "Respondent role", "Respondent email", "Theme", "Activity code", "Activity",
-      "Contribution no.", "Level", "In-kind contribution", "Person", "Role or position", "Email", "Note", "Chosen for"];
+    var head = ["Respondent (accountable)", "Respondent institution", "Respondent role", "Respondent email", "Theme", "Activity code", "Activity",
+      "Contribution no.", "Level", "In-kind contribution", "Person", "Role or position", "Email", "Community groups", "Involvement (RACI)", "Note", "Chosen for"];
+    var raciName = { R: "Responsible", C: "Consulted", I: "Informed" };
     var rows = [head].concat(assignments().map(function (x) {
       return [S.me.name, S.me.inst, S.me.role, S.me.email, "Theme " + x.A.theme + " · " + x.A.themeShort, x.A.code, x.A.name,
-        x.no, x.ask.level === "optional" ? "optional" : x.ask.level ? "essential" : "", x.ask.text, x.p.name, x.p.role, x.p.email, x.note,
+        x.no, x.ask.level === "optional" ? "optional" : x.ask.level ? "essential" : "", x.ask.text, x.p.name, x.p.role, x.p.email, groupsOf(x.p), raciName[x.raci] || "", x.note,
         x.all ? "the whole activity" : "this contribution"];
     }));
     var blob = xlsx(rows, "In-kind contributions");
